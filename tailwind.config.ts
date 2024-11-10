@@ -9,12 +9,6 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      spacing: {
-        'gutter': '12px',       // gutter 12px
-      },
-      fontFamily: {
-        sans: ["SUIT", "Arial", "Helvetica", "sans-serif"],
-      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -44,7 +38,7 @@ const config: Config = {
           pink: {
             DEFAULT: "#FF006A",
             15: "rgba(255, 0, 106, 0.15)", // 15% 투명도 적용된 main pink
-          },    
+          },
         },
         sub: {
           palePink: {
@@ -143,8 +137,15 @@ const config: Config = {
       },
       // Gradient
       backgroundImage: {
-        'gradient-35-pink': "linear-gradient(180deg, rgba(255, 204, 225, 0.35) 0%, rgba(255, 0, 106, 0.35) 100%))",
-      }
+        "gradient-35-pink":
+          "linear-gradient(180deg, rgba(255, 204, 225, 0.35) 0%, rgba(255, 0, 106, 0.35) 100%))",
+      },
+      spacing: {
+        gutter: "12px",
+      },
+      fontFamily: {
+        sans: ["SUIT", "Arial", "Helvetica", "sans-serif"],
+      },
     },
   },
   plugins: [],
