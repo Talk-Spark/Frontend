@@ -23,10 +23,13 @@ body {
   font-family: 'SUIT', Arial, Helvetica, sans-serif;
 }
 
-/* 375px 이하에서 기본 적용할 padding과 gutter(gap) 설정 */
+/* 375px 이하에서 적용할 padding과 gutter(gap) 설정 */
 @media (max-width: 375px) {
-  body {
-    padding: 0 20px;
-    gap: 12px; /* gap은 flex 컨테이너에서 적용 가능 */
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .gutter {
+    gap: 12px;
   }
 }
