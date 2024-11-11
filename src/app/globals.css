@@ -24,7 +24,7 @@ body {
 }
 
 /* 375px 이하에서 적용할 padding과 gutter(gap) 설정 */
-@media (max-width: 375px) {
+@media (max-width: 376px) {
   .container {
     padding-left: 20px;
     padding-right: 20px;
