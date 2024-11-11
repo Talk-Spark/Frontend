@@ -5,7 +5,8 @@ const Header = () => {
   return (
     <header>
       <nav>
-        <Link href={"/"}>Home</Link>|<Link href={"/dashboard"}>DashBoard</Link>|<Link href={"/settings"}>Settings</Link>
+        <Link href={"/"}>Home</Link>|<Link href={"/dashboard"}>DashBoard</Link>|
+        <Link href={"/settings"}>Settings</Link>
       </nav>
     </header>
   );
