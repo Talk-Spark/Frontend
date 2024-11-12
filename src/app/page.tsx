@@ -16,8 +16,20 @@ export default function HomePage() {
   console.log("hi");
   return (
     <>
-      <h1>Welcome to the Home Page</h1>
+      <h1 className="bg-gradient-35-pink mb-4 font-sans text-headline-1 text-main-pink shadow">
+        Welcome to the Home Page
+      </h1>
       <Image className="grid" src={file} alt="hi" />
+
+      <div className="bg-gradient-pink-transparent rounded-lg p-8 text-center text-white">
+        <p className="text-body-1-med">This is a test for gradient</p>
+      </div>
+
+      <div className="mt-8">
+        <p className="mb-2 text-sub-blue-40">55프로 sub pale pink color</p>
+        <p className="font-alt text-caption-bold">bold caption</p>
+        <p className="font-sans text-caption-bold">bold caption</p>
+      </div>
     </>
   );
 }
