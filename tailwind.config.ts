@@ -145,6 +145,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["SUIT", "Arial", "Helvetica", "sans-serif"],
+        alt: ["Arial", "Helvetica", "sans-serif"],
       },
     },
   },

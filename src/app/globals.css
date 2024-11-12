@@ -1,5 +1,5 @@
 /* suit폰트 cdn방식으로 import 이후 body에 적용 */
-@import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css');
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css");
 
 @tailwind base;
 @tailwind components;
@@ -17,19 +17,33 @@
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'SUIT', Arial, Helvetica, sans-serif;
+  font-family: "SUIT", Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  border: 0;
+  min-width: 375px;
+  max-width: 768px;
 }
 
-/* 375px 이하에서 적용할 padding과 gutter(gap) 설정 */
-@media (max-width: 376px) {
-  .container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  .gutter {
-    gap: 12px;
-  }
+.container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.gutter {
+  gap: 12px;
 }
