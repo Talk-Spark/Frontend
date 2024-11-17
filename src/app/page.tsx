@@ -4,6 +4,8 @@ import file from "@/public/file.svg";
 
 // src/app/page.tsx
 import { Metadata } from "next";
+import NameCard from "../components/NameCard";
+import ParentComponent from "./ParentComponet";
 
 //SEO를 위한 메타데이터(해당 페이지에 적용, 레이아웃 메타데이터를 덮어씀)
 export const metadata: Metadata = {
@@ -21,7 +23,7 @@ export default function HomePage() {
         Welcome to the Home Page
       </h1>
       <Image className="grid" src={file} alt="hi" />
-
+      <ParentComponent />
       <div className="bg-gradient-pink-transparent rounded-lg p-8 text-center text-white">
         <p className="text-body-1-med">This is a test for gradient</p>
       </div>

@@ -128,7 +128,7 @@ const config: Config = {
         // Caption styles
         "caption-bold": [
           "12px",
-          { lineHeight: "145%", letterSpacing: "-0.001em", fontWeight: "600" },
+          { lineHeight: "145%", letterSpacing: "-0.001em", fontWeight: "700" },
         ], // SemiBold
         "caption-med": [
           "12px",
