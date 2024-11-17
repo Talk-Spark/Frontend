@@ -1,32 +1,55 @@
-- name: Notify Slack on Success
-  if: success() # 이 step은 job이 성공한 경우에만 실행된다.
-  id: slack-success
-  uses: slackapi/slack-github-action@v1.24.0
-  with:
-    payload: |
-      {
-        "channel": "채널 ID",
-        "attachments": [
-          {
-            "color": "#36a64f", # 성공시 연두색
-            "title": "${{ github.repository }}", # 제목은 깃헙 레포지토리
-            "title_link": "https://github.com/${{github.repository}}", # 제목 클릭시 레포지토리로 이동
-            "text": "GitHub Action 성공",
-            "fields": [
-              {
-                "title": "Repository",
-                "value": "${{ github.repository }}",
-                "short": true
-              },
-              {
-                "title": "Tag",
-                "value": "${{ github.ref_name }}",
-                "short": true
-              }
-            ]      
-          }
-        ]
-      }
-  env:
-    SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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"
-    SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+name: PR Notification
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  notify_slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Read user mapping
+        id: user_mapping
+        run: |
+          content=$(cat .github/workflows/githubSlackUsers.json)
+          echo "mapping<<EOF" >> $GITHUB_OUTPUT
+          echo "$content" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Get Slack user ID
+        id: slack_user
+        run: |
+          github_user='${{ github.event.pull_request.user.login }}'
+          slack_id=$(echo '${{ steps.user_mapping.outputs.mapping }}' | jq -r --arg gh_user "$github_user" '.[$gh_user]')
+          if [ "$slack_id" != "null" ] && [ -n "$slack_id" ]; then
+            echo "id=<@$slack_id>" >> $GITHUB_OUTPUT
+          else
+            echo "id=$github_user" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get PR labels
+        id: pr_labels
+        run: |
+          labels=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name' | tr '\n' ', ' | sed 's/,$//')
+          echo "labels=$labels" >> $GITHUB_OUTPUT
+
+      - name: Slack Notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            🎉 *PR SPARK* 🎉
+            - Author: ${{ steps.slack_user.outputs.id }}
+            - PR Title: ${{ github.event.pull_request.title }}
+            - PR Link: ${{ github.event.pull_request.html_url }}
+            - PR Label: ${{ steps.pr_labels.outputs.labels }}
+          author_name: GitHub PR Bot
+          icon_emoji: ":github:"
+          username: GitHub PR Bot
+          channel: 프론트엔드
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
