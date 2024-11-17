@@ -2,6 +2,20 @@
 
 import majorIcon from "@/public/nameCard/major.svg"; // 프로젝트 경로에 맞춰 수정
 import Image from "next/image";
+import { useState } from "react";
+
+// NameCard에 전달할 데이터 (예시)
+// const nameCardData = {
+//   teamName: "팀이름팀이름",
+//   name: "홍길동",
+//   age: "1298세",
+//   major: "전공",
+//   mbti: "ENTP",
+//   hobby: "밥먹기",
+//   lookAlike: "돼지",
+//   selfDescription: "먹고자고먹고자고하는사람이야",
+//   tmi: "오늘 저녁은 족발",
+// };
 
 type NameCardProps = {
   teamName: string;
@@ -13,8 +27,6 @@ type NameCardProps = {
   lookAlike: string;
   selfDescription: string;
   tmi: string;
-  selectedCategory: string | null;
-  onCategorySelect: (category: string) => void;
 };
 
 const NameCard: React.FC<NameCardProps> = ({
@@ -27,12 +39,15 @@ const NameCard: React.FC<NameCardProps> = ({
   lookAlike,
   selfDescription,
   tmi,
-  selectedCategory,
-  onCategorySelect,
 }) => {
+  // 컴포넌트 내부에서 상태 관리
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
   // 카테고리 클릭 시 선택 상태 변경
   const handleCategorySelect = (category: string) => {
-    onCategorySelect(category); // 부모에서 전달받은 콜백 호출
+    setSelectedCategory((prevCategory) =>
+      prevCategory === category ? null : category,
+    );
   };
 
   return (
@@ -41,14 +56,14 @@ const NameCard: React.FC<NameCardProps> = ({
         <div className="mb-[0.8rem] text-caption-bold text-main-pink">
           {teamName}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-[1.2rem]">
           <div className="text-headline-2">{name}</div>
           <div className="text-subhead-med">{age}</div>
         </div>
         <div className="flex items-center justify-between gap-[2.4rem]">
           {/* 전공 항목 */}
           <div
-            className={`flex w-auto flex-1 items-center gap-[0.4rem] rounded py-[0.4rem] ${
+            className={`flex w-auto flex-1 items-center gap-[0.4rem] rounded-[0.4rem] py-[0.4rem] ${
               selectedCategory === "전공" ? "bg-sub-palePink" : ""
             }`}
             onClick={() => handleCategorySelect("전공")} // 전공 선택
@@ -61,7 +76,7 @@ const NameCard: React.FC<NameCardProps> = ({
 
           {/* MBTI 항목 */}
           <div
-            className={`flex flex-1 items-center gap-[1.2rem] rounded px-[0.4rem] py-[0.4rem] ${
+            className={`flex flex-1 items-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
               selectedCategory === "엠비티아이" ? "bg-sub-palePink" : ""
             }`}
             onClick={() => handleCategorySelect("엠비티아이")} // MBTI 선택
@@ -80,12 +95,12 @@ const NameCard: React.FC<NameCardProps> = ({
         </div>
       </div>
 
-      <div className="my-1 h-[1px] w-full bg-gray-4"></div>
+      <div className="my-1 h-[0.1rem] w-full bg-gray-4"></div>
 
       <div className="mx-[0.4rem] flex flex-col gap-[0.4rem]">
         {/* 취미 항목 */}
         <div
-          className={`flex items-center justify-center gap-[1.2rem] rounded px-[0.4rem] py-[0.4rem] ${
+          className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
             selectedCategory === "취미" ? "bg-sub-palePink" : ""
           }`}
           onClick={() => handleCategorySelect("취미")} // 취미 선택
@@ -102,7 +117,7 @@ const NameCard: React.FC<NameCardProps> = ({
 
         {/* 닮은꼴 항목 */}
         <div
-          className={`flex items-center justify-center gap-[1.2rem] rounded px-[0.4rem] py-[0.4rem] ${
+          className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
             selectedCategory === "닮은꼴" ? "bg-sub-palePink" : ""
           }`}
           onClick={() => handleCategorySelect("닮은꼴")} // 닮은꼴 선택
@@ -121,7 +136,7 @@ const NameCard: React.FC<NameCardProps> = ({
           <div className="flex justify-between gap-[0.8rem]">
             {/* 나는 이런 사람이야 항목 */}
             <div
-              className={`flex max-w-[14rem] flex-1 flex-col gap-[0.8rem] rounded px-[0.4rem] py-[0.4rem] ${
+              className={`flex max-w-[14rem] flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
                 selectedCategory === "나는 이런 사람이야"
                   ? "bg-sub-palePink"
                   : ""
@@ -144,19 +159,19 @@ const NameCard: React.FC<NameCardProps> = ({
 
             {/* TMI 항목 */}
             <div
-              className={`flex max-w-[14rem] flex-1 flex-col gap-[0.8rem] rounded px-[0.4rem] py-[0.4rem] ${
+              className={`flex max-w-[14rem] flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
                 selectedCategory === "TMI" ? "bg-sub-palePink" : ""
               }`}
               onClick={() => handleCategorySelect("TMI")} // TMI 선택
             >
               <div
-                className={`flex-1 text-body-1-bold ${
+                className={`text-body-1-bold ${
                   selectedCategory === "TMI" ? "text-main-pink" : "text-gray-12"
                 }`}
               >
                 TMI
               </div>
-              <div className="text-body-1-med">{tmi}</div>
+              <div className="flex-1 text-body-1-med">{tmi}</div>
             </div>
           </div>
         </div>
