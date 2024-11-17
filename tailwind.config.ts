@@ -148,6 +148,9 @@ const config: Config = {
         alt: ["Arial", "Helvetica", "sans-serif"],
       },
     },
+    borderWidth: {
+      3: "3px", // border-3을 3px로 설정
+    },
   },
   plugins: [],
 };
