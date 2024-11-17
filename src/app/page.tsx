@@ -16,6 +16,7 @@ export default function HomePage() {
   console.log("hi");
   return (
     <>
+      <h1 className="h-40 w-40">안녕하세용</h1>
       <h1 className="bg-gradient-35-pink mb-4 font-sans text-headline-1 text-main-pink shadow">
         Welcome to the Home Page
       </h1>
