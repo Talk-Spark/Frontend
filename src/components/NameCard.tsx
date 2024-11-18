@@ -1,32 +1,21 @@
-"use client"; // 클라이언트 사이드에서 렌더링되어야 함을 명시
+"use client";
 
-import majorIcon from "@/public/nameCard/major.svg"; // 프로젝트 경로에 맞춰 수정
+import majorIcon from "@/public/nameCard/major.svg";
 import Image from "next/image";
 import { useState } from "react";
-
-// NameCard에 전달할 데이터 (예시)
-// const nameCardData = {
-//   teamName: "팀이름팀이름",
-//   name: "홍길동",
-//   age: "1298세",
-//   major: "전공",
-//   mbti: "ENTP",
-//   hobby: "밥먹기",
-//   lookAlike: "돼지",
-//   selfDescription: "먹고자고먹고자고하는사람이야",
-//   tmi: "오늘 저녁은 족발",
-// };
 
 type NameCardProps = {
   teamName: string;
   name: string;
-  age: string;
+  age: number;
   major: string;
   mbti: string;
   hobby: string;
   lookAlike: string;
   selfDescription: string;
   tmi: string;
+  selectedCategory: string | null; // 부모에서 전달받은 상태
+  onCategorySelect: (category: string) => void; // 부모에서 전달받은 상태 변경 함수
 };
 
 const NameCard: React.FC<NameCardProps> = ({
@@ -40,6 +29,17 @@ const NameCard: React.FC<NameCardProps> = ({
   selfDescription,
   tmi,
 }) => {
+  // 각 항목의 순서 정의
+  const categories = [
+    { key: "엠비티아이", value: mbti },
+    { key: "취미", value: hobby },
+    { key: "닮은꼴", value: lookAlike },
+    { key: "나는 이런 사람이야", value: selfDescription },
+    { key: "TMI", value: tmi },
+  ];
+
+  /////* 여기 부분 부모 컴포넌트로 *////
+
   // 컴포넌트 내부에서 상태 관리
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -50,128 +50,169 @@ const NameCard: React.FC<NameCardProps> = ({
     );
   };
 
+  ///*여기까지 부모 컴포넌트로 *///
+
+  // 각 카테고리 항목에 대해 상태 가져오기
+  const getCategoryStatus = (category: string, value: string | null) => {
+    if (selectedCategory === category) {
+      return "active";
+    }
+    return value ? "filled" : "default";
+  };
+
+  // 상태가 "active"가 아니고 값이 없을 때 text-gray-7 처리하는 함수
+  const getTextColor = (category: string, value: string | null) => {
+    if (getCategoryStatus(category, value) === "active") {
+      return "text-main-pink";
+    }
+    return "text-gray-7";
+  };
+
+  const getCategoryValue = (
+    category: string,
+    value: string | null,
+    index: number,
+  ) => {
+    const selectedIndex = categories.findIndex(
+      (cat) => cat.key === selectedCategory,
+    );
+    if (selectedIndex === -1 || index < selectedIndex) {
+      // 이전 항목은 실제 값 출력
+      return value || <span className="text-gray-5"></span>;
+    }
+    if (index > selectedIndex) {
+      // 이후 항목은 "아직 순서가 아니에요!" 출력
+      return <span className="text-gray-5">아직 순서가 아니에요!</span>;
+    }
+    return value || <span className="text-gray-5"></span>;
+  };
+
   return (
-    <div className="rounded-xl bg-white px-[1.2rem] py-[1.6rem] shadow">
+    <div className="flex h-[30rem] flex-col rounded-xl bg-white px-[1.2rem] py-[1.6rem] shadow">
       <div className="mx-[0.8rem] my-[0.4rem]">
         <div className="mb-[0.8rem] text-caption-bold text-main-pink">
           {teamName}
         </div>
         <div className="flex items-center gap-[1.2rem]">
           <div className="text-headline-2">{name}</div>
-          <div className="text-subhead-med">{age}</div>
+          <div className="text-subhead-med">{age}세</div>
         </div>
+
         <div className="flex items-center justify-between gap-[2.4rem]">
           {/* 전공 항목 */}
           <div
             className={`flex w-auto flex-1 items-center gap-[0.4rem] rounded-[0.4rem] py-[0.4rem] ${
-              selectedCategory === "전공" ? "bg-sub-palePink" : ""
+              getCategoryStatus("전공", major) === "active"
+                ? "bg-sub-palePink"
+                : ""
             }`}
-            onClick={() => handleCategorySelect("전공")} // 전공 선택
+            onClick={() => handleCategorySelect("전공")}
           >
             <Image src={majorIcon} alt="전공 아이콘" width={24} height={24} />
             <div className="flex-1 gap-[0.4rem] px-[0.5rem] text-right text-body-2-med text-black">
-              {major}
+              {getCategoryStatus("전공", major) === "active" ? "" : major || ""}
             </div>
           </div>
 
           {/* MBTI 항목 */}
           <div
             className={`flex flex-1 items-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-              selectedCategory === "엠비티아이" ? "bg-sub-palePink" : ""
+              getCategoryStatus("엠비티아이", mbti) === "active"
+                ? "bg-sub-palePink"
+                : ""
             }`}
-            onClick={() => handleCategorySelect("엠비티아이")} // MBTI 선택
+            onClick={() => handleCategorySelect("엠비티아이")}
           >
             <div
-              className={`text-body-1-bold ${
-                selectedCategory === "엠비티아이"
-                  ? "text-main-pink"
-                  : "text-gray-12"
-              }`}
+              className={`text-body-1-bold ${getTextColor("엠비티아이", mbti)}`}
             >
               MBTI
             </div>
-            <div className="text-body-1-med text-gray-10">{mbti}</div>
+            <div className="text-body-1-med text-gray-10">
+              {getCategoryValue("엠비티아이", mbti, 0)}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="my-1 h-[0.1rem] w-full bg-gray-4"></div>
 
-      <div className="mx-[0.4rem] flex flex-col gap-[0.4rem]">
+      <div className="mx-[0.4rem] flex h-[15.5rem] flex-1 flex-col gap-[0.4rem]">
         {/* 취미 항목 */}
         <div
           className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-            selectedCategory === "취미" ? "bg-sub-palePink" : ""
+            getCategoryStatus("취미", hobby) === "active"
+              ? "bg-sub-palePink"
+              : ""
           }`}
-          onClick={() => handleCategorySelect("취미")} // 취미 선택
+          onClick={() => handleCategorySelect("취미")}
         >
-          <div
-            className={`text-body-1-bold ${
-              selectedCategory === "취미" ? "text-main-pink" : "text-gray-12"
-            }`}
-          >
+          <div className={`text-body-1-bold ${getTextColor("취미", hobby)}`}>
             취미
           </div>
-          <div className="flex-1 text-right text-body-1-med">{hobby}</div>
+          <div className="flex-1 text-right text-body-1-med">
+            {getCategoryValue("취미", hobby, 1)}
+          </div>
         </div>
 
         {/* 닮은꼴 항목 */}
         <div
           className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-            selectedCategory === "닮은꼴" ? "bg-sub-palePink" : ""
+            getCategoryStatus("닮은꼴", lookAlike) === "active"
+              ? "bg-sub-palePink"
+              : ""
           }`}
-          onClick={() => handleCategorySelect("닮은꼴")} // 닮은꼴 선택
+          onClick={() => handleCategorySelect("닮은꼴")}
         >
           <div
-            className={`text-body-1-bold ${
-              selectedCategory === "닮은꼴" ? "text-main-pink" : "text-gray-12"
-            }`}
+            className={`text-body-1-bold ${getTextColor("닮은꼴", lookAlike)}`}
           >
             닮은꼴
           </div>
-          <div className="flex-1 text-right text-body-1-med">{lookAlike}</div>
+          <div className="flex-1 text-right text-body-1-med">
+            {getCategoryValue("닮은꼴", lookAlike, 2)}
+          </div>
         </div>
 
-        <div>
-          <div className="flex justify-between gap-[0.8rem]">
+        <div className="flex-1">
+          <div className="flex h-full justify-between gap-[0.8rem]">
             {/* 나는 이런 사람이야 항목 */}
             <div
-              className={`flex max-w-[14rem] flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-                selectedCategory === "나는 이런 사람이야"
+              className={`flex flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
+                getCategoryStatus("나는 이런 사람이야", selfDescription) ===
+                "active"
                   ? "bg-sub-palePink"
                   : ""
               }`}
-              onClick={() => handleCategorySelect("나는 이런 사람이야")} // 나는 이런 사람이야 선택
+              onClick={() => handleCategorySelect("나는 이런 사람이야")}
             >
               <div
-                className={`flex-1 text-body-1-bold ${
-                  selectedCategory === "나는 이런 사람이야"
-                    ? "text-main-pink"
-                    : "text-gray-12"
-                }`}
+                className={`text-body-1-bold ${getTextColor("나는 이런 사람이야", selfDescription)}`}
               >
                 나는 이런 사람이야
               </div>
+
               <div className="flex-1 text-body-1-med tracking-tight">
-                {selfDescription}
+                {getCategoryValue("나는 이런 사람이야", selfDescription, 3)}
               </div>
             </div>
 
             {/* TMI 항목 */}
             <div
-              className={`flex max-w-[14rem] flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-                selectedCategory === "TMI" ? "bg-sub-palePink" : ""
+              className={`flex flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
+                getCategoryStatus("TMI", tmi) === "active"
+                  ? "bg-sub-palePink"
+                  : ""
               }`}
-              onClick={() => handleCategorySelect("TMI")} // TMI 선택
+              onClick={() => handleCategorySelect("TMI")}
             >
-              <div
-                className={`text-body-1-bold ${
-                  selectedCategory === "TMI" ? "text-main-pink" : "text-gray-12"
-                }`}
-              >
+              <div className={`text-body-1-bold ${getTextColor("TMI", tmi)}`}>
                 TMI
               </div>
-              <div className="flex-1 text-body-1-med">{tmi}</div>
+
+              <div className="flex-1 text-body-1-med tracking-tight">
+                {getCategoryValue("TMI", tmi, 4)}
+              </div>
             </div>
           </div>
         </div>
