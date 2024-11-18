@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 //반드시 export만 해주면 됨.(컴포넌트명은 뭐가 되든 상관 x)
 export default function HomePage() {
-  console.log("hi");
+  // console.log("hi");
   return (
     <>
       <h1 className="h-[10rem] w-[10rem]">안녕하세용</h1>
