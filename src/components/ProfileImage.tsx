@@ -33,6 +33,7 @@ interface ProfileImageProps {
   isSelected?: boolean; // 선택 여부 (동적 border, name color 적용)
   size?: number;
   backColor?: "gray" | "blue";
+  isSecond?: boolean; //명함 맞추기 flow에서 2순위에 사용할 prop
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -43,6 +44,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   isSelected = false,
   size = 68,
   backColor = "blue",
+  isSecond = false,
 }) => {
   const profileImageUrl = profileImages[color] || profileImages.pink;
   const crownImageUrl = crownImages[color] || crownImages.pink;
@@ -63,6 +65,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         ? "border-3 border-main-pink"
         : "border-0";
 
+  const borderStyleSecond = "border-2 border-sub-pink";
   // isSelected
   //   ? size === 148
   //     ? "border-3 border-gray-3"
@@ -101,7 +104,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
           />
         </div>
         <div
-          className={`absolute inset-0 h-full w-full rounded-full ${borderStyle}`}
+          className={`absolute inset-0 h-full w-full rounded-full ${isSecond ? borderStyleSecond : borderStyle}`}
         ></div>
       </div>
 
