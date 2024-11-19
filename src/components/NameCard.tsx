@@ -1,8 +1,5 @@
-"use client";
-
 import majorIcon from "@/public/nameCard/major.svg";
 import Image from "next/image";
-import { useState } from "react";
 
 type NameCardProps = {
   teamName: string;
@@ -28,6 +25,8 @@ const NameCard: React.FC<NameCardProps> = ({
   lookAlike,
   selfDescription,
   tmi,
+  selectedCategory,
+  onCategorySelect,
 }) => {
   // 각 항목의 순서 정의
   const categories = [
@@ -41,14 +40,14 @@ const NameCard: React.FC<NameCardProps> = ({
   /////* 여기 부분 부모 컴포넌트로 *////
 
   // 컴포넌트 내부에서 상태 관리
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // 카테고리 클릭 시 선택 상태 변경
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory((prevCategory) =>
-      prevCategory === category ? null : category,
-    );
-  };
+  // // 카테고리 클릭 시 선택 상태 변경
+  // const handleCategorySelect = (category: string) => {
+  //   setSelectedCategory((prevCategory) =>
+  //     prevCategory === category ? null : category,
+  //   );
+  // };
 
   ///*여기까지 부모 컴포넌트로 *///
 
@@ -60,10 +59,20 @@ const NameCard: React.FC<NameCardProps> = ({
     return value ? "filled" : "default";
   };
 
-  // 상태가 "active"가 아니고 값이 없을 때 text-gray-7 처리하는 함수
-  const getTextColor = (category: string, value: string | null) => {
+  const getTextColor = (
+    category: string,
+    value: string | null,
+    index: number,
+  ) => {
+    const selectedIndex = categories.findIndex(
+      (cat) => cat.key === selectedCategory,
+    );
     if (getCategoryStatus(category, value) === "active") {
       return "text-main-pink";
+    }
+
+    if (selectedIndex === -1 || index < selectedIndex) {
+      return "text-gray-12";
     }
     return "text-gray-7";
   };
@@ -84,7 +93,7 @@ const NameCard: React.FC<NameCardProps> = ({
       // 이후 항목은 "아직 순서가 아니에요!" 출력
       return <span className="text-gray-5">아직 순서가 아니에요!</span>;
     }
-    return value || <span className="text-gray-5"></span>;
+    return <span className="text-gray-5"></span>;
   };
 
   return (
@@ -106,7 +115,7 @@ const NameCard: React.FC<NameCardProps> = ({
                 ? "bg-sub-palePink"
                 : ""
             }`}
-            onClick={() => handleCategorySelect("전공")}
+            onClick={() => onCategorySelect("전공")}
           >
             <Image src={majorIcon} alt="전공 아이콘" width={24} height={24} />
             <div className="flex-1 gap-[0.4rem] px-[0.5rem] text-right text-body-2-med text-black">
@@ -121,10 +130,10 @@ const NameCard: React.FC<NameCardProps> = ({
                 ? "bg-sub-palePink"
                 : ""
             }`}
-            onClick={() => handleCategorySelect("엠비티아이")}
+            onClick={() => onCategorySelect("엠비티아이")}
           >
             <div
-              className={`text-body-1-bold ${getTextColor("엠비티아이", mbti)}`}
+              className={`text-body-1-bold ${getTextColor("엠비티아이", mbti, 0)}`}
             >
               MBTI
             </div>
@@ -145,12 +154,12 @@ const NameCard: React.FC<NameCardProps> = ({
               ? "bg-sub-palePink"
               : ""
           }`}
-          onClick={() => handleCategorySelect("취미")}
+          onClick={() => onCategorySelect("취미")}
         >
-          <div className={`text-body-1-bold ${getTextColor("취미", hobby)}`}>
+          <div className={`text-body-1-bold ${getTextColor("취미", hobby, 1)}`}>
             취미
           </div>
-          <div className="flex-1 text-right text-body-1-med">
+          <div className="flex-1 text-right text-body-1-med text-gray-10">
             {getCategoryValue("취미", hobby, 1)}
           </div>
         </div>
@@ -162,14 +171,14 @@ const NameCard: React.FC<NameCardProps> = ({
               ? "bg-sub-palePink"
               : ""
           }`}
-          onClick={() => handleCategorySelect("닮은꼴")}
+          onClick={() => onCategorySelect("닮은꼴")}
         >
           <div
-            className={`text-body-1-bold ${getTextColor("닮은꼴", lookAlike)}`}
+            className={`text-body-1-bold ${getTextColor("닮은꼴", lookAlike, 2)}`}
           >
             닮은꼴
           </div>
-          <div className="flex-1 text-right text-body-1-med">
+          <div className="flex-1 text-right text-body-1-med text-gray-10">
             {getCategoryValue("닮은꼴", lookAlike, 2)}
           </div>
         </div>
@@ -184,10 +193,10 @@ const NameCard: React.FC<NameCardProps> = ({
                   ? "bg-sub-palePink"
                   : ""
               }`}
-              onClick={() => handleCategorySelect("나는 이런 사람이야")}
+              onClick={() => onCategorySelect("나는 이런 사람이야")}
             >
               <div
-                className={`text-body-1-bold ${getTextColor("나는 이런 사람이야", selfDescription)}`}
+                className={`text-body-1-bold ${getTextColor("나는 이런 사람이야", selfDescription, 3)}`}
               >
                 나는 이런 사람이야
               </div>
@@ -204,9 +213,11 @@ const NameCard: React.FC<NameCardProps> = ({
                   ? "bg-sub-palePink"
                   : ""
               }`}
-              onClick={() => handleCategorySelect("TMI")}
+              onClick={() => onCategorySelect("TMI")}
             >
-              <div className={`text-body-1-bold ${getTextColor("TMI", tmi)}`}>
+              <div
+                className={`text-body-1-bold ${getTextColor("TMI", tmi, 4)}`}
+              >
                 TMI
               </div>
 
