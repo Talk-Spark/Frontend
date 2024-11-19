@@ -31,8 +31,8 @@ interface ProfileImageProps {
   isHost?: boolean;
   children?: ReactNode;
   isSelected?: boolean; // 선택 여부 (동적 border, name color 적용)
-  size: number;
-  backColor: "gray" | "blue";
+  size?: number;
+  backColor?: "gray" | "blue";
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
