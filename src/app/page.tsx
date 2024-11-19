@@ -22,18 +22,6 @@ export default function HomePage() {
         Welcome to the Home Page
       </h1>
       <Image className="grid" src={file} alt="hi" />
-      <ProfileImage isSelected={true} isHost={true} color={"pink"}>
-        정인
-      </ProfileImage>
-      <ProfileImage isSelected={true} isHost={true} color={"green"}>
-        정인
-      </ProfileImage>
-      <ProfileImage isSelected={true} isHost={true} color={"blue"}>
-        정인
-      </ProfileImage>
-      <ProfileImage isSelected={true} isHost={true} color={"yellow"}>
-        정인
-      </ProfileImage>
 
       <div className="bg-gradient-pink-transparent rounded-lg p-8 text-center text-white">
         <p className="text-body-1-med">This is a test for gradient</p>

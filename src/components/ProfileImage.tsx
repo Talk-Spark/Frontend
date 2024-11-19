@@ -31,6 +31,8 @@ interface ProfileImageProps {
   isHost?: boolean;
   children?: ReactNode;
   isSelected?: boolean; // 선택 여부 (동적 border, name color 적용)
+  size: number;
+  backColor: "gray" | "blue";
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -39,26 +41,45 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   isHost = false,
   children,
   isSelected = false,
+  size = 68,
+  backColor = "blue",
 }) => {
   const profileImageUrl = profileImages[color] || profileImages.pink;
   const crownImageUrl = crownImages[color] || crownImages.pink;
 
   const positionStyles = {
-    pink: "top-6 right-4",
-    green: "bottom-0.5 left-2.5",
-    yellow: "bottom-0 left-3",
-    blue: "top-2 right-4",
+    pink: size === 68 ? "top-6 right-4" : "top-14 right-10",
+    green: size === 68 ? "bottom-0.5 left-2.5" : "bottom-3 left-9",
+    yellow: size === 68 ? "bottom-0 left-3" : "bottom-1 left-",
+    blue: size === 68 ? "top-2 right-4" : "top-7 right-8",
   };
 
-  const borderStyle = isSelected ? "border-3 border-main-pink" : "border-0";
+  const borderStyle =
+    size === 148
+      ? isSelected
+        ? "border-3 border-main-pink"
+        : "border-3 border-gray-3"
+      : isSelected
+        ? "border-3 border-main-pink"
+        : "border-0";
+
+  // isSelected
+  //   ? size === 148
+  //     ? "border-3 border-gray-3"
+  //     : "border-3 border-main-pink"
+  //   : "border-0";
 
   const textColor = isSelected ? "text-main-pink" : "text-black";
 
+  const imageSize = size === 68 ? "h-[68px] w-[68px]" : "h-[148px] w-[148px]";
+
+  const bgStyle = backColor === "blue" ? "bg-sub-blue-40" : "bg-gray-1";
+
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="relative box-border h-[68px] w-[68px]">
+      <div className={`relative box-border ${imageSize}`}>
         <div
-          className={`relative h-full w-full overflow-hidden rounded-full bg-sub-blue-40`}
+          className={`relative h-full w-full overflow-hidden rounded-full ${bgStyle}`}
         >
           {/* 왕관 이미지 */}
           {isHost && (
@@ -74,8 +95,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
           <Image
             src={profileImageUrl}
             alt={alt}
-            width={62}
-            height={62}
+            width={size === 68 ? 62 : 127} // Adjust image width/height based on size
+            height={size === 68 ? 62 : 140}
             className={`absolute object-cover ${positionStyles[color]}`}
           />
         </div>
