@@ -44,10 +44,10 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   const crownImageUrl = crownImages[color] || crownImages.pink;
 
   const positionStyles = {
-    pink: "top-4 right-2.5",
+    pink: "top-6 right-4",
     green: "bottom-0.5 left-2.5",
-    yellow: "bottom-0 left-2",
-    blue: "top-1.5 right-2",
+    yellow: "bottom-0 left-3",
+    blue: "top-2 right-4",
   };
 
   const borderStyle = isSelected ? "border-3 border-main-pink" : "border-0";
@@ -65,17 +65,17 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             <Image
               src={crownImageUrl}
               alt="Crown"
-              width={22}
+              width={25}
               height={15}
-              className="absolute right-0 top-3 z-10 -translate-x-1/2 object-cover"
+              className="absolute -right-1 top-4 z-10 -translate-x-1/2 object-cover"
             />
           )}
           {/* 프로필 이미지 */}
           <Image
             src={profileImageUrl}
             alt={alt}
-            width={60}
-            height={60}
+            width={62}
+            height={62}
             className={`absolute object-cover ${positionStyles[color]}`}
           />
         </div>
@@ -87,7 +87,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       {/* 이름 */}
       {children && (
         <div
-          className={`mt-1 text-center text-body-2-bold text-sm ${textColor}`}
+          className={`mt-[0.4rem] text-center text-body-2-bold text-sm ${textColor}`}
         >
           {children}
         </div>
