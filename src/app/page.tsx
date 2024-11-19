@@ -17,6 +17,9 @@ export default function HomePage() {
   console.log("hi");
   return (
     <>
+      <ProfileImage size={68} backColor="gray">
+        하잉
+      </ProfileImage>
       <h1 className="h-[10rem] w-[10rem]">안녕하세용</h1>
       <h1 className="bg-gradient-35-pink mb-4 font-sans text-headline-1 text-main-pink shadow">
         Welcome to the Home Page
