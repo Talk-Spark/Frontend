@@ -74,6 +74,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
   const textColor = isSelected ? "text-main-pink" : "text-black";
 
+  //size 52px, 64px도 존재..
   const imageSize = size === 68 ? "h-[68px] w-[68px]" : "h-[148px] w-[148px]";
 
   const bgStyle = backColor === "blue" ? "bg-sub-blue-40" : "bg-gray-1";
