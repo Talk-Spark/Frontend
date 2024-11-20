@@ -17,7 +17,7 @@ import Button from "@/src/components/common/Button";
 
 //반드시 export만 해주면 됨.(컴포넌트명은 뭐가 되든 상관 x)
 export default function HomePage() {
-  console.log("hi");
+  // console.log("hi");
   return (
     <>
       <Button
