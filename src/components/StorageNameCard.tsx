@@ -37,7 +37,7 @@ const graphicColor: Record<string, StaticImageData> = {
 };
 
 const StorageNameCard: React.FC<NameCardProps> = ({
-  teamName = "",
+  teamName = "", //teamName은 어디에 사용?
   name = "",
   age = "",
   major = "",
@@ -190,7 +190,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
                   height={24}
                 />
                 <div className={`text-body-2-med ${nameTextColor}`}>
-                  어쩌고 전공
+                  {major}
                 </div>
               </div>
               <div className="flex items-center gap-[0.4rem]">
@@ -212,29 +212,21 @@ const StorageNameCard: React.FC<NameCardProps> = ({
             <div className="flex flex-1 flex-col gap-[1.6rem]">
               <div className="flex flex-1 flex-col gap-[0.4rem]">
                 <span className={`${categoryColor}`}>취미</span>
-                <p className={` ${contentTextColor}`}>
-                  텍스트영역텍스트영역텍스트영역텍스트영역
-                </p>
+                <p className={` ${contentTextColor}`}>{hobby}</p>
               </div>
               <div className="flex flex-1 flex-col gap-[0.4rem]">
-                <span className={`${categoryColor}`}>취미</span>
-                <p className={` ${contentTextColor}`}>
-                  텍스트영역텍스트영역텍스트영역텍스트영역
-                </p>
+                <span className={`${categoryColor}`}>TMI</span>
+                <p className={` ${contentTextColor}`}>{tmi}</p>
               </div>
             </div>
             <div className="flex flex-1 flex-col gap-[1.6rem]">
               <div className="flex flex-1 flex-col gap-[0.4rem]">
-                <span className={`${categoryColor}`}>취미</span>
-                <p className={` ${contentTextColor}`}>
-                  텍스트영역텍스트영역텍스트영역텍스트영역
-                </p>
+                <span className={`${categoryColor}`}>닮은 꼴</span>
+                <p className={` ${contentTextColor}`}>{lookAlike}</p>
               </div>
               <div className="flex flex-1 flex-col gap-[0.4rem]">
-                <span className={`${categoryColor}`}>취미</span>
-                <p className={` ${contentTextColor}`}>
-                  텍스트영역텍스트영역텍스트영역텍스트영역
-                </p>
+                <span className={`${categoryColor}`}>나는 이런 사람이야</span>
+                <p className={` ${contentTextColor}`}>{selfDescription}</p>
               </div>
             </div>
           </div>
