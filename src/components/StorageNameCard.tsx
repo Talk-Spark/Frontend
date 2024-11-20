@@ -135,8 +135,11 @@ const StorageNameCard: React.FC<NameCardProps> = ({
           ? "bg-sub-mint"
           : "bg-sub-blue";
 
+  //301 + 192 = 493
   return (
-    <div className={`relative h-[49.3rem] w-[33.5rem] rounded-[2rem]`}>
+    <div
+      className={`relative ${isFull ? "h-[49.3rem]" : "h-[30.1rem]"} w-[33.5rem] rounded-[2rem]`}
+    >
       {/* 첫 번째 사각형 - 상단 */}
       <div className="">
         <div className="">
