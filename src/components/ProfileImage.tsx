@@ -31,7 +31,7 @@ interface ProfileImageProps {
   isHost?: boolean;
   children?: ReactNode;
   isSelected?: boolean; // 선택 여부 (동적 border, name color 적용)
-  size?: 36 | 52 | 62 | 68 | 148; // Added size 36px
+  size?: 36 | 52 | 64 | 68 | 148; // Added size 36px
   backColor?: "gray" | "blue";
   isSecond?: boolean; //명함 맞추기 flow에서 2순위에 사용할 prop
 }
@@ -55,7 +55,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         ? "top-3 right-1.5"
         : size === 52
           ? "top-5 right-2.5"
-          : size === 62
+          : size === 64
             ? "top-6 right-3"
             : size === 68
               ? "top-6 right-4"
@@ -65,7 +65,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         ? "bottom-0.5 left-2"
         : size === 52
           ? "bottom-1 left-3"
-          : size === 62
+          : size === 64
             ? "bottom-1 left-4"
             : size === 68
               ? "bottom-1.5 left-4"
@@ -75,7 +75,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         ? "bottom-0 left-1.5"
         : size === 52
           ? "bottom-0 left-2"
-          : size === 62
+          : size === 64
             ? "bottom-0 left-2.5"
             : size === 68
               ? "bottom-0 left-3"
@@ -85,7 +85,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         ? "top-1 right-2"
         : size === 52
           ? "top-2 right-3"
-          : size === 62
+          : size === 64
             ? "top-2 right-3"
             : size === 68
               ? "top-2.5 right-4"
@@ -107,7 +107,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             : isSelected
               ? "border-2 border-main-pink"
               : "border-2 border-gray-3"
-          : size === 62
+          : size === 64
             ? isSelected
               ? "border-2 border-main-pink"
               : "border-2 border-gray-3"
@@ -124,8 +124,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       ? "h-[36px] w-[36px]"
       : size === 52
         ? "h-[52px] w-[52px]"
-        : size === 62
-          ? "h-[62px] w-[62px]"
+        : size === 64
+          ? "h-[64px] w-[64px]"
           : size === 68
             ? "h-[68px] w-[68px]"
             : "h-[148px] w-[148px]";
@@ -157,10 +157,10 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
                 ? 34
                 : size === 52
                   ? 50
-                  : size === 62
+                  : size === 64
                     ? 58
                     : size === 68
-                      ? 62
+                      ? 64
                       : 127
             } // Adjust image width based on size
             height={
@@ -168,10 +168,10 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
                 ? 34
                 : size === 52
                   ? 48
-                  : size === 62
+                  : size === 64
                     ? 58
                     : size === 68
-                      ? 62
+                      ? 64
                       : 140
             }
             className={`absolute object-cover ${positionStyles[color]}`}
