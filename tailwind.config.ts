@@ -1,6 +1,5 @@
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
-import plugin, { PluginAPI } from "tailwindcss/plugin";
 
 const config: Config = {
   content: [
