@@ -1,4 +1,3 @@
-// import Button from "@/src/components/common/Button";
 import loginImage from "@/public/Image/onBoarding/loginImage.svg";
 import kakaoImage from "@/public/Image/onBoarding/kakaoImage.svg";
 import Image from "next/image";
@@ -18,7 +17,6 @@ const page = () => {
           대화의 불꽃을 피워드릴게요!
         </div>
       </div>
-      {/* <Button>카카오 로그인</Button> */}
       <button className="bg-sub-yellow-kakao flex h-[5.6rem] w-full items-center justify-center gap-[1rem] rounded-[1.2rem]">
         <Image src={kakaoImage} width={20} height={18} alt="kakaoImage" />
         <p className="text-subhead-bold text-gray-11">카카오 로그인</p>

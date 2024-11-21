@@ -46,6 +46,10 @@ const headerConfig: Record<string, HeaderProps> = {
   "/login": {
     title: "",
   },
+  "/creating-card": {
+    showButton1: true,
+    title: "TalkSpark",
+  },
 };
 
 const HeaderWrapper = () => {
