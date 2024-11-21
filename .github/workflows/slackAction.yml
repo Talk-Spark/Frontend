@@ -49,7 +49,7 @@ jobs:
           author_name: GitHub PR Bot
           icon_emoji: ":github:"
           username: GitHub PR Bot
-          channel: 프론트엔드
+          channel: 프론트엔드-깃허브알림
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
