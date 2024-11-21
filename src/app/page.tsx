@@ -2,13 +2,13 @@
 // import { Metadata } from "next";
 import React, { useState } from "react";
 import Modal from "../components/common/Modal";
-import Button from "@/src/components/common/Button";
-import Image from "next/image";
-//alias 테스트
-import file from "@/public/file.svg";
+// import Button from "@/src/components/common/Button";
+// import Image from "next/image";
+// //alias 테스트
+// import file from "@/public/file.svg";
 
-// src/app/page.tsx
-import { Metadata } from "next";
+// // src/app/page.tsx
+// import { Metadata } from "next";
 
 //메타데이터는 클라이언트 컴포넌트에서는 사용 불가 !!
 // //SEO를 위한 메타데이터(해당 페이지에 적용, 레이아웃 메타데이터를 덮어씀)

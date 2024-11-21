@@ -40,6 +40,12 @@ const headerConfig: Record<string, HeaderProps> = {
     button2Type: "settings",
     button2Action: () => {},
   },
+  "/landing": {
+    title: "",
+  },
+  "/login": {
+    title: "",
+  },
 };
 
 const HeaderWrapper = () => {
