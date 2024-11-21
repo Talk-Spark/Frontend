@@ -3,10 +3,10 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Image from "next/image";
 import icon from "@/src/components/Headers/icon.svg";
 
-export type HeaderProps = {
+type HeaderProps = {
   showButton1?: boolean; // 버튼1 표시 여부
   title: string; // 헤더 텍스트
-  button2Type?: "edit" | "complete" | "next" | "exit" | "settings"; // 버튼2 종류
+  button2Type?: "edit" | "complete" | "next" | "exit" | "settings" | string; // 버튼2 종류
   button2Action?: () => void; // 버튼2 클릭 동작
 };
 
@@ -45,7 +45,7 @@ const Header = ({
       {showButton1 ? (
         <button
           onClick={() => window.history.back()} // 뒤로가기
-          className="w-[2.4rem] text-[2.4rem] text-gray-7"
+          className="flex w-[2.4rem] items-center justify-center text-[2.4rem] text-gray-7"
           aria-label="Back"
         >
           <ArrowBackIosNewIcon
