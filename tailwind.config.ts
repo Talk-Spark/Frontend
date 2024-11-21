@@ -2,6 +2,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  mode: "jit",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -147,6 +148,10 @@ const config: Config = {
         sans: ["SUIT", "Arial", "Helvetica", "sans-serif"],
         alt: ["Arial", "Helvetica", "sans-serif"],
       },
+    },
+    borderWidth: {
+      3: "3px", // border-3을 3px로 설정
+      2: "2px"
     },
   },
   plugins: [],
