@@ -37,7 +37,6 @@ const graphicColor: Record<string, StaticImageData> = {
 };
 
 const StorageNameCard: React.FC<NameCardProps> = ({
-  teamName = "", //teamName은 어디에 사용?
   name = "",
   age = "",
   major = "",

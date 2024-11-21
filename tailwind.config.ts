@@ -159,18 +159,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    plugin(function ({ addComponents }: PluginAPI) {
-      addComponents({
-        ".mask-child": {
-          "-webkit-mask-image":
-            "radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%)",
-          "mask-image":
-            "radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%)",
-        },
-      });
-    }),
-  ],
+  plugins: [],
 };
 
 export default config;
