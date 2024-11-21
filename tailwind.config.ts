@@ -72,6 +72,15 @@ const config: Config = {
       boxShadow: {
         DEFAULT: "0px 0px 12px 0px rgba(0, 0, 0, 0.08)",
       },
+      backgroundImage: {
+        "mint-gradient":
+          "linear-gradient(196deg, #BBFFF3 21.25%, #11EBC5 95.64%)",
+        "pink-gradient": "linear-gradient(204deg, #FFCCE1 0%, #FF80B4 101.19%)",
+        "blue-gradient":
+          "linear-gradient(196deg, #9CACFF 21.25%, #3D5BF5 95.64%)",
+        "yellow-gradient":
+          "linear-gradient(196deg, #FFEFB7 21.25%, #FDD853 95.64%)",
+      },
       fontSize: {
         // Headline styles
         "headline-1": [
@@ -138,10 +147,10 @@ const config: Config = {
         ], // Medium
       },
       // Gradient
-      backgroundImage: {
-        "gradient-35-pink":
-          "linear-gradient(180deg, rgba(255, 204, 225, 0.35) 0%, rgba(255, 0, 106, 0.35) 100%))",
-      },
+      // backgroundImage: {
+      //   "gradient-35-pink":
+      //     "linear-gradient(180deg, rgba(255, 204, 225, 0.35) 0%, rgba(255, 0, 106, 0.35) 100%))",
+      // },
       spacing: {
         gutter: "12px",
       },
@@ -149,6 +158,10 @@ const config: Config = {
         sans: ["SUIT", "Arial", "Helvetica", "sans-serif"],
         alt: ["Arial", "Helvetica", "sans-serif"],
       },
+    },
+    borderWidth: {
+      3: "3px", // border-3을 3px로 설정
+      2: "2px",
     },
   },
   plugins: [],
