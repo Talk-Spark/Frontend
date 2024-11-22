@@ -1,40 +1,38 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "../common/Button";
 import { StepProps } from "./Step1";
 import InputField from "./InputField";
 
-const Step2 = ({ onNext }: StepProps) => {
-  const [mbti, setMbti] = useState("");
-  const [hobby, setHobby] = useState("");
-  const [lookAlike, setLookAlike] = useState("");
-
+const Step2 = ({ onNext, formData, onChange }: StepProps) => {
   const fields = [
     {
       label: "나의 MBTI 유형은?",
       id: "mbti",
-      value: mbti,
+      value: formData.mbti,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setMbti(e.target.value),
+        onChange("mbti", e.target.value),
       placehorder: "ex. ESTJ",
       type: "text",
     },
     {
       label: "나의 취미는??",
       id: "hobby",
-      value: hobby,
+      value: formData.hobby,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setHobby(e.target.value),
+        onChange("hobby", e.target.value),
       placehorder: "ex. 영화 보기",
       type: "text",
+      maxLength: 15,
     },
     {
       label: "나의 닮은꼴은?",
       id: "lookAlike",
-      value: lookAlike,
+      value: formData.lookAlike,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setLookAlike(e.target.value),
+        onChange("lookAlike", e.target.value),
       placehorder: "ex. 토끼",
       type: "text",
+      maxLength: 15,
     },
   ];
 
@@ -59,6 +57,7 @@ const Step2 = ({ onNext }: StepProps) => {
               onChange={field.onChange}
               placeholder={field.placehorder}
               type={field.type}
+              maxLength={field.maxLength}
             />
           ))}
         </div>

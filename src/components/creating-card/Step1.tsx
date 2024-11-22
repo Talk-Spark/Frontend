@@ -1,50 +1,50 @@
 import { useEffect, useState } from "react";
 import Button from "../common/Button";
 import InputField from "./InputField";
+import { FormData } from "@/src/app/(onBoarding)/creating-card/page";
 
 export type StepProps = {
   onNext: () => void;
+  formData: FormData;
+  onChange: (key: keyof FormData, value: string) => void;
 };
 
-const Step1 = ({ onNext }: StepProps) => {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [major, setMajor] = useState("");
+const Step1 = ({ onNext, formData, onChange }: StepProps) => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const fields = [
     {
       label: "이름",
       id: "name",
-      value: name,
+      value: formData.name,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setName(e.target.value),
+        onChange("name", e.target.value),
       placeholder: "이름을 입력해 주세요",
       type: "text",
     },
     {
       label: "나이",
       id: "age",
-      value: age,
+      value: formData.age,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setAge(e.target.value),
+        onChange("age", e.target.value),
       placeholder: "숫자만 입력해 주세요",
       type: "number",
     },
     {
       label: "전공/직무",
       id: "major",
-      value: major,
+      value: formData.major,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setMajor(e.target.value),
+        onChange("major", e.target.value),
       placeholder: "ex. 경영학 전공, IT 서비스 기획 직무",
       type: "text",
     },
   ];
 
   useEffect(() => {
-    setIsFormValid(!!name && !!age && !!major);
-  }, [name, age, major]);
+    setIsFormValid(!!formData.name && !!formData && !!formData.major);
+  }, [formData]);
 
   const handleNext = () => {
     if (isFormValid) {

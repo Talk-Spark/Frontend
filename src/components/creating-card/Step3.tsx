@@ -1,30 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "../common/Button";
 import { StepProps } from "./Step1";
 import InputField from "./InputField";
 
-const Step3 = ({ onNext }: StepProps) => {
-  const [intro, setIntro] = useState("");
-  const [tmi, setTmi] = useState("");
-
+const Step3 = ({ onNext, formData, onChange }: StepProps) => {
   const fields = [
     {
       label: "나는 이런 사람이야",
       id: "intro",
-      value: intro,
+      value: formData.intro,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setIntro(e.target.value),
+        onChange("intro", e.target.value),
       placehorder: "ex. 만능 개발자",
       type: "text",
+      maxLength: 20,
     },
     {
       label: "나의 TMI는?",
       id: "tmi",
-      value: tmi,
+      value: formData.tmi,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setTmi(e.target.value),
+        onChange("tmi", e.target.value),
       placehorder: "ex. 흰 머리가 많다",
       type: "text",
+      maxLength: 20,
     },
   ];
 
@@ -49,6 +48,7 @@ const Step3 = ({ onNext }: StepProps) => {
               onChange={field.onChange}
               placeholder={field.placehorder}
               type={field.type}
+              maxLength={field.maxLength}
             />
           ))}
         </div>

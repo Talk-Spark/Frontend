@@ -6,9 +6,41 @@ import Step3 from "@/src/components/creating-card/Step3";
 import Step4 from "@/src/components/creating-card/Step4";
 import { useState } from "react";
 
+export type FormData = {
+  name: string;
+  age: string;
+  major: string;
+  mbti: string;
+  hobby: string;
+  lookAlike: string;
+  intro: string;
+  tmi: string;
+  selectedCharacter: string;
+};
+
 const Page = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [progress, setProgress] = useState(25);
+
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    age: "",
+    major: "",
+    mbti: "",
+    hobby: "",
+    lookAlike: "",
+    intro: "",
+    tmi: "",
+    selectedCharacter: "",
+  });
+
+  // 사용자 입력 데이터 추가
+  const handleChange = (key: keyof FormData, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   const handleNextStep = () => {
     if (currentStep < 4) {
@@ -27,13 +59,37 @@ const Page = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1 onNext={handleNextStep} />;
+        return (
+          <Step1
+            onNext={handleNextStep}
+            formData={formData}
+            onChange={handleChange}
+          />
+        );
       case 2:
-        return <Step2 onNext={handleNextStep} />;
+        return (
+          <Step2
+            onNext={handleNextStep}
+            formData={formData}
+            onChange={handleChange}
+          />
+        );
       case 3:
-        return <Step3 onNext={handleNextStep} />;
+        return (
+          <Step3
+            onNext={handleNextStep}
+            formData={formData}
+            onChange={handleChange}
+          />
+        );
       case 4:
-        return <Step4 />;
+        return (
+          <Step4
+            onNext={setFormData}
+            formData={formData}
+            onChange={handleChange}
+          />
+        );
       default:
         return null;
     }

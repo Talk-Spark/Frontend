@@ -5,6 +5,7 @@ type InputFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   type: string;
+  maxLength?: number;
 };
 
 const InputField = ({
@@ -14,6 +15,7 @@ const InputField = ({
   onChange,
   placeholder,
   type,
+  maxLength,
 }: InputFieldProps) => {
   return (
     <div className="flex flex-col gap-[0.4rem]">
@@ -26,6 +28,7 @@ const InputField = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        maxLength={maxLength}
         className={`border-b-[1.5px] px-[1.2rem] py-[1rem] text-subhead-med focus:border-gray-10 focus:text-black focus:outline-none ${
           value ? "border-gray-10 text-black" : "border-gray-4 text-gray-5"
         }`}

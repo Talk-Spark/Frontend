@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "../common/Button";
 import ProfileImage from "../ProfileImage";
+import { FormData } from "@/src/app/(onBoarding)/creating-card/page";
 
 type CharacterColor = "pink" | "yellow" | "green" | "blue";
 
-const Step4 = () => {
-  // 선택된 캐릭터(색상) 상태 관리
-  const [selectedCharacter, setSelectedCharacter] = useState<string>("");
+type Step4Props = {
+  onNext: (formData: FormData) => void;
+  formData: FormData;
+  onChange: (key: keyof FormData, value: string) => void;
+}
 
-  const handleSelectCharacter = (color: CharacterColor) => {
-    setSelectedCharacter(color);
-  };
-
+const Step4 = ({onNext, formData, onChange}: Step4Props) => {
   // todo: 명함 정보 담아서 서버로 보내기
   const handleNextClick = () => {
+    onNext(formData);
     alert("명함 생성 완료!");
+    console.log(formData);
   };
 
   return (
@@ -38,14 +40,14 @@ const Step4 = () => {
               (color) => (
                 <div
                   key={color}
-                  onClick={() => handleSelectCharacter(color)}
+                  onClick={() => onChange("selectedCharacter", color)}
                   className="cursor-pointer"
                 >
                   <ProfileImage
                     color={color}
-                    isSelected={selectedCharacter === color}
+                    isSelected={formData.selectedCharacter === color}
                     size={148}
-                    backColor={selectedCharacter === color ? "blue" : "gray"}
+                    backColor={formData.selectedCharacter === color ? "blue" : "gray"}
                   />
                 </div>
               ),
@@ -55,8 +57,8 @@ const Step4 = () => {
       </div>
       <Button
         onClick={handleNextClick}
-        variant={selectedCharacter ? "black" : "gray"}
-        disabled={!selectedCharacter}
+        variant={formData.selectedCharacter ? "black" : "gray"}
+        disabled={!formData.selectedCharacter}
       >
         다음으로
       </Button>
