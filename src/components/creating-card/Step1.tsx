@@ -1,10 +1,57 @@
+import { useEffect, useState } from "react";
 import Button from "../common/Button";
+import InputField from "./InputField";
 
 export type StepProps = {
   onNext: () => void;
 };
 
 const Step1 = ({ onNext }: StepProps) => {
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [major, setMajor] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const fields = [
+    {
+      label: "이름",
+      id: "name",
+      value: name,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        setName(e.target.value),
+      placeholder: "이름을 입력해 주세요",
+      type: "text",
+    },
+    {
+      label: "나이",
+      id: "age",
+      value: age,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        setAge(e.target.value),
+      placeholder: "숫자만 입력해 주세요",
+      type: "number",
+    },
+    {
+      label: "전공/직무",
+      id: "major",
+      value: major,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        setMajor(e.target.value),
+      placeholder: "ex. 경영학 전공, IT 서비스 기획 직무",
+      type: "text",
+    },
+  ];
+
+  useEffect(() => {
+    setIsFormValid(!!name && !!age && !!major);
+  }, [name, age, major]);
+
+  const handleNext = () => {
+    if (isFormValid) {
+      onNext();
+    }
+  };
+
   return (
     <div className="flex flex-col gap-[13.5rem]">
       <div className="flex flex-col gap-[5.2rem]">
@@ -20,12 +67,24 @@ const Step1 = ({ onNext }: StepProps) => {
           </p>
         </div>
         <div className="flex flex-col gap-[3.6rem]">
-          <div>이름</div>
-          <div>나이</div>
-          <div>전공/직무</div>
+          {fields.map((field) => (
+            <InputField
+              key={field.id}
+              label={field.label}
+              id={field.id}
+              value={field.value}
+              onChange={field.onChange}
+              placeholder={field.placeholder}
+              type={field.type}
+            />
+          ))}
         </div>
       </div>
-      <Button onClick={onNext} variant="gray">
+      <Button
+        onClick={handleNext}
+        variant={isFormValid ? "black" : "gray"}
+        disabled={!isFormValid}
+      >
         다음으로
       </Button>
     </div>

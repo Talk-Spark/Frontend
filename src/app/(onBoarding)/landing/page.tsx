@@ -1,8 +1,13 @@
+"use client";
+
 import Button from "@/src/components/common/Button";
 import landingImage from "@/public/Image/onBoarding/landingImage.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
+  const router = useRouter();
+
   return (
     <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center gap-[4.5rem]">
       <div className="flex flex-col items-center gap-[3.2rem] text-center text-black">
@@ -18,9 +23,16 @@ const page = () => {
           지금 나만의 명함을 완성해 보세요!
         </div>
       </div>
-      <Button>내 명함 만들기</Button>
+      <Button
+        variant="pink"
+        onClick={() => {
+          router.push("/creating-card");
+        }}
+      >
+        내 명함 만들기
+      </Button>
     </div>
   );
 };
 
-export default page;
+export default Page;

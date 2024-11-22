@@ -51,6 +51,15 @@ const HeaderWrapper = () => {
         button2Type: "settings",
         button2Action: () => {},
       };
+    } else if (pathname === "/login" || pathname === "/landing") {
+      return {
+        title: "",
+      };
+    } else if (pathname === "/creating-card") {
+      return {
+        showButton1: true,
+        title: "TalkSpark",
+      };
     }
 
     return null;

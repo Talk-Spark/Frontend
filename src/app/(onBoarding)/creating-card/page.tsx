@@ -20,7 +20,7 @@ const Page = () => {
   // const handlePrevStep = () => {
   //   if (currentStep > 1) {
   //     setCurrentStep((prev) => prev - 1);
-  //     // setProgress((prev) => prev - 25);
+  //     setProgress((prev) => prev - 25);
   //   }
   // };
 
@@ -31,7 +31,7 @@ const Page = () => {
       case 2:
         return <Step2 onNext={handleNextStep} />;
       case 3:
-        return <Step3 />;
+        return <Step3 onNext={handleNextStep} />;
       case 4:
         return <Step4 />;
       default:
@@ -40,8 +40,8 @@ const Page = () => {
   };
 
   return (
-    <div className="mt-[0.4rem]">
-      <div>
+    <div className="mb-[6rem] mt-[0.4rem] flex flex-col items-center justify-center">
+      <div className="mb-[0.4rem] w-full">
         <div className="relative mb-[0.8rem] h-[0.4rem] rounded-[0.4rem] bg-gray-3">
           <div
             className="absolute left-0 top-0 h-full rounded-[0.4rem] bg-main-pink transition-all duration-300"

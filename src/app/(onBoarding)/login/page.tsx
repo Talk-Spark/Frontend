@@ -17,7 +17,7 @@ const page = () => {
           대화의 불꽃을 피워드릴게요!
         </div>
       </div>
-      <button className="bg-sub-yellow-kakao flex h-[5.6rem] w-full items-center justify-center gap-[1rem] rounded-[1.2rem]">
+      <button className="flex h-[5.6rem] w-[33.5rem] items-center justify-center gap-[1rem] rounded-[1.2rem] bg-sub-yellow-kakao">
         <Image src={kakaoImage} width={20} height={18} alt="kakaoImage" />
         <p className="text-subhead-bold text-gray-11">카카오 로그인</p>
       </button>

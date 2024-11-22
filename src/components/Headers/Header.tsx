@@ -5,6 +5,7 @@ import icon from "@/src/components/Headers/icon.svg";
 
 type HeaderProps = {
   showButton1?: boolean; // 버튼1 표시 여부
+  button1Action?: () => void;
   title: string; // 헤더 텍스트
   button2Type?: "edit" | "complete" | "next" | "exit" | "settings" | string; // 버튼2 종류
   button2Action?: () => void; // 버튼2 클릭 동작
@@ -12,6 +13,7 @@ type HeaderProps = {
 
 const Header = ({
   showButton1 = false,
+  button1Action = () => window.history.back(),
   title,
   button2Type,
   button2Action,
@@ -44,7 +46,7 @@ const Header = ({
       {/* 버튼1: 뒤로 가기 버튼 */}
       {showButton1 ? (
         <button
-          onClick={() => window.history.back()} // 뒤로가기
+          onClick={button1Action} // 기본: 페이지 뒤로가기
           className="flex w-[2.4rem] items-center justify-center text-[2.4rem] text-gray-7"
           aria-label="Back"
         >
