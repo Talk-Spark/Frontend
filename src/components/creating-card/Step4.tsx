@@ -9,9 +9,9 @@ type Step4Props = {
   onNext: (formData: FormData) => void;
   formData: FormData;
   onChange: (key: keyof FormData, value: string) => void;
-}
+};
 
-const Step4 = ({onNext, formData, onChange}: Step4Props) => {
+const Step4 = ({ onNext, formData, onChange }: Step4Props) => {
   // todo: 명함 정보 담아서 서버로 보내기
   const handleNextClick = () => {
     onNext(formData);
@@ -47,7 +47,9 @@ const Step4 = ({onNext, formData, onChange}: Step4Props) => {
                     color={color}
                     isSelected={formData.selectedCharacter === color}
                     size={148}
-                    backColor={formData.selectedCharacter === color ? "blue" : "gray"}
+                    backColor={
+                      formData.selectedCharacter === color ? "blue" : "gray"
+                    }
                   />
                 </div>
               ),
