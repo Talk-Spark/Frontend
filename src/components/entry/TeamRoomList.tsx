@@ -1,0 +1,49 @@
+import Image from "next/image";
+import arrowIcon from "@/public/entry/arrowLeft.svg";
+
+interface GameRoom {
+  roomName: string; // 방 이름
+  hostName: string; // 방장 이름
+  participants: number;
+}
+
+interface TeamRoomListProps {
+  gameRooms: GameRoom[];
+  onClickWaiting: () => void;
+}
+
+const TeamRoomList: React.FC<TeamRoomListProps> = ({
+  gameRooms,
+  onClickWaiting,
+}) => {
+  return (
+    <div className="mt-[2.4rem] flex flex-col items-center justify-center gap-[1.2rem]">
+      {gameRooms.map((gameRoom, index) => (
+        <div
+          className="flex h-[7.2rem] w-full justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] border-gray-2 bg-gray-1 py-[1.4rem] pl-[1.6rem] pr-[0.8rem]"
+          key={index}
+        >
+          <div>
+            <span className="text-body-2-reg text-gray-9">
+              방장 {gameRoom.hostName}
+            </span>
+            <div className="flex gap-[0.4rem]">
+              <span className="text-body-2-bold">{gameRoom.roomName}</span>
+              <span className="text-body-2-med text-gray-7">
+                {gameRoom.participants}
+              </span>
+            </div>
+          </div>
+          <Image
+            src={arrowIcon}
+            alt="화살표 이미지"
+            className="cursor-pointer"
+            onClick={onClickWaiting}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default TeamRoomList;

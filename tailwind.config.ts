@@ -1,5 +1,6 @@
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   mode: "jit",
@@ -144,6 +145,10 @@ const config: Config = {
           "12px",
           { lineHeight: "145%", letterSpacing: "-0.001em", fontWeight: "500" },
         ], // Medium
+        "graphic-font": [
+          "24px",
+          { lineHeight: "145%", letterSpacing: "-0.001em", fontWeight: "500" },
+        ],
       },
       // Gradient
       // backgroundImage: {
@@ -163,7 +168,18 @@ const config: Config = {
       2: "2px",
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        ".remove-search-x": {
+          "::-webkit-search-cancel-button": {
+            appearance: "none !important",
+            display: "none !important",
+          },
+        },
+      });
+    }),
+  ],
 };
 
 export default config;
