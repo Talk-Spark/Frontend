@@ -55,11 +55,11 @@ const HeaderWrapper = () => {
       return {
         title: "",
       };
-    } else if (pathname === "/creating-card") {
-      return {
-        showButton1: true,
-        title: "TalkSpark",
-      };
+      // } else if (pathname === "/creating-card") {
+      //   return {
+      //     showButton1: true,
+      //     title: "TalkSpark",
+      //   };
     }
 
     return null;

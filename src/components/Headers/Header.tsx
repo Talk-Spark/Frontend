@@ -9,6 +9,7 @@ type HeaderProps = {
   title: string; // 헤더 텍스트
   button2Type?: "edit" | "complete" | "next" | "exit" | "settings" | string; // 버튼2 종류
   button2Action?: () => void; // 버튼2 클릭 동작
+  padding?: boolean;
 };
 
 const Header = ({
@@ -17,6 +18,7 @@ const Header = ({
   title,
   button2Type,
   button2Action,
+  padding = true,
 }: HeaderProps) => {
   // 버튼2 텍스트 및 스타일 매핑
   const button2Config: Record<
@@ -42,7 +44,11 @@ const Header = ({
   const button2 = button2Type ? button2Config[button2Type] : null;
 
   return (
-    <header className="relative flex h-[5.2rem] items-center justify-between bg-white px-[2rem]">
+    <header
+      className={`relative flex h-[5.2rem] items-center justify-between bg-white ${
+        padding ? "px-[2rem]" : "px-0"
+      }`}
+    >
       {/* 버튼1: 뒤로 가기 버튼 */}
       {showButton1 ? (
         <button

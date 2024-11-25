@@ -4,6 +4,7 @@ import Step1 from "@/src/components/creating-card/Step1";
 import Step2 from "@/src/components/creating-card/Step2";
 import Step3 from "@/src/components/creating-card/Step3";
 import Step4 from "@/src/components/creating-card/Step4";
+import Header from "@/src/components/Headers/Header";
 import { useState } from "react";
 
 export type FormData = {
@@ -49,12 +50,12 @@ const Page = () => {
     }
   };
 
-  // const handlePrevStep = () => {
-  //   if (currentStep > 1) {
-  //     setCurrentStep((prev) => prev - 1);
-  //     setProgress((prev) => prev - 25);
-  //   }
-  // };
+  const handlePrevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+      setProgress((prev) => prev - 25);
+    }
+  };
 
   const renderStep = () => {
     switch (currentStep) {
@@ -97,6 +98,14 @@ const Page = () => {
 
   return (
     <div className="mb-[6rem] mt-[0.4rem] flex flex-col items-center justify-center">
+      <div className="w-full">
+        <Header
+          title="TalkSpark"
+          showButton1={true}
+          button1Action={handlePrevStep}
+          padding={false}
+        />
+      </div>
       <div className="mb-[0.4rem] w-full">
         <div className="relative mb-[0.8rem] h-[0.4rem] rounded-[0.4rem] bg-gray-3">
           <div
