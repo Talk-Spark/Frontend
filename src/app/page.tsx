@@ -9,7 +9,8 @@ export default function HomePage() {
 
   // "나가기" 버튼 클릭 시 동작하는 함수 (필요에 맞게 작성해서 onAction에 넘겨주면 됨)
   const handleExit = () => {
-    alert("나가기 버튼 클릭됨");
+    alert("나가기 버튼 클릭됨!!-준");
+    console.log("나가기 버튼 클릭!");
     setModalOpen(false);
   };
 
