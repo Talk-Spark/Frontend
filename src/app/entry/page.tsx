@@ -13,6 +13,7 @@ import TeamRoomList from "@/src/components/entry/TeamRoomList";
 
 import { useEffect, useState } from "react";
 import ProfileImage from "@/src/components/ProfileImage";
+import { useRouter } from "next/navigation"; // 'next/navigation'에서 useRouter import
 
 // 방 타입 정의
 interface GameRoom {
@@ -36,6 +37,11 @@ const Entry = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [isOn, setIsOn] = useState<boolean>(false);
   const [isWaiting, setIsWaiting] = useState<boolean>(false); // 대기실 UI 위해 임시 상태
+  const router = useRouter();
+
+  const startGame = () => {
+    router.push("/start");
+  };
 
   const [user, setUser] = useState<{ name: string; id: string } | null>(null);
 
@@ -95,14 +101,12 @@ const Entry = () => {
   };
 
   return (
-    <div className="xs:p-0 w-full">
-      <Header title="입장하기" showButton1={true} />
-
+    // 부모 패딩 무시
+    <div className="w-full">
       {isWaiting ? (
-        
         /* 대기실 퍼블리싱 */
-        <div className="bg-gray-1">
-          <div className="mx-[2rem] flex flex-col gap-[21.2rem] pb-[6rem] pt-[2.4rem]">
+        <div className="w-[cal(100% + 4rem)] -mx-[2rem] bg-gray-1 px-[2rem]">
+          <div className="flex flex-col gap-[21.2rem] pb-[6rem] pt-[2.4rem]">
             <div className="flex flex-col gap-[5.2rem]">
               <div className="flex justify-center">
                 <div className="flex flex-col">
@@ -140,14 +144,16 @@ const Entry = () => {
               </div>
             </div>
             {/* 로그인한 사용자가 방장일 경우 '시작하기' 버튼 */}
-            {gameRoomDetail.some((room) => isUserHost(room)) ? (
-              <button className="w-full cursor-pointer rounded-[1.2rem] bg-main-pink py-[1.6rem] text-center text-subhead-bold text-white">
+            {!gameRoomDetail.some((room) => isUserHost(room)) ? (
+              <button
+                onClick={startGame}
+                className="w-full cursor-pointer rounded-[1.2rem] bg-main-pink py-[1.6rem] text-center text-subhead-bold text-white"
+              >
                 시작하기
               </button>
             ) : (
-              // 방장이 아니라면 '기다리고 있어요' 버튼
               <button
-                disabled={true} // 버튼을 비활성화
+                disabled={true}
                 className="w-full cursor-not-allowed rounded-[1.2rem] bg-gray-3 py-[1.5rem] text-center text-subhead-bold text-white"
               >
                 시작을 기다리고 있어요
@@ -175,7 +181,7 @@ const Entry = () => {
           ) : (
             <div className="mt-[5.2rem] flex justify-center pl-[3.5rem] pr-[2rem] pt-[3rem] text-gray-10">
               <div className="relative flex h-[30rem] w-[28rem] flex-col items-center justify-center gap-[2.1rem]">
-                <span className="text-graphic-font z-0">
+                <span className="z-0 text-graphic-font">
                   우리 팀을 찾아보아요~
                 </span>
                 <Image
