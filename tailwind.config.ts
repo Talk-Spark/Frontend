@@ -1,6 +1,5 @@
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
-import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   mode: "jit",
@@ -168,18 +167,7 @@ const config: Config = {
       2: "2px",
     },
   },
-  plugins: [
-    plugin(function ({ addUtilities }) {
-      addUtilities({
-        ".remove-search-x": {
-          "::-webkit-search-cancel-button": {
-            appearance: "none !important",
-            display: "none !important",
-          },
-        },
-      });
-    }),
-  ],
+  plugins: [],
 };
 
 export default config;

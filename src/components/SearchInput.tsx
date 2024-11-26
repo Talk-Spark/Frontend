@@ -21,17 +21,11 @@ const SearchInput = ({
     >
       {!searchValue && <Image src={searchIcon} alt="돋보기 아이콘" />}
       <input
-        className="search-reset remove-search-x w-full appearance-none text-subhead-med placeholder-gray-5 focus:outline-none" // appearance-none 추가
+        className="search-reset w-full text-subhead-med placeholder-gray-5 focus:outline-none"
         placeholder={placeholderText}
         onChange={handleChange}
         value={searchValue}
         type="search"
-        style={
-          {
-            WebkitAppearance: "none",
-            MozAppearance: "none",
-          } as React.CSSProperties
-        } // 타입 단언 사용
       />
       {isQr && (
         <Image
