@@ -13,6 +13,7 @@ const Step2 = ({ onNext, formData, onChange }: StepProps) => {
         onChange("mbti", e.target.value),
       placehorder: "ex. ESTJ",
       type: "text",
+      maxLength: 4,
     },
     {
       label: "나의 취미는??",
