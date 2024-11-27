@@ -97,12 +97,14 @@ const Page = () => {
   };
 
   return (
-    <div className="mb-[6rem] mt-[0.4rem] flex flex-col items-center justify-center">
+    <div className="mb-[6rem] flex flex-col items-center justify-center">
       <div className="w-full">
         <Header
           title="TalkSpark"
           showButton1={true}
-          button1Action={handlePrevStep}
+          button1Action={
+            currentStep == 1 ? () => window.history.back() : handlePrevStep
+          }
           padding={false}
         />
       </div>

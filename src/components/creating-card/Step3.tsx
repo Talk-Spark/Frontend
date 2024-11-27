@@ -28,7 +28,7 @@ const Step3 = ({ onNext, formData, onChange }: StepProps) => {
   ];
 
   return (
-    <div className="flex flex-col gap-[25rem]">
+    <div className="flex flex-col gap-[25.1rem]">
       <div className="flex flex-col gap-[5.2rem]">
         <div>
           <h2 className="mb-[0.8rem] text-headline-3 text-black">
