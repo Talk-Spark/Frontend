@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../common/Button";
 import ProfileImage from "../ProfileImage";
 import { FormData } from "@/src/app/(onBoarding)/creating-card/page";
+import { useRouter } from "next/navigation";
 
 type CharacterColor = "pink" | "yellow" | "green" | "blue";
 
@@ -12,10 +13,12 @@ type Step4Props = {
 };
 
 const Step4 = ({ onNext, formData, onChange }: Step4Props) => {
+  const router = useRouter();
+
   // todo: 명함 정보 담아서 서버로 보내기
   const handleNextClick = () => {
     onNext(formData);
-    alert("명함 생성 완료!");
+    router.push("/creating-card/result");
     console.log(formData);
   };
 

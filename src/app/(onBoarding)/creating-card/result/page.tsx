@@ -1,4 +1,8 @@
+"use client";
+
 import Button from "@/src/components/common/Button";
+import animationData from "@/public/lottie/creating-card/creating-card.json";
+import Lottie from "react-lottie-player";
 
 const Page = () => {
   return (
@@ -8,10 +12,17 @@ const Page = () => {
         <br />
         명함이 완성되었어요!
       </div>
-      <div className="h-[33.5rem] w-full">로티</div>
-      <div className="flex justify-between">
-        <Button>홈으로</Button>
-        <Button>명함 보관함</Button>
+      <div className="mb-[12.3rem] h-[33.5rem] w-[33.5rem]">
+        <Lottie loop animationData={animationData} play />
+      </div>
+      <div className="flex gap-[1.1rem]">
+        {/* todo: Button에 라우팅 적용 */}
+        <Button variant="gray" size="l">
+          홈으로
+        </Button>
+        <Button variant="pink" size="l">
+          명함 보관함
+        </Button>
       </div>
     </div>
   );
