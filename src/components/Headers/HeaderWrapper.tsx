@@ -51,6 +51,11 @@ const HeaderWrapper = () => {
         button2Type: "settings",
         button2Action: () => {},
       };
+    } else if (pathname === "/flow") {
+      return {
+        showButton1: false,
+        title: "명함 맞추기",
+      };
     }
 
     return null;
