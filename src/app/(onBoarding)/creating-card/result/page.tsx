@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/src/components/common/Button";
-import animationData from "@/public/lottie/creating-card/creating-card.json";
+import animationData from "./creating-card.json";
 import Lottie from "react-lottie-player";
 
 const Page = () => {
