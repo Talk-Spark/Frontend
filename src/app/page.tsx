@@ -6,10 +6,10 @@ import Modal from "../components/common/Modal";
 //반드시 export만 해주면 됨.(컴포넌트명은 뭐가 되든 상관 x)
 export default function HomePage() {
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열림 상태 관리 (필수!!)
-
+  alert("his");
   // "나가기" 버튼 클릭 시 동작하는 함수 (필요에 맞게 작성해서 onAction에 넘겨주면 됨)
   const handleExit = () => {
-    alert("나가기 버튼 클릭됨!!-준");
+    alert("나가기 버튼 클릭됨!!-준혁");
     console.log("나가기 버튼 클릭!");
     setModalOpen(false);
   };
