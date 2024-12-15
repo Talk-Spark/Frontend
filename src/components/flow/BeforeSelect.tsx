@@ -17,13 +17,18 @@ interface BeforeSelectProps {
 const BeforeSelect = ({ cardStep, NameCardInfo }: BeforeSelectProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
+  const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
   };
 
   const handleClickButton = (item: string) => {
-    setSelectedButton(item);
+    if (!isAnswerSeleted) setSelectedButton(item);
+  };
+
+  const handleAnswerSelect = () => {
+    if (selectedButton) setIsAnswerSeleted(true);
   };
 
   const popUpRef = useRef<HTMLDivElement | null>(null);
@@ -110,7 +115,13 @@ const BeforeSelect = ({ cardStep, NameCardInfo }: BeforeSelectProps) => {
       </article>
 
       <div className="flex w-[33.6rem] flex-col items-start gap-[0.8rem]">
-        <Button>선택 완료</Button>
+        <Button
+          disabled={isAnswerSeleted}
+          variant={`${(isAnswerSeleted && "gray") || "black"}`}
+          onClick={handleAnswerSelect}
+        >
+          {isAnswerSeleted ? "기다리는 중이에요" : "선택 완료"}
+        </Button>
         <span className="flex items-center justify-center gap-[0.4rem] self-stretch text-caption-bold text-gray-7">
           <Image src={warning_circle} alt="warning" />
           선택 완료 후에는 답변을 변경할 수 없어요!
