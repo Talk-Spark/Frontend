@@ -12,9 +12,14 @@ import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
 interface BeforeSelectProps {
   cardStep: string;
   NameCardInfo: NameCardObjProps;
+  setIsBefore: (input: boolean) => void;
 }
 
-const BeforeSelect = ({ cardStep, NameCardInfo }: BeforeSelectProps) => {
+const BeforeSelect = ({
+  cardStep,
+  NameCardInfo,
+  setIsBefore,
+}: BeforeSelectProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
   const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
@@ -28,7 +33,12 @@ const BeforeSelect = ({ cardStep, NameCardInfo }: BeforeSelectProps) => {
   };
 
   const handleAnswerSelect = () => {
-    if (selectedButton) setIsAnswerSeleted(true);
+    if (selectedButton) {
+      setIsAnswerSeleted(true);
+      setTimeout(() => {
+        setIsBefore(false);
+      }, 3000);
+    }
   };
 
   const popUpRef = useRef<HTMLDivElement | null>(null);

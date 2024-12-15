@@ -20,7 +20,8 @@ const Flow = () => {
   const [cardStep, setCardStep] = useState("TMI"); //소켓으로 on 해올 예정
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
   const [isMaker, setIsMaker] = useState(false); //소켓 or API로 방장 여부 받아오기
-  const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({ //이것도 현재 대상자 정보를 소켓으로 받아와야할 듯
+  const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
+    //이것도 현재 대상자 정보를 소켓으로 받아와야할 듯
     teamName: "팀 이름 없음",
     name: "JunHyuk Kong",
     age: 18,
@@ -33,9 +34,13 @@ const Flow = () => {
   });
 
   return (
-    <main className="bg-gray-1">
+    <main className="flex flex-col items-center bg-gray-1">
       {isBefore ? (
-        <BeforeSelect cardStep={cardStep} NameCardInfo={NameCardInfo} />
+        <BeforeSelect
+          cardStep={cardStep}
+          NameCardInfo={NameCardInfo}
+          setIsBefore={setIsBefore}
+        />
       ) : (
         <AfterSelect />
       )}

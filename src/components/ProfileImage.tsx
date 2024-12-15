@@ -133,7 +133,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   const bgStyle = backColor === "blue" ? "bg-sub-blue-40" : "bg-gray-1";
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex w-[6.8rem] flex-col items-center">
       <div className={`relative box-border ${imageSize}`}>
         <div
           className={`relative h-full w-full overflow-hidden rounded-full ${bgStyle}`}
@@ -185,7 +185,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       {/* 이름 */}
       {children && (
         <div
-          className={`mt-[0.4rem] text-center text-body-2-bold text-sm ${textColor}`}
+          className={`mt-[0.4rem] text-center ${isSelected ? "text-body-2-bold" : "text-body-2-reg"} ${textColor}`}
         >
           {children}
         </div>
