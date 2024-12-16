@@ -6,7 +6,6 @@ import Image from "next/image";
 const CameraPage = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
 
   useEffect(() => {
     const startCamera = async () => {
@@ -23,8 +22,6 @@ const CameraPage = () => {
             .play()
             .catch((err) => console.error("Error playing video:", err));
         }
-
-        setIsCameraOn(true);
       } catch (err) {
         setError("카메라에 접근할 수 없습니다. 권한을 확인해주세요.");
         console.error("Error accessing camera: ", err);
@@ -34,13 +31,12 @@ const CameraPage = () => {
     startCamera();
 
     return () => {
-      setIsCameraOn(false);
       if (videoRef.current && videoRef.current.srcObject) {
         const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
         tracks.forEach((track) => track.stop());
       }
     };
-  }, []);
+  }, [videoRef]);
 
   return (
     <div className="h-full">

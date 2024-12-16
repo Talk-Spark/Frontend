@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import ProfileImage from "@/src/components/ProfileImage";
-import axios from "axios";
+// import axios from "axios";
 
 interface Participant {
   name: string;
@@ -22,11 +22,14 @@ interface GameRoomDetail {
 
 const TeamDetail = () => {
   const [user, setUser] = useState<{ name: string; id: number } | null>(null);
-  const { id } = useParams();
+  // const { id } = useParams();
   const [teamData, setTeamData] = useState<GameRoomDetail | null>(null);
   const router = useRouter();
+
   const startGame = () => {
     router.push("/start");
+
+    setTeamData(null); // api 함수 작성 후 삭제
   };
 
   const isUserHost = (roomDetail: GameRoomDetail) => {
