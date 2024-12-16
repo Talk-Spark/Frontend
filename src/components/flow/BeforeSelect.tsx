@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import question from "@/public/nameCard/question.svg";
 import warning_circle from "@/public/nameCard/warning_circle.svg";
 import popup_bg from "@/public/nameCard/popup_bg.png";
@@ -8,17 +14,21 @@ import Image from "next/image";
 import NameCard from "@/src/components/NameCard";
 import Button from "@/src/components/common/Button";
 import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
+import { CardFlowType } from "@/src/app/(flow)/flow/page";
+import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
 
 interface BeforeSelectProps {
-  cardStep: string;
+  cardStep: number;
   NameCardInfo: NameCardObjProps;
   setIsBefore: (input: boolean) => void;
+  setCardStep: Dispatch<SetStateAction<number>>;
 }
 
 const BeforeSelect = ({
   cardStep,
   NameCardInfo,
   setIsBefore,
+  setCardStep,
 }: BeforeSelectProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
@@ -35,6 +45,9 @@ const BeforeSelect = ({
   const handleAnswerSelect = () => {
     if (selectedButton) {
       setIsAnswerSeleted(true);
+      setCardStep((prev) => prev + 1);
+
+      //다음으로 넘어가기 위한 임시 timeout
       setTimeout(() => {
         setIsBefore(false);
       }, 3000);
@@ -56,6 +69,11 @@ const BeforeSelect = ({
     };
   }, []);
 
+  if (cardStep > 4) {
+    //퀴즈 다 맞춘 상태 -> 알맞은 단계로 이어져야 함
+    return;
+  }
+
   return (
     <section className="flex h-auto w-[37.5rem] flex-col items-center gap-[2.4rem]">
       <article className="flex h-[37.2rem] w-[37.5rem] shrink-0 items-center justify-center self-stretch bg-sub-pink-55">
@@ -70,7 +88,7 @@ const BeforeSelect = ({
             lookAlike={NameCardInfo.lookAlike}
             selfDescription={NameCardInfo.selfDescription}
             tmi={NameCardInfo.tmi}
-            selectedCategory={cardStep}
+            selectedCategory={CARD_FLOW[cardStep]}
             onCategorySelect={() => alert("hi")}
           />
           <div className="flex gap-[0.5rem]" ref={popUpRef}>

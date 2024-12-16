@@ -4,6 +4,15 @@ import AfterSelect from "@/src/components/flow/AfterSelect";
 import BeforeSelect from "@/src/components/flow/BeforeSelect";
 import { useState } from "react";
 
+export const CARD_FLOW = [
+  "엠비티아이",
+  "취미",
+  "닮은꼴",
+  "나는 이런 사람이야",
+  "TMI",
+] as const;
+export type CardFlowType = (typeof CARD_FLOW)[number];
+
 export interface NameCardObjProps {
   teamName: string;
   name: string;
@@ -17,7 +26,7 @@ export interface NameCardObjProps {
 }
 
 const Flow = () => {
-  const [cardStep, setCardStep] = useState("TMI"); //소켓으로 on 해올 예정
+  const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
   const [isMaker, setIsMaker] = useState(false); //소켓 or API로 방장 여부 받아오기
   const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
@@ -33,6 +42,7 @@ const Flow = () => {
     tmi: "카페인이 너무 잘 들어요",
   });
 
+  //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
     <main className="flex flex-col items-center bg-gray-1">
       {isBefore ? (
@@ -40,9 +50,10 @@ const Flow = () => {
           cardStep={cardStep}
           NameCardInfo={NameCardInfo}
           setIsBefore={setIsBefore}
+          setCardStep={setCardStep}
         />
       ) : (
-        <AfterSelect />
+        <AfterSelect cardStep={cardStep} setIsBefore={setIsBefore} />
       )}
     </main>
   );
