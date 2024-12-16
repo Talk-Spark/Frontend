@@ -59,6 +59,10 @@ const HeaderWrapper = () => {
       return {
         title: "TalkSpark",
       };
+    } else if (pathname === "/creating-room/result") {
+      return {
+        title: "방 개설하기",
+      };
     }
 
     return null;
