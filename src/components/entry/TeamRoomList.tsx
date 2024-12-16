@@ -1,7 +1,9 @@
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import arrowIcon from "@/public/entry/arrowLeft.svg";
 
 interface GameRoom {
+  roomId: number;
   roomName: string; // 방 이름
   hostName: string; // 방장 이름
   participants: number;
@@ -9,13 +11,15 @@ interface GameRoom {
 
 interface TeamRoomListProps {
   gameRooms: GameRoom[];
-  onClickWaiting: () => void;
 }
 
-const TeamRoomList: React.FC<TeamRoomListProps> = ({
-  gameRooms,
-  onClickWaiting,
-}) => {
+const TeamRoomList: React.FC<TeamRoomListProps> = ({ gameRooms }) => {
+  const router = useRouter();
+  const handleTeamClick = (roomId: number) => {
+    // roomName을 쿼리로 전달
+    router.push(`/team/${encodeURIComponent(roomId)}`);
+  };
+
   return (
     <div className="mt-[2.4rem] flex flex-col items-center justify-center gap-[1.2rem]">
       {gameRooms.map((gameRoom, index) => (
@@ -38,7 +42,7 @@ const TeamRoomList: React.FC<TeamRoomListProps> = ({
             src={arrowIcon}
             alt="화살표 이미지"
             className="cursor-pointer"
-            onClick={onClickWaiting}
+            onClick={() => handleTeamClick(gameRoom.roomId)}
           />
         </div>
       ))}

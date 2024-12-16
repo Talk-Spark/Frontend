@@ -1,74 +1,26 @@
-"use client";
-import Image from "next/image";
+import SearchInput from "../SearchInput";
+import TeamRoomList from "./TeamRoomList";
 import searchGraphic from "@/public/entry/searchGraphic.svg";
 import starPink from "@/public/entry/starPink.svg";
 import starBlue from "@/public/entry/starBlue.svg";
 import starMint from "@/public/entry/starMint.svg";
 import starYellow from "@/public/entry/starYellow.svg";
-import Camera from "@/src/components/entry/Camera";
-import SearchInput from "@/src/components/SearchInput";
-import TeamRoomList from "@/src/components/entry/TeamRoomList";
 
-import { useEffect, useState } from "react";
-import ProfileImage from "@/src/components/ProfileImage";
-import { useRouter } from "next/navigation"; // 'next/navigation'에서 useRouter import
-import axios from "axios";
-
-// 방 타입 정의
-interface GameRoom {
-  roomId: number;
-  roomName: string;
-  hostName: string;
-  participants: number;
-}
-
-const Entry = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
-
-  // 게임 방 목록 (기본 정보)
-  const [gameRooms, setGameRooms] = useState<GameRoom[]>([]);
-  const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
-
-  const handleSearch = async () => {
-    try {
-      const response = await axios.get(`/api/rooms`, {
-        params: { search: searchValue }, // 검색어를 쿼리 매개변수로 전달
-      });
-      setFilteredRooms(response.data); // 검색 결과를 상태에 저장
-    } catch (err) {
-      console.error("Error fetching team data:", err);
-    }
-  };
-
-  // 방 검색하기 api
-  // useEffect(() => {
-  //   const fetchGameRooms = async () => {
-  //     try {
-  //       const response = await axios.get(`/api/rooms`);
-  //       setGameRooms(response.data); // 기본 방 목록 설정
-  //       setFilteredRooms(response.data); // 필터링된 목록도 초기화
-  //     } catch (err) {
-  //       console.error("Error fetching game rooms:", err);
-  //     }
-  //   };
-
-  //   fetchGameRooms();
-  // }, []);
-
+const FindRoom = ({ searchValue, setSearchValue, setIsOn }) => {
   return (
-    <div className="w-full">
+    <div>
       <div className="my-[2.4rem] my-[2rem] flex flex-col">
         <span className="text-headline-3 text-black">팀 방 찾기</span>
         <SearchInput
           searchValue={searchValue}
           setSearchValue={setSearchValue}
+          setIsOn={setIsOn}
           placeholderText={"팀 방 검색"}
           isQr={true}
-          onSearch={handleSearch}
         />
       </div>
-      {filteredRooms.length > 0 ? (
-        <TeamRoomList gameRooms={filteredRooms} />
+      {gameRooms.length > 0 ? (
+        <TeamRoomList gameRooms={gameRooms} onClickWaiting={onClickWaiting} />
       ) : (
         <div className="mt-[5.2rem] flex justify-center pl-[3.5rem] pr-[2rem] pt-[3rem] text-gray-10">
           <div className="relative flex h-[30rem] w-[28rem] flex-col items-center justify-center gap-[2.1rem]">
@@ -105,5 +57,4 @@ const Entry = () => {
     </div>
   );
 };
-
-export default Entry;
+export default FindRoom;

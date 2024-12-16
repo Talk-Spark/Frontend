@@ -3,45 +3,25 @@ import { useEffect, useRef, useState } from "react";
 import cameraIcon from "@/public/entry/camera.svg";
 import Image from "next/image";
 
-// interface CameraPageProps {
-//   setIsCameraOn: (isOn: boolean) => void; // setIsCameraOn 함수 타입 정의
-//   setCapturedImage: (image: string) => void; // setCapturedImage 함수 타입 정의 (필요하다면 사용)
-// }
-
 const CameraPage = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
 
-  interface ExtendedMediaTrackCapabilities extends MediaTrackCapabilities {
-    zoom?: number; // 선택적으로 zoom 속성 추가
-  }
-
   useEffect(() => {
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: "environment" } },
+          video: { facingMode: { ideal: "environment" } }, // 후면 카메라 사용
         });
-
-        const videoTrack = stream.getVideoTracks()[0];
-        const capabilities =
-          videoTrack.getCapabilities() as ExtendedMediaTrackCapabilities;
-
-        // 줌 기능을 지원하는 경우 기본값 설정
-        if (capabilities.zoom !== undefined) {
-          await videoTrack.applyConstraints({
-            advanced: [{ zoom: 1 }],
-          });
-        }
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          videoRef.current.load(); // 미디어 로드 초기화
 
-          videoRef.current.play().catch((err) => {
-            console.error("Error playing video:", err);
-          });
+          // load()를 호출하지 않아도 srcObject 설정으로 브라우저가 자동으로 로드
+          videoRef.current
+            .play()
+            .catch((err) => console.error("Error playing video:", err));
         }
 
         setIsCameraOn(true);
@@ -62,32 +42,23 @@ const CameraPage = () => {
     };
   }, []);
 
-  const capturePhoto = () => {
-    if (!videoRef.current) return;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-
-    const context = canvas.getContext("2d");
-    if (context) {
-      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL("image/png");
-      setCapturedImage(dataUrl);
-    }
-  };
-
   return (
-    <div>
+    <div className="h-full">
       {error ? (
         <div>{error}</div>
       ) : (
         <>
-          <div className="relative flex w-full justify-center">
+          <div className="relative flex h-full w-full justify-center">
             <span className="absolute mt-[8.8rem] text-headline-3 text-white">
               QR코드를 인식해 주세요
             </span>
-            <video ref={videoRef} autoPlay={false} playsInline />
+            <video
+              ref={videoRef}
+              autoPlay={false}
+              playsInline
+              muted
+              className="h-full w-full object-cover"
+            />
             <Image
               className="absolute mt-[15.9rem]"
               src={cameraIcon}
@@ -99,9 +70,5 @@ const CameraPage = () => {
     </div>
   );
 };
-
-// CameraPage.propTypes = {
-//   setCapturedImage: PropTypes.func.isRequired,
-// };
 
 export default CameraPage;
