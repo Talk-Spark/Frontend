@@ -1,15 +1,11 @@
-.myclass{
-    
-    .swiper-wrapper{
-
-    }
-    
+.myclass{    
     .swiper-slide{
         width: 33.5rem;
     }
 
     .swiper-button-prev, .swiper-button-next{
         top: 525px;
+        z-index: 11;
         &::after{
             background-image: url('../../../src/asset/icon.svg');
             background-size: contain;
