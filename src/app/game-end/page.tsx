@@ -2,7 +2,7 @@
 
 import BarGraph from "@/src/components/game-end/BarGraph";
 import RankingSheet from "@/src/components/game-end/RankingSheet";
-import React from "react";
+import React, { useState } from "react";
 
 export interface Player {
   name: string;

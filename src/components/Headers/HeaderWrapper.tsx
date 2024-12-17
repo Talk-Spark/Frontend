@@ -1,9 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Header from "./Header";
 import { usePathname } from "next/navigation";
 
 const HeaderWrapper = () => {
+  const router = useRouter();
   const pathname = usePathname();
   const getHeaderProps = () => {
     if (pathname === "/" || pathname === "/page1") {
@@ -59,13 +61,20 @@ const HeaderWrapper = () => {
     } else if (pathname === "/game-end") {
       return {
         title: "최종 스코어",
-        button2Type: "next", // 버튼2 종류
+        button2Type: "next",
         button2Action: () => {
-          /*알맞은 함수 필요 */
+          router.push("/all-cards");
+        },
+      };
+    } else if (pathname === "/all-cards") {
+      return {
+        title: "전체 명함 공개",
+        button2Type: "next",
+        button2Action: () => {
+          /*방명록 페이지로 이동하는 알맞은 로직 필요*/
         },
       };
     }
-
     return null;
   };
 
