@@ -34,6 +34,7 @@ interface ProfileImageProps {
   size?: 36 | 52 | 64 | 68 | 148; // Added size 36px
   backColor?: "gray" | "blue";
   isSecond?: boolean; //명함 맞추기 flow에서 2순위에 사용할 prop
+  noBorder?: boolean; //최종 스코어에서 3등에게 사용할 prop
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -45,6 +46,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   size = 68,
   backColor = "blue",
   isSecond = false,
+  noBorder = false,
 }) => {
   const profileImageUrl = profileImages[color] || profileImages.pink;
   const crownImageUrl = crownImages[color] || crownImages.pink;
@@ -104,9 +106,11 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         : size === 52
           ? isSecond
             ? "border-2 border-sub-pink" // isSecond true일때
-            : isSelected
-              ? "border-2 border-main-pink"
-              : "border-2 border-gray-3"
+            : noBorder
+              ? ""
+              : isSelected
+                ? "border-2 border-main-pink"
+                : "border-2 border-gray-3"
           : size === 64
             ? isSelected
               ? "border-2 border-main-pink"
@@ -117,7 +121,11 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
   const borderStyleSecond = "border-2 border-sub-pink";
 
-  const textColor = isSelected ? "text-main-pink" : "text-black";
+  const textColor = noBorder
+    ? "text-black"
+    : isSelected
+      ? "text-main-pink"
+      : "text-black";
 
   const imageSize =
     size === 36

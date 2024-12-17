@@ -56,6 +56,14 @@ const HeaderWrapper = () => {
         showButton1: false,
         title: "명함 맞추기",
       };
+    } else if (pathname === "/game-end") {
+      return {
+        title: "최종 스코어",
+        button2Type: "next", // 버튼2 종류
+        button2Action: () => {
+          /*알맞은 함수 필요 */
+        },
+      };
     }
 
     return null;

@@ -6,6 +6,7 @@ import Button from "@/src/components/common/Button";
 import Lottie from "lottie-react";
 import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
+import { useRouter } from "next/navigation";
 
 const STORAGE_CARD = {
   teamName: "팀이름없어용",
@@ -32,13 +33,16 @@ const AfterSelect = ({ cardStep, setIsBefore }: AfterSelectProps) => {
   const [isQuizEnd, setIsQuizEnd] = useState(false);
   const [isGameEnd, setIsGameEnd] = useState(true);
 
+  const router = useRouter();
+
   const handleNextQuestion = () => {
     if (cardStep <= 4) setIsBefore(true);
     else setIsQuizEnd(true); //개인 카드 공개
   };
 
   const handleNextPerson = () => {
-    if (isGameEnd) alert("최종스코어 창으로 이동!");
+    if (isGameEnd)
+      router.push("/game-end"); //최종스코어 창으로 이동!;
     else {
       //맞출 사람이 더 남았을 경우 - 초기화 작업
       setIsBefore(true);
