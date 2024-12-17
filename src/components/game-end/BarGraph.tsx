@@ -200,6 +200,15 @@ const BarGraph = ({ players }: BarGraphProps) => {
     topThree?.length === 3 ? [topThree![1], topThree![0], topThree![2]] : [];
   return (
     <section className="relative h-[31.7rem] w-[37.5rem] shrink-0 overflow-hidden bg-gradient-35-pink">
+      <article className="mt-[3.2rem] flex flex-col items-center gap-[0.8rem] self-stretch">
+        <span className="self-stretch text-center text-body-2-bold text-main-pink">
+          총 NN문항
+        </span>
+        <h1 className="self-stretch text-center text-headline-3 text-black">
+          누가 가장 많이 맞췄을까요?
+        </h1>
+      </article>
+
       {rankingType === "a"
         ? aTypeTopThree?.map((player, idx) => (
             <div
@@ -217,13 +226,18 @@ const BarGraph = ({ players }: BarGraphProps) => {
               <div className="absolute inset-0 z-0 rounded-[12px] bg-main-pink-15 blur-[1px]"></div>
 
               <div
-                className="absolute"
+                className="absolute flex flex-col justify-center"
                 style={{
                   bottom: `${bottomPosition}px`,
                   left: `${profileLeftPosition[player.rank - 1]}px`,
                   transition: "bottom 1s ease-out",
                 }}
               >
+                <span
+                  className={`mb-[0.8rem] self-stretch text-center text-black ${player.rank === 1 ? "text-subhead-bold" : "text-body-1-med"}`}
+                >
+                  {player.score}개
+                </span>
                 <ProfileImage
                   isSelected={player.rank === 1}
                   isSecond={player.rank === 2}
@@ -251,13 +265,18 @@ const BarGraph = ({ players }: BarGraphProps) => {
               <div className="absolute inset-0 z-0 rounded-[12px] bg-main-pink-15 blur-[1px]"></div>
 
               <div
-                className="absolute"
+                className="absolute flex flex-col justify-center"
                 style={{
                   bottom: `${bottomPosition}px`,
                   left: `${profileLeftPosition[player.rank - 1]}px`,
                   transition: "bottom 1s ease-out",
                 }}
               >
+                <span
+                  className={`mb-[0.8rem] self-stretch text-center text-black ${player.rank === 1 ? "text-subhead-bold" : "text-body-1-med"}`}
+                >
+                  {player.score}개
+                </span>
                 <ProfileImage
                   isSelected={player.rank === 1}
                   isSecond={player.rank === 2}
