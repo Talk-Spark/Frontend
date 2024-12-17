@@ -31,7 +31,7 @@ const BarGraph = ({ players }: BarGraphProps) => {
   const [barHeights, setBarHeights] = useState<PlayersWithRank["score"][]>([
     0, 0, 0,
   ]);
-  const [bottomPosition, setBottomPosition] = useState(25); // 초기 bottom 위치
+  const [bottomPosition, setBottomPosition] = useState(25); // profile의 초기 bottom 위치
   const [rankingType, setRankingType] = useState<RankingType>("a");
 
   useEffect(() => {
@@ -124,15 +124,32 @@ const BarGraph = ({ players }: BarGraphProps) => {
           rank: 2,
         });
       }
+    } else if (
+      rankingCounts[0] === 2 &&
+      !rankingCounts[1] &&
+      !rankingCounts[2]
+    ) {
+      //e. (단, 위와는 달리 둘의 점수가 같을 때)
+      tempRankingType = "e" as const;
+      for (let i = 0; i < 2; i++) {
+        temp.push({
+          name: sortedPlayers[i].name,
+          score: sortedPlayers[i].score,
+          rank: 1,
+        });
+      }
     }
+
     //top 3명 이름, 점수, 랭킹 정보 저장 & 랭킹 타입 저장
+    console.log(temp);
     setTopThree(temp);
     setRankingType(tempRankingType);
   }, [players]);
 
   //barHeight 계산 (순위에 맞는 bar 높이 부여)
   useEffect(() => {
-    if (topThree && topThree.length === 3) {
+    console.log(topThree);
+    if (topThree && topThree.length >= 2) {
       const heightsWithRank = [166, 145, 134];
 
       const tempHeights: number[] = [];
@@ -144,6 +161,10 @@ const BarGraph = ({ players }: BarGraphProps) => {
       setBottomPosition(101);
     }
   }, [topThree]);
+
+  useEffect(() => {
+    console.log(barHeights);
+  }, [barHeights]);
 
   /*
     랭킹 타입 분리
@@ -174,42 +195,80 @@ const BarGraph = ({ players }: BarGraphProps) => {
 
   const profileSize: (64 | 52)[] = [64, 52, 52];
   const profileLeftPosition = [7.5, 7.5, 7.5];
+
+  const aTypeTopThree =
+    topThree?.length === 3 ? [topThree![1], topThree![0], topThree![2]] : [];
   return (
     <section className="relative h-[31.7rem] w-[37.5rem] shrink-0 overflow-hidden bg-gradient-35-pink">
-      {topThree?.map((player, idx) => (
-        <div
-          key={`topThree-${idx}`}
-          className="w-[8rem] shrink-0 rounded-[12px] bg-transparent transition-all duration-1000 ease-out"
-          style={{
-            position: "absolute",
-            bottom: "-25px",
-            left: `${leftPostion[idx]}px`,
-            height: `${barHeights[0]}px`,
-            transformOrigin: "bottom", // 아래쪽을 기준으로 변형 적용
-          }}
-        >
-          {/*배경만 정확히 블러처리를 위한 before요소 */}
-          <div className="absolute inset-0 z-0 rounded-[12px] bg-main-pink-15 blur-[1px]"></div>
-
-          <div
-            className="absolute"
-            style={{
-              bottom: `${bottomPosition}px`,
-              left: `${profileLeftPosition[player.rank - 1]}px`,
-              transition: "bottom 1s ease-out",
-            }}
-          >
-            <ProfileImage
-              isSelected={player.rank === 1}
-              isSecond={player.rank === 2}
-              noBorder
-              size={profileSize[player.rank - 1]}
+      {rankingType === "a"
+        ? aTypeTopThree?.map((player, idx) => (
+            <div
+              key={`topThree-${idx}`}
+              className="w-[8rem] shrink-0 rounded-[12px] bg-transparent transition-all duration-1000 ease-out"
+              style={{
+                position: "absolute",
+                bottom: "-25px",
+                left: `${leftPostion[idx]}px`,
+                height: `${barHeights[player.rank - 1]}px`,
+                transformOrigin: "bottom", // 아래쪽을 기준으로 변형 적용
+              }}
             >
-              공준혁
-            </ProfileImage>
-          </div>
-        </div>
-      ))}
+              {/*배경만 정확히 블러처리를 위한 before요소 */}
+              <div className="absolute inset-0 z-0 rounded-[12px] bg-main-pink-15 blur-[1px]"></div>
+
+              <div
+                className="absolute"
+                style={{
+                  bottom: `${bottomPosition}px`,
+                  left: `${profileLeftPosition[player.rank - 1]}px`,
+                  transition: "bottom 1s ease-out",
+                }}
+              >
+                <ProfileImage
+                  isSelected={player.rank === 1}
+                  isSecond={player.rank === 2}
+                  noBorder
+                  size={profileSize[player.rank - 1]}
+                >
+                  {player.name}
+                </ProfileImage>
+              </div>
+            </div>
+          ))
+        : topThree?.map((player, idx) => (
+            <div
+              key={`topThree-${idx}`}
+              className="w-[8rem] shrink-0 rounded-[12px] bg-transparent transition-all duration-1000 ease-out"
+              style={{
+                position: "absolute",
+                bottom: "-25px",
+                left: `${leftPostion[idx]}px`,
+                height: `${barHeights[player.rank - 1]}px`,
+                transformOrigin: "bottom", // 아래쪽을 기준으로 변형 적용
+              }}
+            >
+              {/*배경만 정확히 블러처리를 위한 before요소 */}
+              <div className="absolute inset-0 z-0 rounded-[12px] bg-main-pink-15 blur-[1px]"></div>
+
+              <div
+                className="absolute"
+                style={{
+                  bottom: `${bottomPosition}px`,
+                  left: `${profileLeftPosition[player.rank - 1]}px`,
+                  transition: "bottom 1s ease-out",
+                }}
+              >
+                <ProfileImage
+                  isSelected={player.rank === 1}
+                  isSecond={player.rank === 2}
+                  noBorder
+                  size={profileSize[player.rank - 1]}
+                >
+                  {player.name}
+                </ProfileImage>
+              </div>
+            </div>
+          ))}
     </section>
   );
 };

@@ -10,7 +10,7 @@ interface Player {
 
 const DUMMY_DATA: Player[] = [
   { name: "Alice", score: 95 },
-  { name: "Bob", score: 87 },
+  { name: "Bob", score: 82 },
   { name: "Charlie", score: 92 },
   { name: "David", score: 78 },
   { name: "Eve", score: 88 },
