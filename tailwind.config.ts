@@ -161,6 +161,7 @@ const config: Config = {
     borderWidth: {
       3: "3px", // border-3을 3px로 설정
       2: "2px",
+      1: "1px",
     },
   },
   plugins: [],

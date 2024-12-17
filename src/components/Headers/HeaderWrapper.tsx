@@ -1,10 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import Header from "./Header";
 import { usePathname } from "next/navigation";
 
-const HeaderWrapper = () => {
+type HeaderWrapperProps = {
+  setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>; // 상태 업데이트 함수 타입
+};
+
+const HeaderWrapper = ({
+  setIsEdit,
+}: {
+  setIsEdit?: (value: boolean) => void;
+}) => {
   const pathname = usePathname();
+  const [isEditing, setIsEditing] = useState(false); // 편집 상태 관리
+
   const getHeaderProps = () => {
     if (pathname === "/" || pathname === "/page1") {
       return {
@@ -44,15 +55,19 @@ const HeaderWrapper = () => {
         button2Type: "exit",
         button2Action: () => {},
       };
-    } else if (pathname === "/page7") {
+    } else if (pathname === "/card") {
       return {
         showButton1: true,
-        title: "TEXT텍스트영역",
-        button2Type: "settings",
-        button2Action: () => {},
+        title: "명함 보관함",
+        button2Type: isEditing ? "complete" : "edit",
+        button2Action: () => {
+          setIsEditing((prev) => !prev); // HeaderWrapper 내부 상태 변경
+          if (setIsEdit) {
+            setIsEdit((prev) => !prev); // setIsEdit이 전달된 경우에만 실행
+          }
+        },
       };
     }
-
     return null;
   };
 
