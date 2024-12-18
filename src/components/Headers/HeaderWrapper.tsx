@@ -48,6 +48,13 @@ const HeaderWrapper = () => {
       return {
         showButton1: true,
         title: "TEXT텍스트영역",
+        button2Type: "edit",
+        button2Action: () => {},
+      };
+    } else if (pathname === "/guest") {
+      return {
+        showButton1: true,
+        title: "TEXT텍스트영역",
         button2Type: "settings",
         button2Action: () => {},
       };
