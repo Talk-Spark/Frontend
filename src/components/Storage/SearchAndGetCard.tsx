@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEdit } from "@/src/context/Context";
 import Modal from "../common/Modal";
 
-const SearchAndGetCard = () => {
+const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
   const router = useRouter();
   const { isEditing } = useEdit();
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
@@ -46,7 +46,19 @@ const SearchAndGetCard = () => {
     }
   }, [isEditing]);
 
-  const handleSearch = () => {};
+  const [filteredTeamData, setFilteredTeamData] = useState(teamData);
+
+  const handleSearch = () => {
+    if (searchValue.trim() === "") {
+      setFilteredTeamData(teamData); // 검색어가 없으면 원래 데이터로 되돌리기
+    } else {
+      setFilteredTeamData(
+        teamData.filter((team) =>
+          team.teamName.toLowerCase().includes(searchValue.toLowerCase()),
+        ),
+      );
+    }
+  };
 
   const handleSelectTeamBox = (index: number) => {
     if (!isEditing) {
@@ -95,15 +107,19 @@ const SearchAndGetCard = () => {
         <SearchInput
           setSearchValue={setSearchValue}
           searchValue={searchValue}
-          placeholderText={"팀명 또는 이름 검색"}
+          placeholderText={
+            ver === "명함" ? "팀명 또는 이름 검색" : "방명록 검색"
+          }
           isQr={false}
           onSearch={handleSearch}
         />
         <div className="mb-[1.2rem] mt-[2.4rem] flex h-[3.6rem] w-full justify-between">
           <div className="flex items-center gap-[0.4rem]">
-            <span className="text-body-1-med text-gray-11">보관된 명함</span>
+            <span className="text-body-1-med text-gray-11">
+              보관된 {ver === "명함" ? "명함" : "방명록"}
+            </span>
             <span className="text-body-1-bold text-gray-7">
-              {teamData.length}
+              {filteredTeamData.length}
             </span>
           </div>
           <Sorting
@@ -113,7 +129,7 @@ const SearchAndGetCard = () => {
           />
         </div>
         <div className="flex w-full flex-col gap-[1.2rem]">
-          {teamData.map((team, index) => (
+          {filteredTeamData.map((team, index) => (
             <TeamBox
               key={index}
               isSelected={selectedTeamBoxes.includes(index)}
@@ -127,28 +143,38 @@ const SearchAndGetCard = () => {
       {isModal && (
         <Modal
           actionText="취소"
-          buttonText="명함 삭제"
+          buttonText={ver === "방명록" ? "방명록 삭제" : "명함 삭제"}
           isOpen={true}
-          title="명함을 삭제하시겠어요?"
-          description="명함 내용이 복구되지 않아요"
+          title={
+            ver === "방명록"
+              ? "방명록을 삭제하시겠어요?"
+              : "명함을 삭제하시겠어요?"
+          }
+          description={
+            ver === "방명록"
+              ? "대화방 내용이 복구되지 않아요"
+              : "명함 내용이 복구되지 않아요"
+          }
           onAction={() => setIsModal(false)}
           onClose={handleConfirmDelete}
         />
       )}
-      <div
-        className="fixed bottom-0 flex h-[13rem] w-full max-w-[76.8rem] justify-center"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
-        }}
-      >
-        <button
-          onClick={addCardBtn}
-          className="h-[5.6rem] w-[33.5rem] rounded-[1.2rem] bg-gray-11 text-subhead-bold text-white"
+      {ver === "명함" && (
+        <div
+          className="fixed bottom-0 flex h-[13rem] w-full max-w-[76.8rem] justify-center"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
+          }}
         >
-          명함 추가하기
-        </button>
-      </div>
+          <button
+            onClick={addCardBtn}
+            className="h-[5.6rem] w-[33.5rem] rounded-[1.2rem] bg-gray-11 text-subhead-bold text-white"
+          >
+            명함 추가하기
+          </button>
+        </div>
+      )}
     </div>
   );
 };

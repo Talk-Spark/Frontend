@@ -3,14 +3,19 @@ import { useState } from "react";
 
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/MyCard";
-import { useEdit } from "@/src/context/Context";
 
 const Card = () => {
-  const { isEditing } = useEdit();
   const [activeView, setActiveView] = useState<"mine" | "others">("others");
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleToggle = (view: "mine" | "others") => {
     setActiveView(view);
+    if (view === "mine") {
+      setIsVisible(false);
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 100);
+    }
   };
 
   return (
@@ -45,7 +50,11 @@ const Card = () => {
           ></div>
         </div>
       </div>
-      {activeView === "others" ? <SearchAndGetCard /> : <MyCard />}
+      {activeView === "others" ? (
+        <SearchAndGetCard ver={"명함"} />
+      ) : (
+        <MyCard isVisible={isVisible} />
+      )}
     </div>
   );
 };
