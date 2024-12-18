@@ -1,7 +1,13 @@
+import SearchInput from "@/src/components/SearchInput";
+import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
+
 const Page = () => {
   return (
-    <div className="-mx-[2rem] h-full w-[calc(100%+4rem)] bg-gray-1">
-      <div></div>
+    <div className="">
+      <div>
+        <SearchInput placeholderText="방명록 검색" />
+        <SearchAndGetCard />
+      </div>
     </div>
   );
 };
