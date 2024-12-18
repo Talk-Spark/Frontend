@@ -51,15 +51,21 @@ const HeaderWrapper = () => {
         button2Type: "edit",
         button2Action: () => {},
       };
-    } else if (pathname === "/guest") {
+    } else if (pathname === "/guest-book") {
       return {
         showButton1: true,
-        title: "TEXT텍스트영역",
-        button2Type: "settings",
+        title: "방명록 보관함",
+        button2Type: "edit",
+        button2Action: () => {},
+      };
+    } else if (pathname.startsWith("/guest-book/")) {
+      return {
+        showButton1: true,
+        title: "팀이름이 들어가야함...",
+        button2Type: "",
         button2Action: () => {},
       };
     }
-
     return null;
   };
 

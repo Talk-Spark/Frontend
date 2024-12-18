@@ -48,3 +48,22 @@ body {
 .gutter {
   gap: 12px;
 }
+@layer utilities {
+  /* IE의 경우 */
+  input::-ms-clear,
+  input::-ms-reveal {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+  }
+
+  /* 크롬 및 WebKit 기반 브라우저에서 */
+  input::-webkit-search-decoration,
+  input::-webkit-search-cancel-button,
+  input::-webkit-search-results-button,
+  input::-webkit-search-results-decoration {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+  }
+}
