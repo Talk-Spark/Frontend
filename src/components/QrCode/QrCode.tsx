@@ -3,20 +3,20 @@ import { QRCodeCanvas } from "qrcode.react";
 interface QrCodeProps {
   cardId: string;
   name: string;
+  size: number;
 }
 
-const QrCode = ({ cardId, name }: QrCodeProps) => {
+const QrCode = ({ cardId, name, size }: QrCodeProps) => {
   const qrData = JSON.stringify({ cardId, name });
 
   return (
     <div>
       <QRCodeCanvas
-        value={qrData} 
-        size={200}
+        value={qrData}
+        size={size}
         bgColor={"transparent"}
         fgColor={"#000000"}
         level={"H"}
-        includeMargin={true}
       />
     </div>
   );

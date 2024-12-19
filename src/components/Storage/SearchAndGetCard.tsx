@@ -6,6 +6,14 @@ import { useRouter } from "next/navigation";
 import { useEdit } from "@/src/context/Context";
 import Modal from "../common/Modal";
 
+interface Team {
+  teamName: string;
+  teamPeopleCount: number;
+  cardDate: string;
+  participants: string;
+  isFav: boolean;
+}
+
 const SearchAndGetCard = ({
   ver,
   teamData,
@@ -15,8 +23,8 @@ const SearchAndGetCard = ({
   setUsedNewTeam,
 }: {
   ver: "방명록" | "명함";
-  teamData: Array<any>;
-  setTeamData: React.Dispatch<React.SetStateAction<any[]>>;
+  teamData: Team[];
+  setTeamData: React.Dispatch<React.SetStateAction<Team[]>>;
   newTeamIndex: number | null;
   usedNewTeam: boolean;
   setUsedNewTeam: (value: boolean) => void;
@@ -28,7 +36,7 @@ const SearchAndGetCard = ({
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
   const [sortOption, setSortOption] = useState("최신순");
-  const [toggleFav, setToggleFav] = useState(null);
+  const [toggleFav, setToggleFav] = useState<number | null>(null);
 
   const addCardBtn = () => {
     router.push("/card/camera");
@@ -36,7 +44,7 @@ const SearchAndGetCard = ({
 
   useEffect(() => {
     if (!isEditing) {
-      setSelectedTeamBoxes([]); 
+      setSelectedTeamBoxes([]);
     }
   }, [isEditing]);
 
@@ -155,12 +163,7 @@ const SearchAndGetCard = ({
               {filteredTeamData.length}
             </span>
           </div>
-          <Sorting
-            onDeleteSelected={() => deleteModal("selected")}
-            onDeleteAll={() => deleteModal("all")}
-            deleteModal={deleteModal}
-            setSortOption={setSortOption}
-          />
+          <Sorting deleteModal={deleteModal} setSortOption={setSortOption} />
         </div>
         <div className="flex w-full flex-col gap-[1.2rem]">
           {filteredTeamData.map((team, index) => (
@@ -173,7 +176,7 @@ const SearchAndGetCard = ({
               newTeamIndex={newTeamIndex}
               usedNewTeam={usedNewTeam}
               setUsedNewTeam={setUsedNewTeam}
-              setToggleFav={setToggleFav}
+              setToggleFav={() => setToggleFav(index)}
             />
           ))}
         </div>

@@ -21,7 +21,7 @@ interface TeamBoxProps {
   newTeamIndex: number | null;
   usedNewTeam: boolean;
   setUsedNewTeam: (value: boolean) => void;
-  setToggleFav: () => void;
+  setToggleFav: (index: number) => void;
 }
 
 const TeamBox = ({
@@ -78,7 +78,6 @@ const TeamBox = ({
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent the event from propagating to the parent
     setToggleFav(index);
-    console.log(`바뀜 ${index} `);
   };
 
   return (

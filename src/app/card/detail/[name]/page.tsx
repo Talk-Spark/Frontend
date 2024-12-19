@@ -25,25 +25,6 @@ type NameCardProps = {
   isStorage?: boolean;
 };
 
-const CustomArrow = ({ className, style, onClick }: any) => (
-  <div
-    className={`${className} custom-arrow`}
-    style={{
-      ...style,
-      display: "flex",
-      zIndex: 10,
-      width: "320px",
-      height: "50px",
-      position: "absolute",
-      bottom: "10px",
-      flex: "1",
-      alignItems: "end",
-      backgroundColor: "blue",
-    }}
-    onClick={onClick}
-  />
-);
-
 // 더미 데이터
 const otherCards: NameCardProps[] = [
   {
@@ -113,8 +94,13 @@ const DetailCard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const slickRef = useRef<Slider | null>(null);
 
-  const previous = useCallback(() => slickRef.current.slickPrev(), []);
-  const next = useCallback(() => slickRef.current.slickNext(), []);
+  const previous = useCallback(() => {
+    slickRef.current?.slickPrev();
+  }, []);
+
+  const next = useCallback(() => {
+    slickRef.current?.slickNext();
+  }, []);
 
   const sliderSettings = {
     dots: false,

@@ -2,16 +2,11 @@ import Image from "next/image";
 import arrowBt from "@/public/storageNameCard/arrowBt.svg";
 import { useState } from "react";
 import { useEdit } from "@/src/context/Context";
-import Modal from "../common/Modal";
 
 const Sorting = ({
-  onDeleteSelected,
-  onDeleteAll,
   deleteModal,
   setSortOption,
 }: {
-  onDeleteSelected: () => void;
-  onDeleteAll: () => void;
   deleteModal: (type: "selected" | "all") => void;
   setSortOption: (option: string) => void;
 }) => {
