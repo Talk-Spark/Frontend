@@ -1,10 +1,44 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/MyCard";
+import ToggleBar from "@/src/components/Storage/ToggleBar";
 
 const Card = () => {
+  const searchParams = useSearchParams();
+  const cardId = searchParams.get("cardId");
+  const name = searchParams.get("name");
+  const timestamp = searchParams.get("timestamp");
+
+  const [teamData, setTeamData] = useState([
+    {
+      teamName: "멋쟁이 데모팀",
+      teamPeopleCount: 5,
+      cardDate: "2024-11-03 14:30:15",
+      participants: "박하경 진예원 이나윤 진예원 진예원",
+      isFav: true,
+    },
+    {
+      teamName: "프론트엔드팀",
+      teamPeopleCount: 3,
+      cardDate: "2024-11-02 10:15:10",
+      participants: "김동욱 공준혁 최정인",
+      isFav: false,
+    },
+    {
+      teamName: "백엔드팀",
+      teamPeopleCount: 3,
+      cardDate: "2024-11-01 09:05:20",
+      participants: "김민우 이윤정 박승범",
+      isFav: false,
+    },
+  ]);
+
+  const [newTeamIndex, setNewTeamIndex] = useState<number | null>(null);
+  const [usedNewTeam, setUsedNewTeam] = useState(false);
   const [activeView, setActiveView] = useState<"mine" | "others">("others");
   const [isVisible, setIsVisible] = useState(false);
 
@@ -18,40 +52,44 @@ const Card = () => {
     }
   };
 
+  useEffect(() => {
+    if (cardId && name && timestamp) {
+      const newData = {
+        teamName: name,
+        teamPeopleCount: 1,
+        cardDate: timestamp,
+        participants: name,
+        isFav: false,
+      };
+
+      setTeamData((prevData) => {
+        const exists = prevData.some(
+          (item) =>
+            item.teamName === newData.teamName &&
+            item.cardDate === newData.cardDate,
+        );
+        if (!exists) {
+          setNewTeamIndex(0);
+          setUsedNewTeam(false);
+          return [...prevData, newData];
+        }
+        return prevData;
+      });
+    }
+  }, [cardId, name, timestamp, teamData]);
+
   return (
     <div className="-mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center">
-      <div className="flex w-full flex-col">
-        <div className="relative mx-[2rem] mb-[0.8rem] flex w-[calc(100%-4rem)] flex-1 justify-between text-subhead-bold">
-          <button
-            onClick={() => handleToggle("mine")}
-            className={`flex flex-1 justify-center ${
-              activeView === "mine" ? "text-black" : "text-gray-5"
-            }`}
-          >
-            내 명함
-          </button>
-          <button
-            onClick={() => handleToggle("others")}
-            className={`flex flex-1 justify-center ${
-              activeView === "others" ? "text-black" : "text-gray-5"
-            }`}
-          >
-            보관함
-          </button>
-        </div>
-        {/* 하단 강조 바 */}
-        <div className="w-[calc(100% - 4rem)] relative mx-[2rem] mb-[2rem] h-[0.3rem] rounded-[0.4rem] bg-gray-300">
-          <div
-            className="absolute h-full w-[50%] rounded-[0.4rem] bg-main-pink transition-transform duration-300"
-            style={{
-              transform:
-                activeView === "mine" ? "translateX(0)" : "translateX(100%)",
-            }}
-          ></div>
-        </div>
-      </div>
+      <ToggleBar handleToggle={handleToggle} activeView={activeView} />
       {activeView === "others" ? (
-        <SearchAndGetCard ver={"명함"} />
+        <SearchAndGetCard
+          teamData={teamData}
+          setTeamData={setTeamData}
+          ver={"명함"}
+          newTeamIndex={newTeamIndex}
+          usedNewTeam={usedNewTeam}
+          setUsedNewTeam={setUsedNewTeam}
+        />
       ) : (
         <MyCard isVisible={isVisible} />
       )}

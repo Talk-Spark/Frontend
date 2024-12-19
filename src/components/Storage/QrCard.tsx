@@ -3,7 +3,7 @@ import blueGraphic from "@/public/nameCard/blueStorageGraphic.svg";
 import yellowGraphic from "@/public/nameCard/yellowStorageGraphic.svg";
 import pinkGraphic from "@/public/nameCard/pinkStoragePink.svg";
 import mintGraphic from "@/public/nameCard/mintStorageGraphic.svg";
-import Qrcode from "@/public/nameCard/Qr.svg";
+import QrCode from "../QrCode/QrCode";
 
 type SelectedColor = "pink" | "green" | "yellow" | "blue";
 
@@ -41,7 +41,7 @@ const QrCard = ({ name = "", color = "pink" }: QrCardProps) => {
         className={`"flex h-[30.1rem] rounded-[2rem] ${backColorTop[color]}`}
       >
         <div className="flex h-full w-full items-center justify-center">
-          <Image src={Qrcode} alt="Qrcode" />
+          <QrCode cardId="1" name="최정인" />{" "}
         </div>
       </div>
       <div

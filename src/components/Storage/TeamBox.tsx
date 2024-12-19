@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import starIcon from "@/public/nameCard/Star.svg";
 import starPinkIcon from "@/public/nameCard/pinkStar.svg";
 import Image from "next/image";
@@ -11,25 +13,49 @@ interface TeamBoxProps {
     teamPeopleCount: number;
     cardDate: string;
     participants: string;
+    isFav: boolean;
   };
   index: number;
   isSelected: boolean;
   onSelect: (index: number) => void;
+  newTeamIndex: number | null;
+  usedNewTeam: boolean;
+  setUsedNewTeam: (value: boolean) => void;
+  setToggleFav: () => void;
 }
 
-const TeamBox = ({ team, index, isSelected, onSelect }: TeamBoxProps) => {
-  const [isFav, setIsFav] = useState(false);
+const TeamBox = ({
+  team,
+  index,
+  isSelected,
+  onSelect,
+  newTeamIndex,
+  usedNewTeam,
+  setUsedNewTeam,
+  setToggleFav,
+}: TeamBoxProps) => {
+  const [bgColor, setBgColor] = useState("bg-gray-1");
   const { isEditing } = useEdit();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (newTeamIndex === index && !usedNewTeam) {
+      setBgColor("bg-sub-palePink-55 border-sub-palePink");
+      setUsedNewTeam(true);
+      setTimeout(() => {
+        setBgColor("bg-gray-1");
+      }, 3000);
+    }
+  }, [newTeamIndex, index, usedNewTeam, setUsedNewTeam]);
 
   const boxBgColor = isSelected
     ? "bg-sub-palePink-55 border-sub-palePink"
-    : "bg-gray-1 border-gray-2";
-  const router = useRouter();
+    : bgColor;
+
   const showDetailCard = () => {
     if (isEditing) {
       return;
     }
-
     router.push("/card/detail/[name]");
   };
 
@@ -41,14 +67,19 @@ const TeamBox = ({ team, index, isSelected, onSelect }: TeamBoxProps) => {
   };
 
   const formattedDate = formatDate(team.cardDate);
-
   const participantsClean = team.participants.split(" ");
-  const maxVisible = 4; // 보여지는 최대 이름 수
+  const maxVisible = 4;
 
   const displayedParticipants =
     participantsClean.length > maxVisible
       ? `${participantsClean.slice(0, maxVisible).join(" ")} ∙∙∙`
       : participantsClean.join(" ");
+
+  const handleFavClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the event from propagating to the parent
+    setToggleFav(index);
+    console.log(`바뀜 ${index} `);
+  };
 
   return (
     <div
@@ -68,8 +99,8 @@ const TeamBox = ({ team, index, isSelected, onSelect }: TeamBoxProps) => {
           </span>
         </div>
         <Image
-          src={isFav ? starPinkIcon : starIcon}
-          onClick={() => setIsFav(!isFav)}
+          src={team.isFav ? starPinkIcon : starIcon}
+          onClick={handleFavClick} // Use the handleFavClick to stop propagation
           alt="즐겨찾기"
           className="cursor-pointer"
         />

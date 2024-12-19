@@ -2,10 +2,14 @@
 import { useEdit } from "@/src/context/Context";
 import Header from "./Header";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const HeaderWrapper = () => {
   const pathname = usePathname();
   const { isEditing, handleEditClick, handleCompleteClick } = useEdit();
+  const [activeView, setActiveView] = useState<"mine" | "others">("others");
+
+  useEffect(() => {}, [activeView]);
 
   const getHeaderProps = () => {
     if (pathname === "/" || pathname === "/page1") {
