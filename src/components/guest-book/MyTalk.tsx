@@ -1,4 +1,9 @@
-const MyTalk = ({ userName, content, dateTime }) => {
+interface MyTalkProps {
+  content: string;
+  dateTime: string;
+}
+
+const MyTalk = ({ content, dateTime }: MyTalkProps) => {
   return (
     <div className="flex flex-col items-end">
       {/* 말풍선 */}

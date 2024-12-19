@@ -1,6 +1,14 @@
 import ProfileImage from "../ProfileImage";
 
-const FixedComment = ({ formatTimeWithMeridiem, roomName }) => {
+interface FixedCommentProps {
+  roomName: string;
+  formatTimeWithMeridiem: (dateTime: string) => string;
+}
+
+const FixedComment = ({
+  roomName,
+  formatTimeWithMeridiem,
+}: FixedCommentProps) => {
   const fixedComment = {
     commnets: ["방명록에 오신 걸 환영합니다!", "게임 후기와 인사를 남겨보아요"],
     roomDateTime: "2024-10-21 10:00",
@@ -33,4 +41,5 @@ const FixedComment = ({ formatTimeWithMeridiem, roomName }) => {
     </div>
   );
 };
+
 export default FixedComment;

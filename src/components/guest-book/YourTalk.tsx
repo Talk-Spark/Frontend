@@ -1,7 +1,19 @@
 import ProfileImage from "../ProfileImage";
 
-const YourTalk = ({ formatTimeWithMeridiem, content, userName, dateTime }) => {
-  
+// Defining the types for the component props
+interface YourTalkProps {
+  formatTimeWithMeridiem: (dateTime: string) => string;
+  content: string;
+  userName: string;
+  dateTime: string;
+}
+
+const YourTalk = ({
+  formatTimeWithMeridiem,
+  content,
+  userName,
+  dateTime,
+}: YourTalkProps) => {
   return (
     <div className="flex gap-[0.8rem]">
       <div>
@@ -25,4 +37,5 @@ const YourTalk = ({ formatTimeWithMeridiem, content, userName, dateTime }) => {
     </div>
   );
 };
+
 export default YourTalk;

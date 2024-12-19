@@ -1,20 +1,20 @@
 "use client";
+import { useState } from "react";
 import FixedComment from "@/src/components/guest-book/FixedComment";
 import MyTalk from "@/src/components/guest-book/MyTalk";
 import YourTalk from "@/src/components/guest-book/YourTalk";
 import CommnetInput from "@/src/components/guest-book/CommentInput";
-import { useState } from "react";
 
 const Page = () => {
   const [commentValue, setCommentValue] = useState("");
   const Date = "2024년 10월 21일";
   const roomName = "멋쟁이 데모팀";
-  function formatTimeWithMeridiem(dateTime: string) {
-    const time = dateTime.split(" ")[1]; // 시간 추출
-    const [hour, minute] = time.split(":").map(Number); // 시, 분 나누기
 
+  function formatTimeWithMeridiem(dateTime: string) {
+    const time = dateTime.split(" ")[1];
+    const [hour, minute] = time.split(":").map(Number);
     const meridiem = hour < 12 ? "오전" : "오후";
-    const formattedHour = hour % 12 || 12; // 12시간 형식으로 변환
+    const formattedHour = hour % 12 || 12;
 
     return `${meridiem} ${formattedHour}:${minute.toString().padStart(2, "0")}`;
   }
@@ -59,7 +59,6 @@ const Page = () => {
             data.isOwnerGuestBook ? (
               <MyTalk
                 key={data.guestBookId}
-                userName={data.sparkUserName}
                 content={data.guestBookContent}
                 dateTime={data.guestBookDateTime}
               />

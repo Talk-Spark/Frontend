@@ -10,14 +10,15 @@ interface TeamBoxProps {
     teamName: string;
     teamPeopleCount: number;
     cardDate: string;
-    participants: string;
+    content: string;
   };
   index: number;
   isSelected: boolean;
   onSelect: (index: number) => void;
+  ver: "명함" | "방명록";
 }
 
-const TeamBox = ({ team, index, isSelected, onSelect }: TeamBoxProps) => {
+const TeamBox = ({ team, index, isSelected, onSelect, ver }: TeamBoxProps) => {
   const [isFav, setIsFav] = useState(false);
   const { isEditing } = useEdit();
 
@@ -29,8 +30,11 @@ const TeamBox = ({ team, index, isSelected, onSelect }: TeamBoxProps) => {
     if (isEditing) {
       return;
     }
-
-    router.push("/card/detail/[name]");
+    if (ver === "명함") {
+      router.push("/card/detail/[name]");
+    } else if (ver === "방명록") {
+      router.push("/guest-book/[id]");
+    }
   };
 
   const formatDate = (dateString: string): string => {
@@ -42,13 +46,25 @@ const TeamBox = ({ team, index, isSelected, onSelect }: TeamBoxProps) => {
 
   const formattedDate = formatDate(team.cardDate);
 
-  const participantsClean = team.participants.split(" ");
+  const participantsClean = team.content.split(" ");
   const maxVisible = 4; // 보여지는 최대 이름 수
+  const maxText = 18; // 보여지는 방명록 메세지 최대 길이 수
 
   const displayedParticipants =
     participantsClean.length > maxVisible
       ? `${participantsClean.slice(0, maxVisible).join(" ")} ∙∙∙`
       : participantsClean.join(" ");
+
+  const getPreviewContent = (content?: string) => {
+    if (ver === "방명록" && content) {
+      return content.length > maxText
+        ? `${content.slice(0, maxText)}∙∙∙`
+        : content;
+    }
+    return content;
+  };
+
+  const previewContent = getPreviewContent(team.content);
 
   return (
     <div
@@ -76,7 +92,7 @@ const TeamBox = ({ team, index, isSelected, onSelect }: TeamBoxProps) => {
       </div>
       <div className="flex justify-between">
         <span className="text-body-2-reg text-gray-9">
-          {displayedParticipants}
+          {ver === "방명록" ? previewContent : displayedParticipants}
         </span>
         <span className="text-caption-med text-gray-5">{formattedDate}</span>
       </div>
