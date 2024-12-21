@@ -55,6 +55,7 @@ const config: Config = {
             DEFAULT: "#FDD853",
             55: "rgba(253, 216, 83, 0.55)", // 55% 투명도 적용된 sub yellow
             20: "rgba(253, 216, 83, 0.2)", // 20% 투명도 적용된 sub yellow
+            kakao: "#F9DB00",
           },
           mint: {
             DEFAULT: "#11EBC5",
