@@ -76,7 +76,7 @@ const Step1 = ({ onNext, formData, onChange }: StepProps) => {
   ];
 
   useEffect(() => {
-    setIsFormValid(!!formData.name && !!formData && !!formData.major);
+    setIsFormValid(!!formData.name && !!formData.age && !!formData.major);
   }, [formData]);
 
   const handleNext = () => {
