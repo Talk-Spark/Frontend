@@ -145,6 +145,10 @@ const config: Config = {
           "12px",
           { lineHeight: "145%", letterSpacing: "-0.001em", fontWeight: "500" },
         ], // Medium
+        "graphic-font": [
+          "24px",
+          { lineHeight: "145%", letterSpacing: "-0.001em", fontWeight: "500" },
+        ],
       },
       // Gradient
       // backgroundImage: {
