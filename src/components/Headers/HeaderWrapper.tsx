@@ -1,10 +1,14 @@
 "use client";
-
+import { useEdit } from "@/src/context/Context";
 import Header from "./Header";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const HeaderWrapper = () => {
   const pathname = usePathname();
+  const { isEditing, handleEditClick, handleCompleteClick } = useEdit();
+
+
   const getHeaderProps = () => {
     if (pathname === "/" || pathname === "/page1") {
       return {
@@ -37,13 +41,20 @@ const HeaderWrapper = () => {
         button2Type: "next",
         button2Action: () => {},
       };
-    } else if (pathname === "/page6") {
+    } else if (pathname === "/card") {
       return {
         showButton1: true,
-        title: "TEXT텍스트영역",
-        button2Type: "exit",
+        title: "명함 보관함",
+        button2Type: isEditing ? "complete" : "edit", // 편집 상태에 따라 버튼 타입 변경
+        button2Action: isEditing ? handleCompleteClick : handleEditClick,
+      };
+    } else if (pathname.startsWith("/card/camera")) {
+      return {
+        showButton1: true,
+        title: "명함 추가하기",
         button2Action: () => {},
       };
+    } else if (pathname.startsWith("/card/detail")) {
     } else if (pathname === "/entry") {
       return {
         showButton1: true,
@@ -62,6 +73,7 @@ const HeaderWrapper = () => {
         title: "입장하기",
         button2Action: () => {},
       };
+      
     } else if (pathname === "/login" || pathname === "/landing") {
       return {
         title: "",
@@ -69,6 +81,13 @@ const HeaderWrapper = () => {
     } else if (pathname === "/creating-card/result") {
       return {
         title: "TalkSpark",
+      };
+    }else if (pathname.startsWith("/card/detail")) {
+      return {
+        showButton1: true,
+        title: "명함 보관함",
+
+        button2Action: isEditing ? handleCompleteClick : handleEditClick,
       };
     }
 
