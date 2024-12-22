@@ -1,5 +1,3 @@
-"use client";
-
 import CardMatching from "@/src/components/home/CardMatching";
 import MyCard from "@/src/components/home/MyCard";
 import Storage from "@/src/components/home/Storage";

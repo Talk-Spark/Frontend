@@ -1,7 +1,12 @@
+"use client";
+
 import { useState } from "react";
 import CardStorage from "./card/CardStorage";
+import { ArrowForwardIos } from "@mui/icons-material";
+import BookStorage from "./guest/BookStorage";
 
 const Storage = () => {
+  // 컴포넌트 전환 관리 (명함, 방명록)
   const [activeTab, setActiveTab] = useState<"namecard" | "guestbook">(
     "namecard",
   );
@@ -23,6 +28,7 @@ const Storage = () => {
           방명록
         </div>
       </div>
+      {/* 상태 바 */}
       <div className="relative mb-[2.4rem] h-[4px] w-[33.5rem] rounded-[4rem] bg-gray-3">
         <span
           className={`absolute h-full w-[16.75rem] rounded-[4rem] bg-main-pink transition-all duration-300 ${
@@ -30,13 +36,20 @@ const Storage = () => {
           }`}
         />
       </div>
-      {activeTab === "namecard" ? <CardStorage /> : <GuestBookComponent />}
+      {activeTab === "namecard" ? <CardStorage /> : <BookStorage />}
+      {/* todo: 라우팅 연결 */}
+      <div className="mt-[1.4rem] flex justify-end text-body-1-med text-gray-7">
+        전체보기
+        <span className="relative top-[-0.2rem]">
+          <ArrowForwardIos></ArrowForwardIos>
+        </span>
+      </div>
     </div>
   );
 };
 
 // 임시 컴포넌트들 (실제 컴포넌트로 교체 필요)
 // const NameCardComponent = () => <div>명함 컴포넌트</div>;
-const GuestBookComponent = () => <div>방명록 컴포넌트</div>;
+// const GuestBookComponent = () => <div>방명록 컴포넌트</div>;
 
 export default Storage;

@@ -1,6 +1,10 @@
+import creatingRoomImage from "@/public/Image/home/creatingRoomImage.svg";
+import enteringRoomImage from "@/public/Image/home/enteringRoomImage.svg";
+import Image from "next/image";
+
 const CardMatching = () => {
   return (
-    <div className="bg-[url('/Image/home/backgroundImage.svg')] bg-cover">
+    <div className="w-screen bg-[url('/Image/home/backgroundImage.svg')] bg-cover">
       <div className="mx-[20px] flex flex-col gap-[0.8rem] pb-[1.2rem] pt-[1.6rem]">
         <div className="text-[2.6875rem] font-black leading-[4.3rem] tracking-[-0.0806rem] text-white">
           TalkSpark
@@ -14,11 +18,13 @@ const CardMatching = () => {
       <div className="mx-[20px] flex flex-col gap-[1.2rem] pb-[2.8rem] pt-[1.6rem]">
         <div className="text-headline-3 text-white">명함 맞추기</div>
         <div className="flex gap-[1.2rem]">
-          <div className="h-[13.2rem] w-[16.2rem] rounded-[1.2rem] bg-yellow-100 text-subhead-bold text-gray-11">
-            방 만들기
+          <div className="h-[13.2rem] w-[16.2rem] text-subhead-bold shadow-DEFAULT">
+            {/* 방 만들기 */}
+            <Image src={creatingRoomImage} alt="방 만들기" />
           </div>
-          <div className="h-[13.2rem] w-[16.2rem] rounded-[1.2rem] bg-yellow-100 text-subhead-bold text-gray-11">
-            입장하기
+          <div className="h-[13.2rem] w-[16.2rem] text-subhead-bold shadow-DEFAULT">
+            {/* 입장하기 */}
+            <Image src={enteringRoomImage} alt="입장하기" />
           </div>
         </div>
       </div>
