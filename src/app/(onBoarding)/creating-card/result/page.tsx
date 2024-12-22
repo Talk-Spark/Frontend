@@ -13,6 +13,7 @@ const Page = () => {
         명함이 완성되었어요!
       </div>
       <div className="mb-[12.3rem] h-[33.5rem] w-[33.5rem]">
+        {/*todo: 무한 루프 없애달라고 요청 오면 로띠 마지막 프레임 고쳐달라고 말씀드리기 */}
         <Lottie loop animationData={animationData} play />
       </div>
       <div className="flex gap-[1.1rem]">

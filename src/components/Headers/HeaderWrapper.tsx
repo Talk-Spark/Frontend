@@ -44,11 +44,22 @@ const HeaderWrapper = () => {
         button2Type: "exit",
         button2Action: () => {},
       };
-    } else if (pathname === "/page7") {
+    } else if (pathname === "/entry") {
       return {
         showButton1: true,
-        title: "TEXT텍스트영역",
-        button2Type: "settings",
+        title: "입장하기",
+        button2Action: () => {},
+      };
+    } else if (pathname.startsWith("/team/")) {
+      return {
+        showButton1: true,
+        title: "입장하기",
+        button2Action: () => {},
+      };
+    } else if (pathname.startsWith("/entry/camera")) {
+      return {
+        showButton1: true,
+        title: "입장하기",
         button2Action: () => {},
       };
     } else if (pathname === "/login" || pathname === "/landing") {
