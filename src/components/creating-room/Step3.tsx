@@ -22,6 +22,7 @@ interface Step3Props {
 const Step3 = ({ formData, onChange }: Step3Props) => {
   const router = useRouter();
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const levels = [
     {
@@ -51,6 +52,7 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
   ];
 
   const handleLevelClick = (levelId: number) => {
+    setIsFormValid(true);
     setSelectedLevel(levelId);
     onChange({ difficulty: levelId });
   };
@@ -99,7 +101,11 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
           <InfoOutlinedIcon sx={{ fontSize: "2rem" }} />
           난이도 상과 랜덤은 팀 전체가 선택 문항을 모두 작성해야 해요!
         </div>
-        <Button onClick={handleNextClick} variant="black">
+        <Button
+          onClick={handleNextClick}
+          variant={isFormValid ? "black" : "gray"}
+          disabled={!isFormValid}
+        >
           다음으로
         </Button>
       </div>
