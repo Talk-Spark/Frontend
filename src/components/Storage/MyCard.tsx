@@ -72,7 +72,6 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
                 isVisible ? "opacity-100" : "opacity-0"
               } w-full transition-opacity duration-700`}
               style={{
-                backfaceVisibility: "hidden", // 앞면 카드 숨기기
                 position: "absolute",
                 top: 0,
                 left: 0,

@@ -8,7 +8,6 @@ const HeaderWrapper = () => {
   const pathname = usePathname();
   const { isEditing, handleEditClick, handleCompleteClick } = useEdit();
 
-
   const getHeaderProps = () => {
     if (pathname === "/" || pathname === "/page1") {
       return {
@@ -55,6 +54,11 @@ const HeaderWrapper = () => {
         button2Action: () => {},
       };
     } else if (pathname.startsWith("/card/detail")) {
+      return {
+        showButton1: true,
+        title: "명함 보관함",
+        button2Action: () => {},
+      };
     } else if (pathname === "/entry") {
       return {
         showButton1: true,
@@ -73,7 +77,6 @@ const HeaderWrapper = () => {
         title: "입장하기",
         button2Action: () => {},
       };
-      
     } else if (pathname === "/login" || pathname === "/landing") {
       return {
         title: "",
@@ -82,7 +85,7 @@ const HeaderWrapper = () => {
       return {
         title: "TalkSpark",
       };
-    }else if (pathname.startsWith("/card/detail")) {
+    } else if (pathname.startsWith("/card/detail")) {
       return {
         showButton1: true,
         title: "명함 보관함",

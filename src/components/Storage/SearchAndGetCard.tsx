@@ -176,8 +176,8 @@ const SearchAndGetCard = ({
               newTeamIndex={newTeamIndex}
               usedNewTeam={usedNewTeam}
               setUsedNewTeam={setUsedNewTeam}
-              setToggleFav={() => setToggleFav(index)}
-            />
+              setToggleFav={() => setToggleFav(index)} 
+              />
           ))}
         </div>
       </div>
