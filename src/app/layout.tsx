@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import HeaderWrapper from "../components/Headers/HeaderWrapper"; // Client Component
 import type { Metadata } from "next";
-import { EditProvider } from "@/src/context/Context"; // EditProvider 임포트
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,11 +32,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* EditProvider로 감싸서 전체에서 편집 상태 관리 */}
-        <EditProvider>
-          <HeaderWrapper />
-          {/* 375px 이하의 디스플레이인 모든 페이지 양쪽에 20px의 여백 생성 (이후 breakpoint 추가 가능) */}
-          <main className="gutter container">{children}</main>
-        </EditProvider>
+        <HeaderWrapper />
+        {/* 375px 이하의 디스플레이인 모든 페이지 양쪽에 20px의 여백 생성 (이후 breakpoint 추가 가능) */}
+        <main className="gutter container">{children}</main>
       </body>
     </html>
   );

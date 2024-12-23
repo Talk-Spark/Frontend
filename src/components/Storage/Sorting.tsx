@@ -1,30 +1,30 @@
 import Image from "next/image";
 import arrowBt from "@/public/storageNameCard/arrowBt.svg";
 import { useState } from "react";
-import { useEdit } from "@/src/context/Context";
 
 const Sorting = ({
   deleteModal,
   setSortOption,
+  isEdit,
 }: {
   deleteModal: (type: "selected" | "all") => void;
   setSortOption: (option: string) => void;
+  isEdit: "edit" | "complete";
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [selectedOption, setSelectedOption] = useState("최신순");
-  const { isEditing } = useEdit();
 
   const options = ["최신순", "가나다순", "즐겨찾기"];
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsActive(false);
-    setSortOption(option); 
+    setSortOption(option);
   };
 
   return (
     <div className="relative">
-      {isEditing ? (
+      {isEdit === "complete" ? (
         <div className="flex h-full w-[13rem] items-center justify-between gap-[0.8rem] text-caption-med text-gray-7">
           <button
             onClick={() => deleteModal("all")}

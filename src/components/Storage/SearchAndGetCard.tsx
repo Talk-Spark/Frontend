@@ -3,7 +3,6 @@ import SearchInput from "../SearchInput";
 import Sorting from "./Sorting";
 import TeamBox from "./TeamBox";
 import { useRouter } from "next/navigation";
-import { useEdit } from "@/src/context/Context";
 import Modal from "../common/Modal";
 
 interface Team {
@@ -21,6 +20,7 @@ const SearchAndGetCard = ({
   newTeamIndex,
   usedNewTeam,
   setUsedNewTeam,
+  isEdit,
 }: {
   ver: "방명록" | "명함";
   teamData: Team[];
@@ -28,9 +28,9 @@ const SearchAndGetCard = ({
   newTeamIndex: number | null;
   usedNewTeam: boolean;
   setUsedNewTeam: (value: boolean) => void;
+  isEdit: "edit" | "complete";
 }) => {
   const router = useRouter();
-  const { isEditing } = useEdit();
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isModal, setIsModal] = useState(false);
@@ -43,10 +43,10 @@ const SearchAndGetCard = ({
   };
 
   useEffect(() => {
-    if (!isEditing) {
+    if (isEdit === "edit") {
       setSelectedTeamBoxes([]);
     }
-  }, [isEditing]);
+  }, [isEdit]);
 
   const [filteredTeamData, setFilteredTeamData] = useState(teamData);
 
@@ -76,29 +76,25 @@ const SearchAndGetCard = ({
 
   const handleSearch = () => {};
 
+  // 편집 시 팀 박스 선택
   const handleSelectTeamBox = (index: number) => {
-    if (!isEditing) {
+    if (isEdit === "edit") {
       return;
     }
 
-    if (newTeamIndex !== null && index === newTeamIndex) {
-      setSelectedTeamBoxes([index]);
+    if (selectedTeamBoxes.includes(index)) {
+      // 기존 팀 박스 선택/해제 처리
+      setSelectedTeamBoxes(selectedTeamBoxes.filter((item) => item !== index));
     } else {
-      if (selectedTeamBoxes.includes(index)) {
-        setSelectedTeamBoxes(
-          selectedTeamBoxes.filter((item) => item !== index),
-        );
-      } else {
-        setSelectedTeamBoxes([...selectedTeamBoxes, index]);
-      }
+      setSelectedTeamBoxes([...selectedTeamBoxes, index]);
     }
   };
 
   const handleDeleteSelected = () => {
+    // 선택된 팀 이름을 찾아서 TeamData 배열 초기화
     const selectedTeamNames = selectedTeamBoxes.map(
       (index) => filteredTeamData[index].teamName,
     );
-
     setTeamData((prevData) =>
       prevData.filter((team) => !selectedTeamNames.includes(team.teamName)),
     );
@@ -163,21 +159,26 @@ const SearchAndGetCard = ({
               {filteredTeamData.length}
             </span>
           </div>
-          <Sorting deleteModal={deleteModal} setSortOption={setSortOption} />
+          <Sorting
+            deleteModal={deleteModal}
+            setSortOption={setSortOption}
+            isEdit={isEdit}
+          />
         </div>
         <div className="flex w-full flex-col gap-[1.2rem]">
           {filteredTeamData.map((team, index) => (
             <TeamBox
               key={index}
               isSelected={selectedTeamBoxes.includes(index)}
+              isEdit={isEdit}
               onSelect={handleSelectTeamBox}
               team={team}
               index={index}
               newTeamIndex={newTeamIndex}
               usedNewTeam={usedNewTeam}
               setUsedNewTeam={setUsedNewTeam}
-              setToggleFav={() => setToggleFav(index)} 
-              />
+              setToggleFav={() => setToggleFav(index)}
+            />
           ))}
         </div>
       </div>

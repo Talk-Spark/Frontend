@@ -20,7 +20,13 @@ type NameCardProps = {
   isStorage?: boolean;
 };
 
-const MyCard = ({ isVisible }: { isVisible: boolean }) => {
+const MyCard = ({
+  isVisible,
+  isEdit,
+}: {
+  isVisible: boolean;
+  isEdit: "complete" | "edit";
+}) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
 
@@ -51,13 +57,13 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
 
   return (
     <div
-      className={`${cardBackground} h-[100vh] w-full transform cursor-pointer items-center justify-center bg-gray-1 px-[2rem]`}
+      className={`${cardBackground} h-[100vh] w-full transform items-center justify-center bg-gray-1 px-[2rem]`}
     >
       <div className="flex flex-col items-center gap-[3.7rem]">
         <div className="flex w-full justify-center">
           {/* 카드 회전 효과 적용 */}
           <div
-            className={`relative h-[49.3rem] w-[33.5rem] transform cursor-pointer`}
+            className={`relative h-[49.3rem] w-[33.5rem] transform`}
             style={{
               transform: isFlipped
                 ? "perspective(1000px) rotateY(180deg)"

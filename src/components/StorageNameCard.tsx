@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react"; // useState 추가
+import React, { useState } from "react";
 import whiteMajorIcon from "@/public/storageNameCard/blueMajorIcon.svg";
 import pinkMajorIcon from "@/public/storageNameCard/pinkMajorIcon.svg";
 import blackMajorIcon from "@/public/storageNameCard/blackMajorIcon.svg";
@@ -13,8 +13,10 @@ import pinkGraphic from "@/public/storageNameCard/pinkGraphics.svg";
 import greenGraphic from "@/public/storageNameCard/greenGraphics.svg";
 import blueGraphic from "@/public/storageNameCard/blueGraphics.svg";
 import yellowGraphic from "@/public/storageNameCard/yellowGraphics.svg";
+import QrcodeDown from "./QrCode/QrCodeDown";
 
 type NameCardProps = {
+  cardId: number;
   teamName: string;
   name: string;
   age: number;
@@ -37,6 +39,7 @@ const graphicColor: Record<string, StaticImageData> = {
 };
 
 const StorageNameCard: React.FC<NameCardProps> = ({
+  cardId = 1,
   name = "",
   age = "",
   major = "",
@@ -51,6 +54,11 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
   const [selectedColor, setSelectedColor] = useState(color); // 색상 상태
+  const qrData = {
+    // 큐알 다운로드 위한 객체
+    cardId: cardId,
+    name: name,
+  };
 
   const handleEditToggle = () => setIsEditing((prev) => !prev); // 편집 상태 토글
   const handleColorChange = (newColor: "pink" | "green" | "yellow" | "blue") =>
@@ -163,18 +171,15 @@ const StorageNameCard: React.FC<NameCardProps> = ({
                             alt="편집 아이콘"
                             width={24}
                             height={24}
-                            className="mb-[1.7rem]"
+                            className="mb-[1.7rem] cursor-pointer"
                           />
                         </button>
                       )}
 
                       <button>
-                        <Image
-                          src={downImageUrl}
-                          alt="다운로드 아이콘"
-                          width={24}
-                          height={24}
-                          className="mb-[1.7rem]"
+                        <QrcodeDown
+                          selectedColor={selectedColor}
+                          qrData={qrData}
                         />
                       </button>
                     </>

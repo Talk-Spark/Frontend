@@ -4,7 +4,7 @@ import starIcon from "@/public/nameCard/Star.svg";
 import starPinkIcon from "@/public/nameCard/pinkStar.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEdit } from "@/src/context/Context";
+
 interface TeamBoxProps {
   team: {
     teamName: string;
@@ -15,6 +15,7 @@ interface TeamBoxProps {
   };
   index: number;
   isSelected: boolean;
+  isEdit: "complete" | "edit";
   onSelect: (index: number) => void;
   newTeamIndex: number | null;
   usedNewTeam: boolean;
@@ -26,6 +27,7 @@ const TeamBox = ({
   team,
   index,
   isSelected,
+  isEdit,
   onSelect,
   newTeamIndex,
   usedNewTeam,
@@ -33,8 +35,8 @@ const TeamBox = ({
   setToggleFav,
 }: TeamBoxProps) => {
   const [bgColor, setBgColor] = useState("bg-gray-1");
-  const { isEditing } = useEdit();
   const router = useRouter();
+
   useEffect(() => {
     if (newTeamIndex === index && !usedNewTeam) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
@@ -44,17 +46,20 @@ const TeamBox = ({
       }, 3000);
     }
   }, [newTeamIndex, index, usedNewTeam, setUsedNewTeam]);
+
+  // 선택되었을때 메인 컬러
   const boxBgColor = isSelected
     ? "bg-sub-palePink-55 border-sub-palePink"
     : bgColor;
 
   const showDetailCard = () => {
-    if (isEditing) {
-      return;
+    if (isEdit === "complete") {
+      onSelect(index);
+    } else {
+      router.push("/card/detail/[name]");
     }
-    onSelect(index);
-    router.push("/card/detail/[name]");
   };
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     const month = date.getMonth() + 1;
@@ -76,7 +81,7 @@ const TeamBox = ({
   return (
     <div
       onClick={() => showDetailCard()}
-      className={`flex h-[7.2rem] w-full cursor-pointer flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEditing && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
+      className={`flex h-[7.2rem] w-full cursor-pointer flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEdit === "complete" && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
     >
       <div className="flex justify-between">
         <div className="flex gap-[0.4rem]">
