@@ -2,7 +2,8 @@
 
 import AfterSelect from "@/src/components/flow/AfterSelect";
 import BeforeSelect from "@/src/components/flow/BeforeSelect";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
 export const CARD_FLOW = [
   "엠비티아이",
@@ -24,8 +25,47 @@ export interface NameCardObjProps {
   selfDescription: string;
   tmi: string;
 }
+/*
+  방에 입장했을 때 소켓 연결 및 joinRoom 메세지 전송
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
+      transports: ["websocket"],
+    });
+
+    //이 2가지 과정은 적절하게 위치 옮길 필요 존재.
+    socketRef.current.emit("joinRoom", { roomId, accessToken, isHost });
+    socketRef.current.on("roomUpdate", (info) => {
+      //info 객체를 가지고 적절한 동작 수행! (방을 세팅하는)
+    });
+
+    //그리고 방장 여부는 받아오기
+    get("/api/rooms/host");
+
+    //방 퇴장 시
+    socketRef.current.emit("leaveRoom", { roomId, accessToken, isHost });
+    socketRef.current.disconnect();
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
+*/
 
 const Flow = () => {
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
+      transports: ["websocket"],
+    });
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
+
   const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
   const [isMaker, setIsMaker] = useState(false); //소켓 or API로 방장 여부 받아오기
