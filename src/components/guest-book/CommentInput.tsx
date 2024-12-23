@@ -25,16 +25,8 @@ const CommnetInput = ({ setCommentValue, commentValue }: CommentInputProps) => {
     setCommentValue(e.target.value);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      if (commentValue.trim()) {
-        setCommentValue(""); // 전송 후 입력 필드 초기화
-      }
-    }
-  };
-
   const handleClickGuestBook = () => {
+    /* 전송 버튼 클릭시 post 요청 후 새로고침처럼 get요청 */
     setCommentValue(""); // 전송 후 입력 필드 초기화
   };
 
@@ -79,6 +71,7 @@ const CommnetInput = ({ setCommentValue, commentValue }: CommentInputProps) => {
           onClick={handleClickGuestBook}
         />
         <div className="relative w-[5rem]">
+          {/* 체크박스 선택시 데이터 이름에 "익명" post */}
           <div className="absolute top-[0.8rem] flex w-full items-center justify-center gap-[0.4rem]">
             <Image
               src={isCheck ? fullCheckBox : checkBox}
@@ -94,7 +87,6 @@ const CommnetInput = ({ setCommentValue, commentValue }: CommentInputProps) => {
           aria-label="댓글 입력 필드"
           className="search-reset w-full resize-none bg-transparent py-[0.5rem] text-body-1-med text-gray-12 placeholder-gray-4 focus:outline-none"
           onChange={handleChange}
-          onKeyDown={handleKeyPress}
           value={commentValue}
           maxLength={200}
           rows={1}

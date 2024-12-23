@@ -7,6 +7,13 @@ import { useRouter } from "next/navigation";
 import { useEdit } from "@/src/context/Context";
 import Modal from "../common/Modal";
 
+interface TeamData {
+  teamName: string;
+  teamPeopleCount: number;
+  cardDate: string;
+  content: string;
+}
+
 const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
   const router = useRouter();
   const { isEditing } = useEdit();
@@ -15,7 +22,8 @@ const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
 
-  const [teamData, setTeamData] = useState([
+  const [teamData, setTeamData] = useState<TeamData[]>([
+    // 더미
     {
       teamName: "멋쟁이 데모팀",
       teamPeopleCount: 5,
@@ -51,7 +59,7 @@ const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
 
   const handleSearch = () => {
     if (searchValue.trim() === "") {
-      setFilteredTeamData(teamData); // 검색어가 없으면 원래 데이터로 되돌리기
+      setFilteredTeamData(teamData);
     } else {
       setFilteredTeamData(
         teamData.filter((team) =>

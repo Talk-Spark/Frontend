@@ -35,6 +35,7 @@ const TeamBox = ({ team, index, isSelected, onSelect, ver }: TeamBoxProps) => {
     } else if (ver === "방명록") {
       router.push("/guest-book/[id]");
     }
+    onSelect(index);
   };
 
   const formatDate = (dateString: string): string => {
@@ -68,24 +69,22 @@ const TeamBox = ({ team, index, isSelected, onSelect, ver }: TeamBoxProps) => {
 
   return (
     <div
-      onClick={() => onSelect(index)}
-      className={`flex h-[7.2rem] w-full flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEditing && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
+      onClick={() => showDetailCard()}
+      className={`flex h-[7.2rem] w-full cursor-pointer flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEditing && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
     >
       <div className="flex justify-between">
         <div className="flex gap-[0.4rem]">
-          <span
-            onClick={showDetailCard}
-            className="cursor-pointer text-body-2-bold text-gray-11"
-          >
-            {team.teamName}
-          </span>
+          <span className="text-body-2-bold text-gray-11">{team.teamName}</span>
           <span className="text-body-2-med text-gray-7">
             {team.teamPeopleCount}
           </span>
         </div>
         <Image
           src={isFav ? starPinkIcon : starIcon}
-          onClick={() => setIsFav(!isFav)}
+          onClick={(e) => {
+            e.stopPropagation(); // 이벤트 전파를 막아 상위 onClick 실행 방지
+            setIsFav(!isFav);
+          }}
           alt="즐겨찾기"
           className="cursor-pointer"
         />
