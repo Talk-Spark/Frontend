@@ -53,7 +53,7 @@ const TeamBox = ({
 
   const boxBgColor = isSelected
     ? "bg-sub-palePink-55 border-sub-palePink"
-    : "bg-gray-1 border-gray-2";
+    : bgColor;
 
   const showDetailCard = () => {
     if (isEdit === "complete") {
@@ -81,13 +81,13 @@ const TeamBox = ({
 
   const displayedParticipants =
     participantsClean.length > maxVisible
-      ? `${participantsClean.slice(0, maxVisible).join(" ")} ∙∙∙`
+      ? `${participantsClean.slice(0, maxVisible).join(" ")} ...`
       : participantsClean.join(" ");
 
   const getPreviewContent = (content?: string) => {
     if (ver === "방명록" && content) {
       return content.length > maxText
-        ? `${content.slice(0, maxText)}∙∙∙`
+        ? `${content.slice(0, maxText)}...`
         : content;
     }
     return content;

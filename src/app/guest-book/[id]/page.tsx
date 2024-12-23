@@ -57,7 +57,7 @@ const Page = () => {
   ];
 
   return (
-    <div >
+    <div>
       <Header title={roomName} padding={false} showButton1={true} />
       <div className="-mx-[2rem] flex h-[100vh] w-[calc(100%+4rem)] flex-col items-center bg-gray-1">
         <div className="mb-[2rem] mt-[2.8rem] rounded-[1.2rem] border-[0.1rem] border-gray-7 px-[0.7rem] py-[0.3rem] text-caption-med text-gray-7">
