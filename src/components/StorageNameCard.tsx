@@ -6,9 +6,7 @@ import blackMajorIcon from "@/public/storageNameCard/blackMajorIcon.svg";
 
 import Image, { StaticImageData } from "next/image";
 import whitePencil from "@/public/storageNameCard/pencil.svg";
-import whiteDown from "@/public/storageNameCard/down.svg";
 import blackPencil from "@/public/storageNameCard/blackPencil.svg";
-import blackDown from "@/public/storageNameCard/blackDown.svg";
 import pinkGraphic from "@/public/storageNameCard/pinkGraphics.svg";
 import greenGraphic from "@/public/storageNameCard/greenGraphics.svg";
 import blueGraphic from "@/public/storageNameCard/blueGraphics.svg";
