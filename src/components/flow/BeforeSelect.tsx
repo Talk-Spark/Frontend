@@ -2,6 +2,7 @@
 
 import React, {
   Dispatch,
+  MutableRefObject,
   SetStateAction,
   useEffect,
   useRef,
@@ -16,47 +17,114 @@ import Button from "@/src/components/common/Button";
 import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
 import { CardFlowType } from "@/src/app/(flow)/flow/page";
 import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
+import { Socket } from "socket.io-client";
 
 interface BeforeSelectProps {
   cardStep: number;
-  NameCardInfo: NameCardObjProps;
   setIsBefore: (input: boolean) => void;
   setCardStep: Dispatch<SetStateAction<number>>;
+  socketRef: MutableRefObject<Socket>;
+  roomId: string;
+  isHost: boolean;
 }
+
+interface CardDataProps {
+  id: number;
+  kakaoId: string;
+  ownerId: number;
+
+  name: string;
+  age: number;
+  major: string;
+  mbti: string;
+  hobby: string;
+  lookAlike: string;
+  slogan: string;
+  tmi: string;
+}
+
+interface QuizDataProps {
+  cardId: number; // 명함 아이디
+  cardOwnerId: number; // 명함 주인 회원아이디
+  fieldName: "mbti" | "hobby" | "lookAlike" | "selfDescription" | "tmi"; // 빈칸으로 뚫릴 필드의 이름 (ex: "name", "age") -> mbti, hobby, lookAlike, selfDescription ,tmi
+  correctAnswer: string; // 정답(보기 번호가 아니고 정답 내용이 들어갑니다. 문제 종류 관계없이 string입니다.)
+  options: string[]; //정답 보기들(아마 4개)
+}
+
+export const CARD_FIELD_NUMBER = {
+  mbti: 0,
+  hobby: 1,
+  lookAlike: 2,
+  selfDescription: 3,
+  tmi: 4,
+} as const;
 
 const BeforeSelect = ({
   cardStep,
-  NameCardInfo,
   setIsBefore,
   setCardStep,
+  socketRef,
+  roomId,
+  isHost,
 }: BeforeSelectProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
   const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
-
-  const handleOpenPopup = () => {
-    setIsPopupOpen(true);
-  };
-
-  const handleClickButton = (item: string) => {
-    if (!isAnswerSeleted) setSelectedButton(item);
-  };
-
-  const handleAnswerSelect = () => {
-    if (selectedButton) {
-      setIsAnswerSeleted(true);
-      setCardStep((prev) => prev + 1);
-
-      //다음으로 넘어가기 위한 임시 timeout
-      setTimeout(() => {
-        setIsBefore(false);
-      }, 3000);
-    }
-  };
-
+  const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
+    //더미데이터
+    teamName: "팀 이름 없음",
+    name: "JunHyuk Kong",
+    age: 18,
+    major: "컴퓨터공학과",
+    mbti: "INTJ",
+    hobby: "축구",
+    lookAlike: "강동원",
+    selfDescription: "안녕하세요 저는 공준혁이라고 합니다",
+    tmi: "카페인이 너무 잘 들어요",
+  });
+  const [quizInfo, setQuizInfo] = useState<QuizDataProps | null>();
   const popUpRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    //만약 순서 꼬이면 emit과 on의 순서 바꿔보기
+    socketRef.current.emit("getQuestion", { roomId });
+    socketRef.current.on("question", (data) => {
+      console.log(data); //실제로 데이터 형식 보고 데이터 연결하기
+      //그래도 일단 노션에 있는거 믿고 작성
+      const cardData: CardDataProps = data[1];
+      const quizData: QuizDataProps = data[2];
+
+      setNameCardInfo({
+        teamName: cardData.slogan, //todo: 수정 필요
+        name: cardData.name,
+        age: cardData.age,
+        major: cardData.major,
+        mbti: cardData.mbti,
+        hobby: cardData.hobby,
+        lookAlike: cardData.lookAlike,
+        selfDescription: cardData.slogan, // todo: 수정 필요
+        tmi: cardData.tmi,
+      });
+      setQuizInfo(quizData);
+      setCardStep(CARD_FIELD_NUMBER[quizData.fieldName]);
+    });
+
+    //todo: 형식 변환될 가능성 있음. (요청해봄)
+    //todo2: 이거 데이터 오면, 해당 데이터를 가지고 AfterSelect로 넘어가는 로직 필요 (아마 부모요소에서 배열을 세팅한다음, isBefore세팅해서 넘어가면 될 듯)
+    socketRef.current.on(
+      "singleQuestionScoreBoard",
+      (data: NumberBooleanMap) => {
+        const entries = Object.entries(data); // [key, value] 배열로 변환
+        entries.forEach(([userId, isMatched]) => {
+          if (isMatched) {
+            console.log(`User ${userId} answered correctly.`);
+          } else {
+            console.log(`User ${userId} answered incorrectly.`);
+          }
+        });
+      },
+    );
+
     const handleClickOutSide = (e: MouseEvent) => {
       if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
         setIsPopupOpen(false);
@@ -69,10 +137,32 @@ const BeforeSelect = ({
     };
   }, []);
 
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClickButton = (item: string) => {
+    if (!isAnswerSeleted) setSelectedButton(item);
+  };
+
+  const handleAnswerSelect = () => {
+    if (selectedButton) {
+      setIsAnswerSeleted(true);
+      //todo: userId 식별할 수 있는 방법 상의한 후, 그 userId를 잘 실어서 보내야함.
+      socketRef.current.emit("submitSelection", {
+        roomId,
+        sparkUserId: userId,
+        answer: selectedButton,
+      });
+    }
+  };
+
   if (cardStep > 4) {
     //퀴즈 다 맞춘 상태 -> 알맞은 단계로 이어져야 함
     return;
   }
+
+  if (!NameCardInfo || !quizInfo || !popUpRef) return;
 
   return (
     <section className="flex h-auto w-[37.5rem] flex-col items-center gap-[2.4rem]">
@@ -125,9 +215,13 @@ const BeforeSelect = ({
           {["A", "B"].map((item) => (
             <button
               key={item}
-              onClick={() => handleClickButton(item)}
+              onClick={() =>
+                handleClickButton(
+                  `${item === "A" ? quizInfo.options[0] : quizInfo.options[1]}`,
+                )
+              }
               className={`br-[0.8rem] flex h-[5.6rem] w-[16.2rem] items-center justify-center gap-[1rem] rounded-[8px] border-gray-4 pb-[0.8rem] pl-[1.2rem] pr-[0.8rem] pt-[0.8rem] text-body-2-med shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)] ${selectedButton === item ? "bg-main-pink text-white" : "bg-white text-gray-12"}`}
-            >{`${item}. 텍스트영역텍스트영역텍스트영역텍스트영역`}</button>
+            >{`${item}. ${item === "A" ? quizInfo.options[0] : quizInfo.options[1]}`}</button>
           ))}
         </div>
 
@@ -135,9 +229,13 @@ const BeforeSelect = ({
           {["C", "D"].map((item) => (
             <button
               key={item}
-              onClick={() => handleClickButton(item)}
+              onClick={() =>
+                handleClickButton(
+                  `${item === "C" ? quizInfo.options[2] : quizInfo.options[3]}`,
+                )
+              }
               className={`br-[0.8rem] flex h-[5.6rem] w-[16.2rem] items-center justify-center gap-[1rem] rounded-[8px] border-gray-4 pb-[0.8rem] pl-[1.2rem] pr-[0.8rem] pt-[0.8rem] text-body-2-med shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)] ${selectedButton === item ? "bg-main-pink text-white" : "bg-white text-gray-12"}`}
-            >{`${item}.`}</button>
+            >{`${item}. ${item === "C" ? quizInfo.options[2] : quizInfo.options[3]}`}</button>
           ))}
         </div>
       </article>

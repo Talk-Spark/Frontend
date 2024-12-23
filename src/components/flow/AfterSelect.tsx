@@ -1,12 +1,19 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import ProfileImage from "../ProfileImage";
 import Button from "@/src/components/common/Button";
 import Lottie from "lottie-react";
 import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
+import { Socket } from "socket.io-client";
 
 const STORAGE_CARD = {
   teamName: "팀이름없어용",
@@ -26,8 +33,17 @@ const STORAGE_CARD = {
 interface AfterSelectProps {
   cardStep: number;
   setIsBefore: Dispatch<SetStateAction<boolean>>;
+  socketRef: MutableRefObject<Socket>;
+  roomId: string;
+  isHost: boolean;
 }
-const AfterSelect = ({ cardStep, setIsBefore }: AfterSelectProps) => {
+const AfterSelect = ({
+  cardStep,
+  setIsBefore,
+  socketRef,
+  roomId,
+  isHost,
+}: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
   const [isAllCorrect, setIsAllCorrect] = useState(true);
   const [isQuizEnd, setIsQuizEnd] = useState(false);
@@ -35,15 +51,24 @@ const AfterSelect = ({ cardStep, setIsBefore }: AfterSelectProps) => {
 
   const router = useRouter();
 
+  //todo: key가 string일 수 있음 (userId : 맞춤 여부) 형식이기 때문!
+  type NumberBooleanMap = {
+    [key: number]: boolean;
+  };
+
   const handleNextQuestion = () => {
     if (cardStep <= 4) setIsBefore(true);
     else setIsQuizEnd(true); //개인 카드 공개
   };
 
   const handleNextPerson = () => {
-    if (isGameEnd)
+    socketRef.current.emit("next", { roomId });
+    //todo: 그냥 다음으로 넘어가는게 아니라, on을 기준으로 판단해야 해서..
+    //매우 중요 todo : 그냥 부모 요소에서 전부 on 해야할 듯!
+    if (isGameEnd) {
+      socketRef.current.on("scores", () => {}); //todo: 아마 부모 요소에서 처리해야할 수도 있음 (최종 스코어 가져오기)
       router.push("/game-end"); //최종스코어 창으로 이동!;
-    else {
+    } else {
       //맞출 사람이 더 남았을 경우 - 초기화 작업
       setIsBefore(true);
       setIsAllCorrect(false);
@@ -127,7 +152,7 @@ const AfterSelect = ({ cardStep, setIsBefore }: AfterSelectProps) => {
           </section>
 
           <div className="mb-[6rem] mt-[7rem]">
-            <Button onClick={handleNextQuestion}>
+            <Button onClick={handleNextQuestion} disabled={isHost}>
               {cardStep <= 4 ? "다음 질문으로" : "다음으로"}
             </Button>
           </div>

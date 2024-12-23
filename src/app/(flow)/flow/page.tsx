@@ -1,8 +1,10 @@
 "use client";
 
+import { get } from "@/src/apis";
 import AfterSelect from "@/src/components/flow/AfterSelect";
 import BeforeSelect from "@/src/components/flow/BeforeSelect";
-import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 export const CARD_FLOW = [
@@ -38,6 +40,12 @@ export interface NameCardObjProps {
     socketRef.current.emit("joinRoom", { roomId, accessToken, isHost });
     socketRef.current.on("roomUpdate", (info) => {
       //info 객체를 가지고 적절한 동작 수행! (방을 세팅하는)
+      {
+        "name": "사람이름",
+        "isOwner": false // 방장이면 true, 아니면 false
+        "userId" //아마 이것도 추가로 넘겨준다고 했음
+      },
+      ...
     });
 
     //그리고 방장 여부는 받아오기
@@ -47,6 +55,16 @@ export interface NameCardObjProps {
     socketRef.current.emit("leaveRoom", { roomId, accessToken, isHost });
     socketRef.current.disconnect();
 
+    //(only 방장) 게임 시작 버튼
+  const handleStartGame = (roomId: string) => {
+    socketRef.current?.emit("startGame", { roomId });
+  };
+
+  socketRef.current?.on("startGame", () => {
+    //startGame을 보내고, 그에 대한 응답이 왔을 시 flow로 넘어가는 로직
+    router.push("/flow/방아이디 어쩌구")
+  });
+
     return () => {
       socketRef.current?.disconnect();
     };
@@ -54,6 +72,17 @@ export interface NameCardObjProps {
 */
 
 const Flow = () => {
+  /* 
+    /flow?roomId={roomId}  와 같은 주소에서 roomId 내용을 뽑아올거임
+  */
+  const searchParams = useSearchParams();
+  const roomId = searchParams.get("roomId");
+
+  const [isHost, setIsHost] = useState(false); //방장 여부
+  const [isReady, setIsReady] = useState(false);
+  const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정
+  const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
+
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -61,39 +90,60 @@ const Flow = () => {
       transports: ["websocket"],
     });
 
+    const isHostCheck = async () => {
+      const response = await get("/api/rooms/host");
+      console.log(response.data);
+      setIsHost(response.data as boolean);
+    };
+
+    isHostCheck();
+
+    //방에 잘 접속했다는 메세지 전송
+    socketRef.current.emit("joinGame", { roomId });
+    socketRef.current.on("gameJoined", () => {
+      if (socketRef.current && isHost)
+        socketRef.current.emit("prepareQuizzes", { roomId });
+      setTimeout(() => {
+        //3초 대기 후 진행
+        setIsReady(true);
+      }, 3000);
+    });
+
+    //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기
+    socketRef.current.on("singleResult", () => {});
+    socketRef.current.on("lastResult", () => {});
+
     return () => {
       socketRef.current?.disconnect();
+      socketRef.current = null; //메모리 누수 방지
     };
   }, []);
 
-  const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정
-  const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
-  const [isMaker, setIsMaker] = useState(false); //소켓 or API로 방장 여부 받아오기
-  const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
-    //이것도 현재 대상자 정보를 소켓으로 받아와야할 듯
-    teamName: "팀 이름 없음",
-    name: "JunHyuk Kong",
-    age: 18,
-    major: "컴퓨터공학과",
-    mbti: "INTJ",
-    hobby: "축구",
-    lookAlike: "강동원",
-    selfDescription: "안녕하세요 저는 공준혁이라고 합니다",
-    tmi: "카페인이 너무 잘 들어요",
-  });
-
+  if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
     <main className="flex flex-col items-center bg-gray-1">
-      {isBefore ? (
-        <BeforeSelect
-          cardStep={cardStep}
-          NameCardInfo={NameCardInfo}
-          setIsBefore={setIsBefore}
-          setCardStep={setCardStep}
-        />
+      {isReady ? (
+        socketRef && isBefore ? (
+          <BeforeSelect
+            cardStep={cardStep}
+            setIsBefore={setIsBefore}
+            setCardStep={setCardStep}
+            socketRef={socketRef as MutableRefObject<Socket>}
+            roomId={roomId}
+            isHost={isHost}
+          />
+        ) : (
+          <AfterSelect
+            cardStep={cardStep}
+            setIsBefore={setIsBefore}
+            socketRef={socketRef as MutableRefObject<Socket>}
+            roomId={roomId}
+            isHost={isHost}
+          />
+        )
       ) : (
-        <AfterSelect cardStep={cardStep} setIsBefore={setIsBefore} />
+        <div>로딩중.. 3초만 기다려주세요</div>
       )}
     </main>
   );
