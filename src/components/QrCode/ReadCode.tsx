@@ -5,7 +5,6 @@ import cameraIcon from "@/public/entry/camera.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-
 const ReadCode = () => {
   const [myRun, setMyRun] = useState<{
     cardId: string;
@@ -64,10 +63,8 @@ const ReadCode = () => {
   useEffect(() => {
     if (myRun) {
       // QR 코드에서 읽은 값과 타임스탬프를 쿼리 파라미터로 전달
-      const encodedTimestamp = encodeURIComponent(myRun.timestamp); 
-      router.push(
-        `/card?cardId=${myRun.cardId}&name=${myRun.name}&timestamp=${encodedTimestamp}`,
-      );
+      const encodedTimestamp = encodeURIComponent(myRun.timestamp);
+      router.push(`/card?cardId=${myRun.cardId}&timestamp=${encodedTimestamp}`);
     }
   }, [myRun, router]);
 

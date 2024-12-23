@@ -20,13 +20,7 @@ type NameCardProps = {
   isStorage?: boolean;
 };
 
-const MyCard = ({
-  isVisible,
-  isEdit,
-}: {
-  isVisible: boolean;
-  isEdit: "complete" | "edit";
-}) => {
+const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
 

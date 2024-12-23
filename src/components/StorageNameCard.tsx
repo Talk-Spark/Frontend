@@ -104,7 +104,6 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   // blue, pink, yellow, green 별 다른 text, graphic 적용
   const graphicImageUrl = graphicColor[selectedColor] || graphicColor.pink;
   const pencilImageUrl = selectedColor === "blue" ? whitePencil : blackPencil;
-  const downImageUrl = selectedColor === "blue" ? whiteDown : blackDown;
   const majorImageUrl =
     selectedColor === "blue"
       ? whiteMajorIcon

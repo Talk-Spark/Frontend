@@ -5,7 +5,6 @@ interface QrCodeProps {
   name: string;
   size: number;
 }
-
 const QrCode = ({ cardId, name, size }: QrCodeProps) => {
   const qrData = JSON.stringify({ cardId, name });
 

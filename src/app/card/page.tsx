@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
@@ -15,7 +13,6 @@ const Card = () => {
   const cardId = searchParams.get("cardId");
   const name = searchParams.get("name");
   const timestamp = searchParams.get("timestamp");
-  const router = useRouter();
 
   type TeamData = {
     teamName: string;
@@ -135,7 +132,7 @@ const Card = () => {
             isEdit={isEdit}
           />
         ) : (
-          <MyCard isVisible={isVisible} isEdit={isEdit} />
+          <MyCard isVisible={isVisible} />
         )}
       </div>
     </>
