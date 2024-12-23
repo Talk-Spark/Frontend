@@ -44,28 +44,27 @@ const HeaderWrapper = () => {
         button2Type: "exit",
         button2Action: () => {},
       };
-    } else if (pathname === "/page7") {
+    } else if (pathname === "/entry") {
+      return {
+        showButton1: true,
+        title: "입장하기",
+        button2Action: () => {},
+      };
+    } else if (pathname.startsWith("/team/")) {
+      return {
+        showButton1: true,
+        title: "입장하기",
+        button2Action: () => {},
+      };
+    } else if (pathname.startsWith("/entry/camera")) {
       return {
         showButton1: true,
         title: "TEXT텍스트영역",
-        button2Type: "edit",
-        button2Action: () => {},
-      };
-    } else if (pathname === "/guest-book") {
-      return {
-        showButton1: true,
-        title: "방명록 보관함",
-        button2Type: "edit",
-        button2Action: () => {},
-      };
-    } else if (pathname.startsWith("/guest-book/")) {
-      return {
-        showButton1: true,
-        title: "팀이름이 들어가야함...",
-        button2Type: "",
+        button2Type: "settings",
         button2Action: () => {},
       };
     }
+
     return null;
   };
 
