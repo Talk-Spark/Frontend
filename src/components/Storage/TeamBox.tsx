@@ -1,36 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import starIcon from "@/public/nameCard/Star.svg";
 import starPinkIcon from "@/public/nameCard/pinkStar.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEdit } from "@/src/context/Context";
 
 interface TeamBoxProps {
   team: {
     teamName: string;
     teamPeopleCount: number;
+    participants: string;
     cardDate: string;
     content: string;
+    isFav: boolean;
   };
   index: number;
   isSelected: boolean;
+  isEdit: "complete" | "edit";
   onSelect: (index: number) => void;
+  newTeamIndex?: number | null;
+  usedNewTeam?: boolean;
+  setUsedNewTeam?: (value: boolean) => void;
+  setToggleFav: (index: number) => void;
   ver: "명함" | "방명록";
 }
 
-const TeamBox = ({ team, index, isSelected, onSelect, ver }: TeamBoxProps) => {
-  const [isFav, setIsFav] = useState(false);
-  const { isEditing } = useEdit();
+const TeamBox = ({
+  team,
+  index,
+  isSelected,
+  isEdit,
+  onSelect,
+  newTeamIndex,
+  usedNewTeam,
+  setUsedNewTeam,
+  setToggleFav,
+  ver,
+}: TeamBoxProps) => {
+  const [bgColor, setBgColor] = useState("bg-gray-1");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (newTeamIndex === index && !usedNewTeam) {
+      setBgColor("bg-sub-palePink-55 border-sub-palePink");
+      if (setUsedNewTeam) {
+        setUsedNewTeam(true);
+      }
+      setTimeout(() => {
+        setBgColor("bg-gray-1");
+      }, 3000);
+    }
+  }, [newTeamIndex, index, usedNewTeam, setUsedNewTeam]);
 
   const boxBgColor = isSelected
     ? "bg-sub-palePink-55 border-sub-palePink"
     : "bg-gray-1 border-gray-2";
-  const router = useRouter();
+
   const showDetailCard = () => {
-    if (isEditing) {
-      return;
-    }
-    if (ver === "명함") {
+    if (isEdit === "complete") {
+      onSelect(index);
+    } else if (ver === "명함") {
       router.push("/card/detail/[name]");
     } else if (ver === "방명록") {
       router.push("/guest-book/[id]");
@@ -47,7 +75,7 @@ const TeamBox = ({ team, index, isSelected, onSelect, ver }: TeamBoxProps) => {
 
   const formattedDate = formatDate(team.cardDate);
 
-  const participantsClean = team.content.split(" ");
+  const participantsClean = team.participants.split(" ");
   const maxVisible = 4; // 보여지는 최대 이름 수
   const maxText = 18; // 보여지는 방명록 메세지 최대 길이 수
 
@@ -67,10 +95,15 @@ const TeamBox = ({ team, index, isSelected, onSelect, ver }: TeamBoxProps) => {
 
   const previewContent = getPreviewContent(team.content);
 
+  const handleFavClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setToggleFav(index);
+  };
+
   return (
     <div
       onClick={() => showDetailCard()}
-      className={`flex h-[7.2rem] w-full cursor-pointer flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEditing && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
+      className={`flex h-[7.2rem] w-full cursor-pointer flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEdit && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
     >
       <div className="flex justify-between">
         <div className="flex gap-[0.4rem]">
@@ -80,11 +113,8 @@ const TeamBox = ({ team, index, isSelected, onSelect, ver }: TeamBoxProps) => {
           </span>
         </div>
         <Image
-          src={isFav ? starPinkIcon : starIcon}
-          onClick={(e) => {
-            e.stopPropagation(); // 이벤트 전파를 막아 상위 onClick 실행 방지
-            setIsFav(!isFav);
-          }}
+          src={team.isFav ? starPinkIcon : starIcon}
+          onClick={handleFavClick}
           alt="즐겨찾기"
           className="cursor-pointer"
         />

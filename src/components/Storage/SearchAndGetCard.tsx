@@ -1,80 +1,90 @@
-"use client";
 import { useState, useEffect } from "react";
 import SearchInput from "../SearchInput";
 import Sorting from "./Sorting";
 import TeamBox from "./TeamBox";
 import { useRouter } from "next/navigation";
-import { useEdit } from "@/src/context/Context";
 import Modal from "../common/Modal";
 
-interface TeamData {
+interface Team {
   teamName: string;
   teamPeopleCount: number;
+  participants: string;
   cardDate: string;
   content: string;
+  isFav: boolean;
 }
 
-const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
+const SearchAndGetCard = ({
+  ver,
+  teamData,
+  setTeamData,
+  newTeamIndex,
+  usedNewTeam,
+  setUsedNewTeam,
+  isEdit,
+}: {
+  ver: "방명록" | "명함";
+  teamData: Team[];
+  setTeamData: React.Dispatch<React.SetStateAction<Team[]>>;
+  newTeamIndex?: number | null;
+  usedNewTeam?: boolean;
+  setUsedNewTeam?: (value: boolean) => void;
+  isEdit: "edit" | "complete";
+}) => {
   const router = useRouter();
-  const { isEditing } = useEdit();
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
-
-  const [teamData, setTeamData] = useState<TeamData[]>([
-    // 더미
-    {
-      teamName: "멋쟁이 데모팀",
-      teamPeopleCount: 5,
-      cardDate: "2024-11-03 14:30:15",
-      content: "박하경 진예원 이나윤 진예원 진예원",
-    },
-    {
-      teamName: "프론트엔드팀",
-      teamPeopleCount: 3,
-      cardDate: "2024-11-02 10:15:10",
-      content: "anjfqhkjknfjknwefnewsadinsfdsfsdfsfsfsfdsfi",
-    },
-    {
-      teamName: "백엔드팀",
-      teamPeopleCount: 3,
-      cardDate: "2024-11-01 09:05:20",
-      content: "김민우 이윤정 박승범",
-    },
-  ]);
+  const [sortOption, setSortOption] = useState("최신순");
+  const [toggleFav, setToggleFav] = useState<number | null>(null);
 
   const addCardBtn = () => {
     router.push("/card/camera");
   };
 
-  // isEditing이 false일 때 selectedTeamBoxes 초기화
   useEffect(() => {
-    if (!isEditing) {
-      setSelectedTeamBoxes([]); // 배열 초기화
+    if (isEdit === "edit") {
+      setSelectedTeamBoxes([]);
     }
-  }, [isEditing]);
+  }, [isEdit]);
 
   const [filteredTeamData, setFilteredTeamData] = useState(teamData);
 
-  const handleSearch = () => {
-    if (searchValue.trim() === "") {
-      setFilteredTeamData(teamData);
-    } else {
-      setFilteredTeamData(
-        teamData.filter((team) =>
-          team.teamName.toLowerCase().includes(searchValue.toLowerCase()),
-        ),
+  useEffect(() => {
+    let sortedData = [...teamData];
+
+    if (searchValue.trim() !== "") {
+      sortedData = sortedData.filter((team) =>
+        team.teamName.toLowerCase().includes(searchValue.toLowerCase()),
       );
     }
-  };
 
+    if (sortOption === "최신순") {
+      sortedData = sortedData.sort((a, b) => {
+        return new Date(b.cardDate).getTime() - new Date(a.cardDate).getTime();
+      });
+    } else if (sortOption === "가나다순") {
+      sortedData = sortedData.sort((a, b) => {
+        return a.teamName.localeCompare(b.teamName);
+      });
+    } else if (sortOption === "즐겨찾기") {
+      sortedData = sortedData.filter((item) => item.isFav);
+    }
+
+    setFilteredTeamData(sortedData);
+  }, [teamData, searchValue, sortOption]);
+
+  const handleSearch = () => {};
+
+  // 편집 시 팀 박스 선택
   const handleSelectTeamBox = (index: number) => {
-    if (!isEditing) {
+    if (isEdit === "edit") {
       return;
     }
 
     if (selectedTeamBoxes.includes(index)) {
+      // 기존 팀 박스 선택/해제 처리
       setSelectedTeamBoxes(selectedTeamBoxes.filter((item) => item !== index));
     } else {
       setSelectedTeamBoxes([...selectedTeamBoxes, index]);
@@ -82,17 +92,37 @@ const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
   };
 
   const handleDeleteSelected = () => {
-    // 선택된 팀 박스를 teamData에서 삭제
-    setTeamData((prevData) =>
-      prevData.filter((_, index) => !selectedTeamBoxes.includes(index)),
+    // 선택된 팀 이름을 찾아서 TeamData 배열 초기화
+    const selectedTeamNames = selectedTeamBoxes.map(
+      (index) => filteredTeamData[index].teamName,
     );
-    setSelectedTeamBoxes([]); // 삭제 후 선택된 팀 박스도 초기화
+    console.log(selectedTeamNames);
+    setTeamData((prevData) =>
+      prevData.filter((team) => !selectedTeamNames.includes(team.teamName)),
+    );
+
+    setSelectedTeamBoxes([]);
     setIsModal(false);
   };
 
+  useEffect(() => {
+    if (toggleFav !== null) {
+      const selectedTeam = filteredTeamData[toggleFav];
+      if (!selectedTeam) return;
+
+      setTeamData((prevData) =>
+        prevData.map((team) =>
+          team.teamName === selectedTeam.teamName
+            ? { ...team, isFav: !team.isFav }
+            : team,
+        ),
+      );
+    }
+  }, [toggleFav]);
+
   const handleDeleteAll = () => {
-    setTeamData([]); // 모든 팀 데이터 삭제
-    setSelectedTeamBoxes([]); // 선택된 팀 박스 초기화
+    setTeamData([]);
+    setSelectedTeamBoxes([]);
     setIsModal(false);
   };
 
@@ -132,9 +162,9 @@ const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
             </span>
           </div>
           <Sorting
-            onDeleteSelected={() => deleteModal("selected")}
-            onDeleteAll={() => deleteModal("all")}
             deleteModal={deleteModal}
+            setSortOption={setSortOption}
+            isEdit={isEdit}
           />
         </div>
         <div className="flex w-full flex-col gap-[1.2rem]">
@@ -142,9 +172,14 @@ const SearchAndGetCard = ({ ver }: { ver: "방명록" | "명함" }) => {
             <TeamBox
               key={index}
               isSelected={selectedTeamBoxes.includes(index)}
+              isEdit={isEdit}
               onSelect={handleSelectTeamBox}
               team={team}
               index={index}
+              newTeamIndex={newTeamIndex}
+              usedNewTeam={usedNewTeam}
+              setUsedNewTeam={setUsedNewTeam}
+              setToggleFav={() => setToggleFav(index)}
               ver={ver}
             />
           ))}

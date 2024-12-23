@@ -4,6 +4,7 @@ import FixedComment from "@/src/components/guest-book/FixedComment";
 import MyTalk from "@/src/components/guest-book/MyTalk";
 import YourTalk from "@/src/components/guest-book/YourTalk";
 import CommnetInput from "@/src/components/guest-book/CommentInput";
+import Header from "@/src/components/Headers/Header";
 
 const Page = () => {
   const [commentValue, setCommentValue] = useState("");
@@ -56,41 +57,44 @@ const Page = () => {
   ];
 
   return (
-    <div className="-mx-[2rem] flex h-[100vh] w-[calc(100%+4rem)] flex-col items-center bg-gray-1">
-      <div className="mb-[2rem] mt-[2.8rem] rounded-[1.2rem] border-[0.1rem] border-gray-7 px-[0.7rem] py-[0.3rem] text-caption-med text-gray-7">
-        {formatDate(date)}
-      </div>
-      <div className="mx-[2rem] flex w-[calc(100%-4rem)] flex-1 flex-col">
-        <FixedComment
-          roomName={roomName}
-          formatTimeWithMeridiem={formatTimeWithMeridiem}
-          date={date}
-        />
-        {/* Guest Book Data */}
-        <div className="mt-[1.6rem] flex flex-col gap-[1.6rem]">
-          {guestBookData.map((data) =>
-            data.isOwnerGuestBook ? (
-              <MyTalk
-                key={data.guestBookId}
-                content={data.guestBookContent}
-                dateTime={data.guestBookDateTime}
-              />
-            ) : (
-              <YourTalk
-                key={data.guestBookId}
-                userName={data.sparkUserName}
-                content={data.guestBookContent}
-                dateTime={data.guestBookDateTime}
-                formatTimeWithMeridiem={formatTimeWithMeridiem}
-              />
-            ),
-          )}
+    <div >
+      <Header title={roomName} padding={false} showButton1={true} />
+      <div className="-mx-[2rem] flex h-[100vh] w-[calc(100%+4rem)] flex-col items-center bg-gray-1">
+        <div className="mb-[2rem] mt-[2.8rem] rounded-[1.2rem] border-[0.1rem] border-gray-7 px-[0.7rem] py-[0.3rem] text-caption-med text-gray-7">
+          {formatDate(date)}
         </div>
+        <div className="mx-[2rem] flex w-[calc(100%-4rem)] flex-1 flex-col">
+          <FixedComment
+            roomName={roomName}
+            formatTimeWithMeridiem={formatTimeWithMeridiem}
+            date={date}
+          />
+          {/* Guest Book Data */}
+          <div className="mt-[1.6rem] flex flex-col gap-[1.6rem]">
+            {guestBookData.map((data) =>
+              data.isOwnerGuestBook ? (
+                <MyTalk
+                  key={data.guestBookId}
+                  content={data.guestBookContent}
+                  dateTime={data.guestBookDateTime}
+                />
+              ) : (
+                <YourTalk
+                  key={data.guestBookId}
+                  userName={data.sparkUserName}
+                  content={data.guestBookContent}
+                  dateTime={data.guestBookDateTime}
+                  formatTimeWithMeridiem={formatTimeWithMeridiem}
+                />
+              ),
+            )}
+          </div>
+        </div>
+        <CommnetInput
+          commentValue={commentValue}
+          setCommentValue={setCommentValue}
+        />
       </div>
-      <CommnetInput
-        commentValue={commentValue}
-        setCommentValue={setCommentValue}
-      />
     </div>
   );
 };
