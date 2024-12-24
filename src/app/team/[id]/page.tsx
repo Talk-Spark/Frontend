@@ -29,8 +29,10 @@ const TeamDetail = () => {
   const router = useRouter();
 
   const startGame = () => {
-    router.push("/start"); // 로티 페이지 이동
-
+    if (teamData) {
+      // roomId 값을 쿼리 파라미터로 전달
+      router.push(`/start?roomId=${encodeURIComponent(teamData.roomId)}`);
+    }
     setTeamData(null); // api 함수 작성 후 삭제
   };
 
