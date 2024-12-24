@@ -5,12 +5,12 @@ import starMint from "@/public/entry/starMint.svg";
 import starYellow from "@/public/entry/starYellow.svg";
 import Image from "next/image";
 
-const FindRoom = () => {
+const FindRoom = ({ findText }: { findText: string }) => {
   return (
     <div>
       <div className="mt-[5.2rem] flex justify-center pl-[3.5rem] pr-[2rem] pt-[3rem] text-gray-10">
         <div className="relative flex h-[30rem] w-[28rem] flex-col items-center justify-center gap-[2.1rem]">
-          <span className="z-0 text-graphic-font">우리 팀을 찾아보아요~</span>
+          <span className="text-graphic-font z-0">{findText}</span>
           <Image
             src={searchGraphic}
             alt="검색 그래픽"

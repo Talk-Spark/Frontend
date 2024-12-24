@@ -1,16 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 // import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ProfileImage from "@/src/components/ProfileImage";
-// import axios from "axios";
+import FindRoom from "@/src/components/entry/FindRoom";
 
+//  참가자들 정보
 interface Participant {
   name: string;
   color: "pink" | "green" | "yellow" | "blue";
-  isHost: boolean;
+  isOwner: boolean;
 }
 
+// 웹 소켓 시 사용할 방 정보 보기 요청 (response에 맞게 수정하시면 됩니다)
 interface GameRoomDetail {
   roomId: number;
   roomName: string;
@@ -21,20 +23,21 @@ interface GameRoomDetail {
 }
 
 const TeamDetail = () => {
-  const [user, setUser] = useState<{ name: string; id: number } | null>(null);
-  // const { id } = useParams();
+  const [user, setUser] = useState<{ name: string } | null>(null);
+  // const { id } = useParams();  // roomId 파라미터 가져온 후 get
   const [teamData, setTeamData] = useState<GameRoomDetail | null>(null);
   const router = useRouter();
 
   const startGame = () => {
-    router.push("/start");
+    router.push("/start"); // 로티 페이지 이동
 
     setTeamData(null); // api 함수 작성 후 삭제
   };
 
   const isUserHost = (roomDetail: GameRoomDetail) => {
+    // 방장 정보와 일치할 때 해당 유저는 시작하기 버튼 활성화
     return roomDetail.participantsDetail.some(
-      (participant) => participant.name === user?.name && participant.isHost,
+      (participant) => participant.name === user?.name && participant.isOwner,
     );
   };
 
@@ -50,7 +53,7 @@ const TeamDetail = () => {
   //   const fetchTeamData = async () => {
   //     if (id) {
   //       try {
-  //         const response = await axios.get(`/api/rooms/${id}`);
+  //         const response = await get(`/api/rooms/${id}`);
   //         setTeamData(response.data);
   //       } catch (err) {
   //         console.error("Error fetching team data:", err);
@@ -62,7 +65,11 @@ const TeamDetail = () => {
   // }, [id]);
 
   if (!teamData) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <FindRoom findText={"우리 팀 로딩 중이에요!"} />
+      </div>
+    );
   }
 
   return (
@@ -96,7 +103,10 @@ const TeamDetail = () => {
                 className="max-w-[(100%-4.8rem)/4] flex-1"
                 style={{ maxWidth: "calc((100% - 4.8rem) / 4)" }}
               >
-                <ProfileImage color={participant.color}>
+                <ProfileImage
+                  color={participant.color}
+                  isHost={participant.isOwner}
+                >
                   {participant.name}
                 </ProfileImage>
               </div>
