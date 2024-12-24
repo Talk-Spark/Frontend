@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+// import { useSearchParams } from "next/navigation";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
@@ -9,10 +9,10 @@ import Header from "@/src/components/Headers/Header";
 import Logout from "@/src/components/Storage/Logout";
 
 const Card = () => {
-  const searchParams = useSearchParams();
-  const cardId = searchParams.get("cardId");
-  const name = searchParams.get("name");
-  const timestamp = searchParams.get("timestamp");
+  // const searchParams = useSearchParams();
+  // const cardId = searchParams?.get("cardId") || "";
+  // const name = searchParams?.get("name") || "";
+  // const timestamp = searchParams?.get("timestamp") || "";
 
   type TeamData = {
     teamName: string;
@@ -59,6 +59,7 @@ const Card = () => {
 
   const handleToggle = (view: "mine" | "others") => {
     setActiveView(view);
+    setNewTeamIndex(0);
     if (view === "mine") {
       setIsVisible(false);
       setTimeout(() => {
@@ -67,31 +68,31 @@ const Card = () => {
     }
   };
 
-  useEffect(() => {
-    if (cardId && name && timestamp) {
-      const newData = {
-        teamName: name,
-        teamPeopleCount: 1,
-        cardDate: timestamp,
-        participants: name,
-        isFav: false,
-      };
+  // useEffect(() => {
+  //   if (cardId && name && timestamp) {
+  //     const newData = {
+  //       teamName: name,
+  //       teamPeopleCount: 1,
+  //       cardDate: timestamp,
+  //       participants: name,
+  //       isFav: false,
+  //     };
 
-      setTeamData((prevData) => {
-        const exists = prevData.some(
-          (item) =>
-            item.teamName === newData.teamName &&
-            item.cardDate === newData.cardDate,
-        );
-        if (!exists) {
-          setNewTeamIndex(0);
-          setUsedNewTeam(false);
-          return [...prevData, newData];
-        }
-        return prevData;
-      });
-    }
-  }, [cardId, name, timestamp]);
+  //     setTeamData((prevData) => {
+  //       const exists = prevData.some(
+  //         (item) =>
+  //           item.teamName === newData.teamName &&
+  //           item.cardDate === newData.cardDate,
+  //       );
+  //       if (!exists) {
+  //         setNewTeamIndex(0);
+  //         setUsedNewTeam(false);
+  //         return [...prevData, newData];
+  //       }
+  //       return prevData;
+  //     });
+  //   }
+  // }, [cardId, name, timestamp]);
 
   const handleCompleteClick = () => {
     if (activeView === "mine") {

@@ -63,8 +63,9 @@ const ReadCode = () => {
   useEffect(() => {
     if (myRun) {
       // QR 코드에서 읽은 값과 타임스탬프를 쿼리 파라미터로 전달
-      const encodedTimestamp = encodeURIComponent(myRun.timestamp);
-      router.push(`/card?cardId=${myRun.cardId}&timestamp=${encodedTimestamp}`);
+      // api 함수 post한 후 card 페이지에서 전체 get
+      // const encodedTimestamp = encodeURIComponent(myRun.timestamp);
+      // router.push(`/card?cardId=${myRun.cardId}&timestamp=${encodedTimestamp}`);
     }
   }, [myRun, router]);
 
