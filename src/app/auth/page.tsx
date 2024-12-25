@@ -52,7 +52,7 @@ const Page = () => {
           };
 
           localStorage.setItem("user", JSON.stringify(user));
-          router.push("/home");
+          router.push("/landing");
         } catch (error) {
           console.error("Error fetching access token: ", error);
         }
