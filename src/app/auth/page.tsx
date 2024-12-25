@@ -32,15 +32,18 @@ const Page = () => {
             },
           );
 
+          console.log("response: ", response.data);
           const access_token = response.data.access_token;
           console.log("access_token: ", access_token);
 
-          await axios.post(
+          // 서버에 토큰 전달
+          const serverResponse = await axios.post(
             `${process.env.NEXT_PUBLIC_BASE_URL}/api/member/kakao`,
+            null,
             {
-              access_token,
-            },
-            {
+              params: {
+                accessToken: access_token,
+              },
               headers: {
                 "Content-Type": "application/json",
               },
@@ -48,8 +51,15 @@ const Page = () => {
           );
 
           const user = {
-            accessToken: access_token,
+            accessToken: serverResponse.data.accessToken,
+            refreshToken: serverResponse.data.refreshToken,
+            kakaoId: serverResponse.data.kakaoId,
+            password: serverResponse.data.password,
+            roleNames: serverResponse.data.roleNames[0],
+            sparkUserId: serverResponse.data.sparkUserId,
           };
+
+          console.log("user: ", user);
 
           localStorage.setItem("user", JSON.stringify(user));
           router.push("/landing");
