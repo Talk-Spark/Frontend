@@ -12,10 +12,11 @@ import greenGraphic from "@/public/storageNameCard/greenGraphics.svg";
 import blueGraphic from "@/public/storageNameCard/blueGraphics.svg";
 import yellowGraphic from "@/public/storageNameCard/yellowGraphics.svg";
 import QrcodeDown from "./QrCode/QrCodeDown";
+import { instance } from "../apis";
 
 type NameCardProps = {
   cardId: number;
-  teamName: string;
+  teamName?: string;
   name: string;
   age: number;
   major: string;
@@ -36,6 +37,21 @@ const graphicColor: Record<string, StaticImageData> = {
   blue: blueGraphic,
 };
 
+const defaultCard: NameCardProps = {
+  cardId: 1,
+  name: "",
+  age: 0,
+  major: "",
+  mbti: "",
+  hobby: "",
+  lookAlike: "",
+  selfDescription: "",
+  tmi: "",
+  color: "pink",
+  isFull: false,
+  isStorage: false,
+};
+
 const StorageNameCard: React.FC<NameCardProps> = ({
   cardId = 1,
   name = "",
@@ -52,15 +68,33 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
   const [selectedColor, setSelectedColor] = useState(color); // 색상 상태
+  const [putData, setPutData] = useState<NameCardProps>(defaultCard); // 명함 수정하기
+
   const qrData = {
     // 큐알 다운로드 위한 객체
     cardId: cardId,
     name: name,
   };
 
-  const handleEditToggle = () => setIsEditing((prev) => !prev); // 편집 상태 토글
-  const handleColorChange = (newColor: "pink" | "green" | "yellow" | "blue") =>
+  const handleEditToggle = async () => {
+    try {
+      setPutData((prev) => ({
+        ...(prev ?? {}),
+        color: selectedColor, // 선택한 color로 수정
+      }));
+
+      await instance.put(`/api/cards/${cardId}`, putData);
+    } catch (e) {
+      console.log(e);
+    }
+    setIsEditing((prev) => !prev); // 편집 상태 토글
+  };
+
+  const handleColorChange = (
+    newColor: "pink" | "green" | "yellow" | "blue",
+  ) => {
     setSelectedColor(newColor); // 색상 변경만 처리
+  };
 
   // 편집 모드일 때 렌더링되는 색상 변경 UI
   const renderColorChangeButtons = () => (
@@ -172,7 +206,6 @@ const StorageNameCard: React.FC<NameCardProps> = ({
                           />
                         </button>
                       )}
-
                       <button>
                         <QrcodeDown
                           selectedColor={selectedColor}
@@ -207,7 +240,6 @@ const StorageNameCard: React.FC<NameCardProps> = ({
             <Image src={graphicImageUrl} alt="그래픽 이미지" />
           </div>
         </div>
-
         {/* 두 번째 사각형 - 하단 */}
         {isFull && (
           <div

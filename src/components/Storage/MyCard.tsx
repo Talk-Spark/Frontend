@@ -1,12 +1,12 @@
 "use client";
 import Button from "../common/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StorageNameCard from "../StorageNameCard";
 import QrCard from "./QrCard";
+import { instance } from "@/src/apis";
 
 type NameCardProps = {
   cardId: number;
-  teamName: string;
   name: string;
   age: number;
   major: string;
@@ -23,31 +23,43 @@ type NameCardProps = {
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
+  const [oneCard, setOneCard] = useState<NameCardProps | undefined>(undefined);
 
-  const oneCard: NameCardProps = {
-    name: "최정인",
-    age: 28,
-    color: "blue",
-    cardId: 1,
-    teamName: "팀명",
-    major: "전공",
-    mbti: "INTJ",
-    hobby: "텍스트영역텍스트영역텍스트영역텍스트",
-    lookAlike: "텍스트영역텍스트영역텍스트영역텍스트",
-    selfDescription: "텍스트영역텍스트영역텍스트영역텍스트",
-    tmi: "텍스트영역텍스트영역텍스트영역텍스트",
-    isFull: true,
-    isStorage: true,
-  };
+  /* 명함 조회하기 */
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await instance.get("/api/cards");
+      const cardRes = response.data[0];
+      setOneCard({
+        cardId: cardRes.id,
+        name: cardRes.name,
+        age: cardRes.age,
+        major: cardRes.major,
+        mbti: cardRes.mbti,
+        hobby: cardRes.hobby,
+        lookAlike: cardRes.lookAlike,
+        selfDescription: cardRes.slogan,
+        tmi: cardRes.tmi,
+        color: cardRes.cardThema,
+        isFull: true,
+        isStorage: true,
+      });
+    };
+    fetchData();
+  });
 
   const cardBackground =
-    oneCard.color === "blue"
+    oneCard?.color === "blue"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : oneCard.color === "green"
+      : oneCard?.color === "green"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
-        : oneCard.color === "yellow"
+        : oneCard?.color === "yellow"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"
           : "bg-gradient-to-b from-[#ffffff] to-[#fdcbdf]";
+
+  if (!oneCard) {
+    return <div></div>; // oneCard가 로드되지 않은 경우 로딩 표시
+  }
 
   return (
     <div
@@ -96,7 +108,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
             >
               <QrCard
                 color={oneCard.color || "pink"}
-                cardId={oneCard.cardId}
+                cardId={oneCard.cardId || 1}
                 name={oneCard.name}
               />
             </div>

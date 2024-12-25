@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { useSearchParams } from "next/navigation";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
@@ -9,7 +8,8 @@ import Header from "@/src/components/Headers/Header";
 import Logout from "@/src/components/Storage/Logout";
 import Modal from "@/src/components/common/Modal";
 import ReadCode from "@/src/components/QrCode/ReadCode";
-import { get } from "@/src/apis";
+import { get, instance } from "@/src/apis";
+import { useRouter } from "next/navigation";
 
 type CardHolderResponse = {
   cardHolderId: number;
@@ -20,6 +20,7 @@ type CardHolderResponse = {
 };
 
 const Card = () => {
+  const router = useRouter();
   const [myRun, setMyRun] = useState<{
     cardId: number;
     name: string;
@@ -95,13 +96,12 @@ const Card = () => {
   const [activeView, setActiveView] = useState<"mine" | "others">("others");
   const [isVisible, setIsVisible] = useState(false);
   const [isEdit, setIsEdit] = useState<"edit" | "complete">("edit");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false); // 로그아웃 | 회원탈퇴 모달
   const [modalAction, setModalAction] = useState<"logout" | "delete" | null>(
     null,
   );
-  const [confirmModal, setConfirmModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false); // 확정 모달
   const [isCamera, setIsCamera] = useState(false);
-  const [user, setUser] = useState<{ name: string; id: number } | null>(null);
   const [isNewData, setIsNewData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -115,13 +115,6 @@ const Card = () => {
     }
   };
 
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem("user"); // 로그인한 사용자 정보 (localStorage 사용 예시)
-    if (loggedInUser) {
-      setUser(JSON.parse(loggedInUser)); // 로그인 정보가 있다면 상태에 저장
-    }
-  }, []);
-
   const handleCompleteClick = () => {
     if (activeView === "mine") {
       setIsModalVisible((prev) => !prev);
@@ -130,12 +123,19 @@ const Card = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    if (!confirmModal) {
-      setConfirmModal(false);
+  const handleCloseModal = async () => {
+    if (modalAction === "logout") {
+      // 로그아웃 -> 로컬스토리지 user 객체 전체 삭제
+      localStorage.removeItem("user");
+    } else if (modalAction === "delete") {
+      /* 회원탈퇴 API */
+      try {
+        await instance.delete("/api/member/leave");
+      } catch (e) {
+        console.log(e);
+      }
     }
-
-    setIsModalVisible(false);
+    router.push("/"); // 메인 홈으로 이동
   };
 
   const mineSettingBtn: "settings" | "edit" | "complete" =
@@ -179,8 +179,8 @@ const Card = () => {
         <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center">
           <Modal
             isOpen={confirmModal}
-            onClose={() => setConfirmModal(false)}
-            onAction={handleCloseModal}
+            onAction={() => setConfirmModal(false)}
+            onClose={handleCloseModal}
             title={
               modalAction === "delete"
                 ? "회원 탈퇴 하시겠어요?"
