@@ -5,19 +5,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const SearchInput = ({
-  setSearchValue,
-  searchValue,
-  placeholderText,
-  isQr,
-  // onSearch,
-}: {
+type SearchInputProps = {
   setSearchValue: (value: string) => void;
   searchValue: string;
   placeholderText: string;
   isQr: boolean;
-  // onSearch: () => void;
-}) => {
+  onSearch?: () => void; // 입장하기 시에만 사용
+};
+
+const SearchInput = (props: SearchInputProps) => {
+  const { setSearchValue, searchValue, placeholderText, isQr, onSearch } =
+    props;
   const [value, setValue] = useState("");
   const borderBT = searchValue ? "border-b-black" : "border-b-gray-4 ";
   const router = useRouter();
@@ -29,7 +27,9 @@ const SearchInput = ({
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setSearchValue(value); // 입장하기 변경
-      // onSearch();
+      if (onSearch) {
+        onSearch();
+      }
     }
   };
 

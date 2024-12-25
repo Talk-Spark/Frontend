@@ -19,9 +19,10 @@ interface TeamBoxProps {
   isEdit: "complete" | "edit";
   onSelect: (index: number) => void;
   setToggleFav: (index: number) => void;
-  isNewData: boolean;
-  setIsNewData: (value: boolean) => void;
+  isNewData?: boolean;
+  setIsNewData?: (value: boolean) => void;
   isLoading?: boolean;
+  ver: "명함" | "방명록";
 }
 
 const TeamBox = ({
@@ -34,12 +35,13 @@ const TeamBox = ({
   setIsNewData,
   isNewData,
   isLoading,
+  ver,
 }: TeamBoxProps) => {
   const [bgColor, setBgColor] = useState("bg-gray-1");
   const router = useRouter();
 
   useEffect(() => {
-    if (isNewData && index === 0 && !isLoading) {
+    if (isNewData && index === 0 && !isLoading && setIsNewData) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
       setIsNewData(false);
       setTimeout(() => {
@@ -56,9 +58,12 @@ const TeamBox = ({
   const showDetailCard = () => {
     if (isEdit === "complete") {
       onSelect(index);
-    } else {
+    } else if (ver === "명함") {
       router.push("/card/detail/[name]");
+    } else if (ver === "방명록") {
+      router.push("/guest-book/[id]");
     }
+    onSelect(index);
   };
 
   const formatDate = (dateString: string): string => {
@@ -67,13 +72,28 @@ const TeamBox = ({
     const day = date.getDate();
     return `${month}월 ${day}일`;
   };
+
   const formattedDate = formatDate(team.cardDate);
+
   const participantsClean = team.participants.split(" ");
-  const maxVisible = 4;
+  const maxVisible = 4; // 보여지는 최대 이름 수
+  const maxText = 18; // 보여지는 방명록 메세지 최대 길이 수
+
   const displayedParticipants =
     participantsClean.length > maxVisible
-      ? `${participantsClean.slice(0, maxVisible).join(" ")} ∙∙∙`
+      ? `${participantsClean.slice(0, maxVisible).join(" ")} ...`
       : participantsClean.join(" ");
+
+  const getPreviewContent = (content?: string) => {
+    if (ver === "방명록" && content) {
+      return content.length > maxText
+        ? `${content.slice(0, maxText)}...`
+        : content;
+    }
+    return content;
+  };
+
+  const previewContent = getPreviewContent(team.participants);
 
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -101,7 +121,7 @@ const TeamBox = ({
       </div>
       <div className="flex justify-between">
         <span className="text-body-2-reg text-gray-9">
-          {displayedParticipants}
+          {ver === "방명록" ? previewContent : displayedParticipants}
         </span>
         <span className="text-caption-med text-gray-5">{formattedDate}</span>
       </div>

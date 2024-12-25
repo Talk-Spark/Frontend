@@ -4,6 +4,7 @@ import StorageNameCard from "../StorageNameCard";
 const MyCard = () => {
   // 예시 데이터
   const cardInfo = {
+    cardId: 1,
     teamName: "톡스파크",
     name: "이름이름",
     age: 23,

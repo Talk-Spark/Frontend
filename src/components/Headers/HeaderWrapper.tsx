@@ -77,16 +77,9 @@ const HeaderWrapper = () => {
     } else if (pathname.startsWith("/entry/camera")) {
       return {
         showButton1: true,
-        title: "입장하기",
+        title: "TEXT텍스트영역",
+        button2Type: "settings",
         button2Action: () => {},
-      };
-    } else if (pathname === "/login" || pathname === "/landing") {
-      return {
-        title: "",
-      };
-    } else if (pathname === "/creating-card/result") {
-      return {
-        title: "TalkSpark",
       };
     }
 

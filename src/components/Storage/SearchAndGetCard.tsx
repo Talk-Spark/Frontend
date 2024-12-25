@@ -14,25 +14,34 @@ interface Team {
   isFav: boolean;
 }
 
-const SearchAndGetCard = ({
-  ver,
-  teamData,
-  setTeamData,
-  isEdit,
-  setIsCamera,
-  isNewData,
-  setIsNewData,
-  isLoading,
-}: {
+type GuestBookProps = {
   ver: "방명록" | "명함";
   teamData: Team[];
   setTeamData: React.Dispatch<React.SetStateAction<Team[]>>;
   isEdit: "edit" | "complete";
-  setIsCamera: (value: boolean) => void;
-  isNewData: boolean;
-  setIsNewData: (value: boolean) => void;
-  isLoading: boolean;
-}) => {
+  isLoading?: boolean;
+};
+
+type NameCardProps = GuestBookProps & {
+  isNewData?: boolean;
+  setIsNewData?: (value: boolean) => void;
+  setIsCamera?: (value: boolean) => void;
+};
+
+// type SearchAndGetCardProps = GuestBookProps | NameCardProps;
+
+const SearchAndGetCard = (props: NameCardProps) => {
+  const {
+    ver,
+    teamData,
+    setTeamData,
+    isEdit,
+    isLoading,
+    isNewData,
+    setIsNewData,
+    setIsCamera,
+  } = props;
+
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isModal, setIsModal] = useState(false);
@@ -41,7 +50,9 @@ const SearchAndGetCard = ({
   const [toggleFav, setToggleFav] = useState<number | null>(null);
 
   const addCardBtn = () => {
-    setIsCamera(true);
+    if (ver === "명함" && setIsCamera) {
+      setIsCamera(true); // setIsCamera가 정의되어 있을 때만 호출
+    }
   };
 
   useEffect(() => {
@@ -153,7 +164,6 @@ const SearchAndGetCard = ({
             ver === "명함" ? "팀명 또는 이름 검색" : "방명록 검색"
           }
           isQr={false}
-          // onSearch={handleSearch}
         />
         <div className="mb-[1.2rem] mt-[2.4rem] flex h-[3.6rem] w-full justify-between">
           <div className="flex items-center gap-[0.4rem]">
@@ -180,9 +190,10 @@ const SearchAndGetCard = ({
               team={team}
               index={index}
               setToggleFav={() => setToggleFav(index)}
-              isNewData={isNewData}
-              setIsNewData={setIsNewData}
               isLoading={isLoading}
+              {...(ver === "명함" ? { isNewData } : {})} // 명함일 때만 isNewData 전달
+              {...(ver === "명함" ? { setIsNewData } : {})}
+              ver="방명록"
             />
           ))}
         </div>
