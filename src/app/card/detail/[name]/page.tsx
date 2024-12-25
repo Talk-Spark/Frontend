@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useRef, useState } from "react";
-import Slider from "react-slick";
+import Slider from "react-slick"; // 모듈 추가
 import Image from "next/image";
 import favStar from "@/public/nameCard/Star.svg";
 import favPinkStar from "@/public/nameCard/pinkStar.svg";

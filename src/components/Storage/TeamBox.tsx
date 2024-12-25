@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 interface TeamBoxProps {
   team: {
+    cardId: number;
     teamName: string;
     teamPeopleCount: number;
     cardDate: string;
@@ -73,6 +74,7 @@ const TeamBox = ({
     participantsClean.length > maxVisible
       ? `${participantsClean.slice(0, maxVisible).join(" ")} ∙∙∙`
       : participantsClean.join(" ");
+
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setToggleFav(index);

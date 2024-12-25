@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { useSearchParams } from "next/navigation";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/MyCard";
@@ -9,14 +9,24 @@ import Header from "@/src/components/Headers/Header";
 import Logout from "@/src/components/Storage/Logout";
 import Modal from "@/src/components/common/Modal";
 import ReadCode from "@/src/components/QrCode/ReadCode";
+import { get } from "@/src/apis";
+
+type CardHolderResponse = {
+  cardHolderId: number;
+  cardHolderName: string;
+  teamNames: string[];
+  bookMark: boolean;
+  storedAt: string;
+};
 
 const Card = () => {
   const [myRun, setMyRun] = useState<{
-    cardId: string;
+    cardId: number;
     name: string;
   } | null>(null);
 
   type TeamData = {
+    cardId: number;
     teamName: string;
     teamPeopleCount: number;
     cardDate: string;
@@ -24,50 +34,63 @@ const Card = () => {
     isFav: boolean;
   };
 
-  const [teamData, setTeamData] = useState<TeamData[]>([]);
+  const [teamData, setTeamData] = useState<TeamData[]>([
+    {
+      cardId: 3,
+      teamName: "박승범",
+      participants: "박승범",
+      teamPeopleCount: 1,
+      isFav: false,
+      cardDate: "2024-12-25T14:25:30.100464",
+    },
+    {
+      cardId: 2,
+      teamName: "멋사 2팀",
+      participants: "박승범 박승범 박승범",
+      teamPeopleCount: 3,
+      isFav: false,
+      cardDate: "2024-12-25T14:23:32.260408",
+    },
+  ]);
 
-  // useEffect(() => {
-  //   const fetchStoredCards = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       // API 응답 타입 정의
-  //       type CardHolderResponse = {
-  //         cardHolderName: string;
-  //         teamNames: string[];
-  //         bookMark: boolean;
-  //         storedAt: string;
-  //       };
+  /* 정렬 조건에 따른 명함 보관함 속 명함 조회 */
+  useEffect(() => {
+    const fetchStoredCards = async () => {
+      if (!isLoading) {
+        try {
+          setIsLoading(true);
+          // API 응답 타입 정의
+          type ApiResponse = {
+            cardHolders: CardHolderResponse[];
+          };
 
-  //       type ApiResponse = {
-  //         cardHolders: CardHolderResponse[];
-  //       };
+          // API 호출
+          const response = await get("/api/storedCards");
 
-  //       // API 호출
-  //       const response = await get("/api/storedCards");
+          // 응답 데이터가 올바른 형식인지 확인
+          const data = response.data as ApiResponse;
 
-  //       // 응답 데이터가 올바른 형식인지 확인
-  //       const data = response.data as ApiResponse;
-
-  //       if (data && data.cardHolders) {
-  //         // 응답 데이터를 TeamData 형식으로 변환
-  //         const formattedData: TeamData[] = data.cardHolders.map((item) => ({
-  //           teamName: item.cardHolderName,
-  //           teamPeopleCount: item.teamNames.length || 0,
-  //           cardDate: item.storedAt,
-  //           participants: item.teamNames.join(" "),
-  //           isFav: item.bookMark,
-  //         }));
-  //         setTeamData(formattedData);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching stored cards:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchStoredCards();
-  // }, []);
+          if (data && data.cardHolders) {
+            // 응답 데이터를 TeamData 형식으로 변환
+            const formattedData: TeamData[] = data.cardHolders.map((item) => ({
+              cardId: item.cardHolderId,
+              teamName: item.cardHolderName,
+              teamPeopleCount: item.teamNames.length || 0,
+              cardDate: item.storedAt,
+              participants: item.teamNames.join(" "),
+              isFav: item.bookMark,
+            }));
+            setTeamData(formattedData);
+          }
+        } catch (error) {
+          console.error("Error fetching stored cards:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+    fetchStoredCards();
+  }, []);
 
   const [activeView, setActiveView] = useState<"mine" | "others">("others");
   const [isVisible, setIsVisible] = useState(false);
@@ -78,9 +101,9 @@ const Card = () => {
   );
   const [confirmModal, setConfirmModal] = useState(false);
   const [isCamera, setIsCamera] = useState(false);
-  // const [user, setUser] = useState<{ name: string; id: number } | null>(null);
+  const [user, setUser] = useState<{ name: string; id: number } | null>(null);
   const [isNewData, setIsNewData] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = (view: "mine" | "others") => {
     setActiveView(view);
@@ -92,33 +115,12 @@ const Card = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const loggedInUser = localStorage.getItem("user"); // 로그인한 사용자 정보 (localStorage 사용 예시)
-  //   if (loggedInUser) {
-  //     setUser(JSON.parse(loggedInUser)); // 로그인 정보가 있다면 상태에 저장
-  //   }
-  // }, []);
-
-  // Qr인식시 개인 명함 post
-  // useEffect(() => {
-  //   const getResponse = async () => {
-  //     if (!myRun || !user?.id) return;
-  //     const requestData = {
-  //       storeType: "IND",
-  //       name: myRun?.name,
-  //       cardId: myRun?.cardId,
-  //       sparkUserId: user?.id,
-  //     };
-
-  //     try {
-  //       const response = await post("/api/store/ind", requestData);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-
-  //   getResponse();
-  // }, [myRun]);
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user"); // 로그인한 사용자 정보 (localStorage 사용 예시)
+    if (loggedInUser) {
+      setUser(JSON.parse(loggedInUser)); // 로그인 정보가 있다면 상태에 저장
+    }
+  }, []);
 
   const handleCompleteClick = () => {
     if (activeView === "mine") {
@@ -162,12 +164,17 @@ const Card = () => {
         />
       </div>
       {isCamera ? (
-        <ReadCode
-          myRun={myRun}
-          setMyRun={setMyRun}
-          setIsNewData={setIsNewData}
-          setIsCamera={setIsCamera}
-        />
+        <div className="-mx-[2rem] w-[calc(100%+4rem)]">
+          <ReadCode
+            myRun={myRun}
+            setMyRun={setMyRun}
+            setIsNewData={setIsNewData}
+            setIsCamera={setIsCamera}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
+            qrVer="card"
+          />
+        </div>
       ) : (
         <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center">
           <Modal
@@ -204,7 +211,7 @@ const Card = () => {
               setIsCamera={setIsCamera}
               isNewData={isNewData}
               setIsNewData={setIsNewData}
-              // isLoading={isLoading}
+              isLoading={isLoading}
             />
           ) : (
             <MyCard isVisible={isVisible} />

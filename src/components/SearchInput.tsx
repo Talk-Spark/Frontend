@@ -10,13 +10,13 @@ const SearchInput = ({
   searchValue,
   placeholderText,
   isQr,
-  onSearch,
+  // onSearch,
 }: {
   setSearchValue: (value: string) => void;
   searchValue: string;
   placeholderText: string;
   isQr: boolean;
-  onSearch: () => void;
+  // onSearch: () => void;
 }) => {
   const [value, setValue] = useState("");
   const borderBT = searchValue ? "border-b-black" : "border-b-gray-4 ";
@@ -28,8 +28,8 @@ const SearchInput = ({
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setSearchValue(value);
-      onSearch();
+      setSearchValue(value); // 입장하기 변경
+      // onSearch();
     }
   };
 

@@ -3,8 +3,10 @@ import SearchInput from "../SearchInput";
 import Sorting from "./Sorting";
 import TeamBox from "./TeamBox";
 import Modal from "../common/Modal";
+import { put } from "@/src/apis";
 
 interface Team {
+  cardId: number;
   teamName: string;
   teamPeopleCount: number;
   cardDate: string;
@@ -29,7 +31,7 @@ const SearchAndGetCard = ({
   setIsCamera: (value: boolean) => void;
   isNewData: boolean;
   setIsNewData: (value: boolean) => void;
-  isLoading?: boolean;
+  isLoading: boolean;
 }) => {
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -74,8 +76,6 @@ const SearchAndGetCard = ({
     setFilteredTeamData(sortedData);
   }, [teamData, searchValue, sortOption]);
 
-  const handleSearch = () => {};
-
   // 편집 시 팀 박스 선택
   const handleSelectTeamBox = (index: number) => {
     if (isEdit === "edit") {
@@ -115,6 +115,11 @@ const SearchAndGetCard = ({
             : team,
         ),
       );
+      /* 보관된 명함에 대한 즐겨찾기 PUT */
+      const putFav = async () => {
+        await put(`/api/storedCard/${selectedTeam.cardId}`);
+      };
+      putFav();
     }
   }, [toggleFav]);
 
@@ -148,7 +153,7 @@ const SearchAndGetCard = ({
             ver === "명함" ? "팀명 또는 이름 검색" : "방명록 검색"
           }
           isQr={false}
-          onSearch={handleSearch}
+          // onSearch={handleSearch}
         />
         <div className="mb-[1.2rem] mt-[2.4rem] flex h-[3.6rem] w-full justify-between">
           <div className="flex items-center gap-[0.4rem]">

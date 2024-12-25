@@ -1,11 +1,13 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import cameraIcon from "@/public/entry/camera.svg";
 import Image from "next/image";
+import router from "next/router";
+import { post } from "@/src/apis";
 
 interface MyRun {
-  cardId: string;
+  cardId: number;
   name: string;
 }
 
@@ -14,25 +16,32 @@ const ReadCode = ({
   setMyRun,
   setIsNewData,
   setIsCamera,
+  qrVer,
+  setIsLoading,
+  isLoading,
 }: {
   myRun: MyRun | null;
   setMyRun: React.Dispatch<React.SetStateAction<MyRun | null>>;
   setIsNewData: (value: boolean) => void;
   setIsCamera: (value: boolean) => void;
+  qrVer: "room" | "card";
+  setIsLoading: (value: boolean) => void;
+  isLoading: boolean;
 }) => {
   const QrOptions = {
     preferredCamera: "environment",
     maxScansPerSecond: 10,
   };
   // 페이지에 필요할시 삭제
-  // const [user, setUser] = useState<{ name: string; id: number } | null>(null);
+  const [user, setUser] = useState<{ name: string; id: number } | null>(null);
 
-  // useEffect(() => {
-  //   const loggedInUser = localStorage.getItem("user"); // 로그인한 사용자 정보 (localStorage 사용 예시)
-  //   if (loggedInUser) {
-  //     setUser(JSON.parse(loggedInUser)); // 로그인 정보가 있다면 상태에 저장
-  //   }
-  // }, []);
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user"); // 로그인한 사용자 정보 (localStorage 사용 예시)
+    if (loggedInUser) {
+      // 나중에 로그인 구현 후에 확인 필요
+      setUser(JSON.parse(loggedInUser)); // 로그인 정보가 있다면 상태에 저장
+    }
+  }, []);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -40,14 +49,16 @@ const ReadCode = ({
     try {
       const parsedData = JSON.parse(result.data);
       setMyRun({
-        cardId: parsedData.cardId,
+        cardId: Number(parsedData.cardId),
         name: parsedData.name,
       });
-      setIsCamera(false);
-      setIsNewData(true);
     } catch (error) {
       console.error("Error parsing QR code data:", error);
       setMyRun(null);
+    }
+    if (qrVer === "card" && !isLoading) {
+      setIsCamera(false);
+      setIsNewData(true);
     }
   };
 
@@ -68,26 +79,42 @@ const ReadCode = ({
   }, []);
 
   useEffect(() => {
-    // if (myRun) {
-    //   const getResponse = async () => {
-    //     if (!myRun || !user?.id) return;
-    //     const requestData = {
-    //       storeType: "IND",
-    //       name: myRun?.name,
-    //       cardId: myRun?.cardId,
-    //       sparkUserId: user?.id,
-    //     };
-    //     try {
-    //       const response = await post("/api/store/ind", requestData);
-    //     } catch (e) {
-    //       console.log(e);
-    //     } finally {
-    //       // 병렬 상태 업데이트
-    //       setIsNewData(true);
-    //     }
-    //   };
-    //   getResponse();
-    // }
+    if (myRun) {
+      // 큐알 스캔이 되고 값이 입력되었을때
+      if (qrVer === "card") {
+        //명함보관함 명함 추가하기
+        const getResponse = async () => {
+          if (!myRun || !user?.id) return;
+          const requestData = {
+            storeType: "IND",
+            name: myRun?.name,
+            cardId: myRun?.cardId,
+            sparkUserId: user?.id,
+          };
+          try {
+            setIsLoading(true);
+            /* 명함 보관함에 개인 명함 저장 */
+            await post("/api/store/ind", requestData);
+          } catch (e) {
+            console.log(e);
+          }
+          setIsLoading(false);
+          setIsNewData(true);
+        };
+        getResponse();
+      } else if (qrVer === "room") {
+        /* 입장하기에서 qr스캐너 (웹소켓) */
+        const entryResponse = async () => {
+          try {
+            // const response = await post("/api/rooms/join", myRun.cardId); // 방 입장하기 post
+            router.push(`/team/${myRun.cardId}`);
+          } catch (e) {
+            console.log(e);
+          }
+        };
+        entryResponse();
+      }
+    }
   }, [myRun]);
 
   return (
