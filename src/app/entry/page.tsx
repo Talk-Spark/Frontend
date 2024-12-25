@@ -5,6 +5,8 @@ import TeamRoomList from "@/src/components/entry/TeamRoomList";
 import { useState } from "react";
 import FindRoom from "@/src/components/entry/FindRoom";
 import { instance } from "@/src/apis";
+import ReadCode from "@/src/components/QrCode/ReadCode";
+import Header from "@/src/components/Headers/Header";
 
 // 방 타입 정의
 interface GameRoom {
@@ -17,8 +19,14 @@ interface GameRoom {
 
 const Entry = () => {
   const [searchValue, setSearchValue] = useState<string>("");
-
   const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
+  const [isCamera, setIsCamera] = useState(false);
+  const [myRun, setMyRun] = useState<{
+    cardId: number;
+    name: string;
+  } | null>(null);
+
+  const setIsNewData = () => {};
 
   // 방 검색하기 api
 
@@ -34,8 +42,34 @@ const Entry = () => {
     }
   };
 
+  const headerBtn1 = () => {
+    if (isCamera) {
+      setIsCamera(false);
+    } else {
+      window.history.back();
+    }
+  };
+
   return (
     <div className="w-full">
+      <Header
+        showButton1={true}
+        button1Action={headerBtn1}
+        title="입장하기"
+        padding={false}
+      />
+
+      {isCamera && (
+        <div className="w-[calc(100%+4rem) -mx-[2rem]">
+          <ReadCode
+            myRun={myRun}
+            setMyRun={setMyRun}
+            setIsCamera={setIsCamera}
+            setIsNewData={setIsNewData}
+            qrVer="room"
+          />
+        </div>
+      )}
       <div className="my-[2.4rem] my-[2rem] flex flex-col">
         <span className="text-headline-3 text-black">팀 방 찾기</span>
         <SearchInput
@@ -43,6 +77,7 @@ const Entry = () => {
           setSearchValue={setSearchValue}
           placeholderText={"팀 방 검색"}
           isQr={true}
+          setIsCamera={setIsCamera}
           onSearch={handleSearch}
         />
       </div>

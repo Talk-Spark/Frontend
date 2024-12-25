@@ -44,19 +44,7 @@ const HeaderWrapper = () => {
         button2Type: "exit",
         button2Action: () => {},
       };
-    } else if (pathname === "/entry") {
-      return {
-        showButton1: true,
-        title: "입장하기",
-        button2Action: () => {},
-      };
     } else if (pathname.startsWith("/team/")) {
-      return {
-        showButton1: true,
-        title: "입장하기",
-        button2Action: () => {},
-      };
-    } else if (pathname.startsWith("/entry/camera")) {
       return {
         showButton1: true,
         title: "입장하기",

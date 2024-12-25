@@ -2,7 +2,6 @@
 import searchIcon from "@/public/entry/search.svg";
 import scannerIcon from "@/public/entry/scanner.svg";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // 'next/navigation'에서 useRouter import
 
 const SearchInput = ({
   setSearchValue,
@@ -10,15 +9,16 @@ const SearchInput = ({
   placeholderText,
   isQr,
   onSearch,
+  setIsCamera,
 }: {
   setSearchValue: (value: string) => void;
   searchValue: string;
   placeholderText: string;
   isQr: boolean;
   onSearch: () => void; // 엔터 키 입력 시 호출되는 함수
+  setIsCamera: (value: boolean) => void;
 }) => {
   const borderBT = searchValue ? "border-b-black" : "border-b-gray-4 ";
-  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -31,9 +31,8 @@ const SearchInput = ({
   };
 
   const onCamera = () => {
-    router.push("/entry/camera");
+    setIsCamera(true);
   };
-
   return (
     <div
       className={`flex items-center justify-center gap-[0.8rem] border-b-[0.15rem] ${borderBT} px-[1.2rem] py-[1rem]`}
