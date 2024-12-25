@@ -7,16 +7,17 @@ import Step4 from "@/src/components/creating-card/Step4";
 import Header from "@/src/components/Headers/Header";
 import { useState } from "react";
 
+// 명함에 담을 데이터 타입
 export type FormData = {
-  name: string;
-  age: string;
-  major: string;
-  mbti: string;
-  hobby: string;
-  lookAlike: string;
-  intro: string;
-  tmi: string;
-  selectedCharacter: string;
+  name: string; // 이름(string)
+  age: number; // 나이(number)
+  major: string; // 전공(string)
+  mbti: string; // mbti(string)
+  hobby: string; // 취미(string)
+  lookAlike: string; // 외모(string)
+  slogan: string; // 자기소개(string)
+  tmi: string; // 명함 소개(string)
+  cardThema: string; // 선택한 캐릭터(string)
 };
 
 const Page = () => {
@@ -25,18 +26,18 @@ const Page = () => {
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    age: "",
+    age: 0,
     major: "",
     mbti: "",
     hobby: "",
     lookAlike: "",
-    intro: "",
+    slogan: "",
     tmi: "",
-    selectedCharacter: "",
+    cardThema: "",
   });
 
   // 사용자 입력 데이터 추가
-  const handleChange = (key: keyof FormData, value: string) => {
+  const handleChange = (key: keyof FormData, value: string | number) => {
     setFormData((prev) => ({
       ...prev,
       [key]: value,

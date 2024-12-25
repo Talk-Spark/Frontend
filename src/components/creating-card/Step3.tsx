@@ -7,10 +7,10 @@ const Step3 = ({ onNext, formData, onChange }: StepProps) => {
   const fields = [
     {
       label: "나는 이런 사람이야",
-      id: "intro",
-      value: formData.intro,
+      id: "slogan",
+      value: formData.slogan,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        onChange("intro", e.target.value),
+        onChange("slogan", e.target.value),
       placehorder: "ex. 만능 개발자",
       type: "text",
       maxLength: 20,
