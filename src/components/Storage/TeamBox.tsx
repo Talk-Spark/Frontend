@@ -17,10 +17,10 @@ interface TeamBoxProps {
   isSelected: boolean;
   isEdit: "complete" | "edit";
   onSelect: (index: number) => void;
-  newTeamIndex: number | null;
-  usedNewTeam: boolean;
-  setUsedNewTeam: (value: boolean) => void;
   setToggleFav: (index: number) => void;
+  isNewData: boolean;
+  setIsNewData: (value: boolean) => void;
+  isLoading?: boolean;
 }
 
 const TeamBox = ({
@@ -29,23 +29,23 @@ const TeamBox = ({
   isSelected,
   isEdit,
   onSelect,
-  newTeamIndex,
-  usedNewTeam,
-  setUsedNewTeam,
   setToggleFav,
+  setIsNewData,
+  isNewData,
+  isLoading,
 }: TeamBoxProps) => {
   const [bgColor, setBgColor] = useState("bg-gray-1");
   const router = useRouter();
 
   useEffect(() => {
-    if (newTeamIndex === index && !usedNewTeam) {
+    if (isNewData && index === 0 && !isLoading) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
-      setUsedNewTeam(true);
+      setIsNewData(false);
       setTimeout(() => {
         setBgColor("bg-gray-1");
       }, 3000);
     }
-  }, [newTeamIndex, index, usedNewTeam, setUsedNewTeam]);
+  }, [isNewData]);
 
   // 선택되었을때 메인 컬러
   const boxBgColor = isSelected

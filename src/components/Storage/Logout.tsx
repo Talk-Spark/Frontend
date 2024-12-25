@@ -4,14 +4,17 @@ const boxStyles =
 const Logout = ({
   setModalAction,
   modalAction,
+  setConfirmModal,
 }: {
   setModalAction: React.Dispatch<
     React.SetStateAction<"logout" | "delete" | null>
   >;
   modalAction: "logout" | "delete" | null;
+  setConfirmModal: (value: boolean) => void;
 }) => {
   const handleClick = (action: "logout" | "delete") => {
     setModalAction(action);
+    setConfirmModal(true);
   };
 
   return (

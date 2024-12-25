@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import SearchInput from "../SearchInput";
 import Sorting from "./Sorting";
 import TeamBox from "./TeamBox";
-import { useRouter } from "next/navigation";
 import Modal from "../common/Modal";
 
 interface Team {
@@ -17,20 +16,21 @@ const SearchAndGetCard = ({
   ver,
   teamData,
   setTeamData,
-  newTeamIndex,
-  usedNewTeam,
-  setUsedNewTeam,
   isEdit,
+  setIsCamera,
+  isNewData,
+  setIsNewData,
+  isLoading,
 }: {
   ver: "방명록" | "명함";
   teamData: Team[];
   setTeamData: React.Dispatch<React.SetStateAction<Team[]>>;
-  newTeamIndex: number | null;
-  usedNewTeam: boolean;
-  setUsedNewTeam: (value: boolean) => void;
   isEdit: "edit" | "complete";
+  setIsCamera: (value: boolean) => void;
+  isNewData: boolean;
+  setIsNewData: (value: boolean) => void;
+  isLoading?: boolean;
 }) => {
-  const router = useRouter();
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isModal, setIsModal] = useState(false);
@@ -39,7 +39,7 @@ const SearchAndGetCard = ({
   const [toggleFav, setToggleFav] = useState<number | null>(null);
 
   const addCardBtn = () => {
-    router.push("/card/camera");
+    setIsCamera(true);
   };
 
   useEffect(() => {
@@ -174,10 +174,10 @@ const SearchAndGetCard = ({
               onSelect={handleSelectTeamBox}
               team={team}
               index={index}
-              newTeamIndex={newTeamIndex}
-              usedNewTeam={usedNewTeam}
-              setUsedNewTeam={setUsedNewTeam}
               setToggleFav={() => setToggleFav(index)}
+              isNewData={isNewData}
+              setIsNewData={setIsNewData}
+              isLoading={isLoading}
             />
           ))}
         </div>

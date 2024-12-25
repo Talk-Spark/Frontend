@@ -1,43 +1,50 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import QrScanner from "qr-scanner";
 import cameraIcon from "@/public/entry/camera.svg";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-const ReadCode = () => {
-  const [myRun, setMyRun] = useState<{
-    cardId: string;
-    name: string;
-    timestamp: string;
-  } | null>(null);
-  const router = useRouter();
+interface MyRun {
+  cardId: string;
+  name: string;
+}
 
+const ReadCode = ({
+  myRun,
+  setMyRun,
+  setIsNewData,
+  setIsCamera,
+}: {
+  myRun: MyRun | null;
+  setMyRun: React.Dispatch<React.SetStateAction<MyRun | null>>;
+  setIsNewData: (value: boolean) => void;
+  setIsCamera: (value: boolean) => void;
+}) => {
   const QrOptions = {
     preferredCamera: "environment",
     maxScansPerSecond: 10,
   };
+  // 페이지에 필요할시 삭제
+  // const [user, setUser] = useState<{ name: string; id: number } | null>(null);
+
+  // useEffect(() => {
+  //   const loggedInUser = localStorage.getItem("user"); // 로그인한 사용자 정보 (localStorage 사용 예시)
+  //   if (loggedInUser) {
+  //     setUser(JSON.parse(loggedInUser)); // 로그인 정보가 있다면 상태에 저장
+  //   }
+  // }, []);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const handleScan = (result: QrScanner.ScanResult) => {
     try {
       const parsedData = JSON.parse(result.data);
-
-      const date = new Date();
-      const timestamp = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date
-        .getDate()
-        .toString()
-        .padStart(2, "0")} ${date.getHours().toString().padStart(2, "0")}:${date
-        .getMinutes()
-        .toString()
-        .padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
-
       setMyRun({
         cardId: parsedData.cardId,
         name: parsedData.name,
-        timestamp: timestamp,
       });
+      setIsCamera(false);
+      setIsNewData(true);
     } catch (error) {
       console.error("Error parsing QR code data:", error);
       setMyRun(null);
@@ -61,13 +68,27 @@ const ReadCode = () => {
   }, []);
 
   useEffect(() => {
-    if (myRun) {
-      // QR 코드에서 읽은 값과 타임스탬프를 쿼리 파라미터로 전달
-      // api 함수 post한 후 card 페이지에서 전체 get
-      // const encodedTimestamp = encodeURIComponent(myRun.timestamp);
-      // router.push(`/card?cardId=${myRun.cardId}&timestamp=${encodedTimestamp}`);
-    }
-  }, [myRun, router]);
+    // if (myRun) {
+    //   const getResponse = async () => {
+    //     if (!myRun || !user?.id) return;
+    //     const requestData = {
+    //       storeType: "IND",
+    //       name: myRun?.name,
+    //       cardId: myRun?.cardId,
+    //       sparkUserId: user?.id,
+    //     };
+    //     try {
+    //       const response = await post("/api/store/ind", requestData);
+    //     } catch (e) {
+    //       console.log(e);
+    //     } finally {
+    //       // 병렬 상태 업데이트
+    //       setIsNewData(true);
+    //     }
+    //   };
+    //   getResponse();
+    // }
+  }, [myRun]);
 
   return (
     <div className="relative flex w-full justify-center">
