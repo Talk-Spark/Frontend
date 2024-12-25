@@ -12,7 +12,7 @@ const Step1 = ({ onNext, formData, onChange }: Step1Props) => {
   const maxLength = 20; // 최대 글자 수 설정
 
   return (
-    <div className="flex flex-col gap-[38.84rem]">
+    <div className="flex h-[61.6rem] flex-col justify-between">
       <div>
         <h2 className="relative mb-[8rem] text-headline-3 text-black">
           팀 방 이름은 무엇인가요?

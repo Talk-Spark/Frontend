@@ -64,7 +64,7 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-[7.5rem]">
+    <div className="flex h-[61.6rem] flex-col justify-between">
       <div>
         <h2 className="relative mb-[0.8rem] text-headline-3 text-black">
           난이도를 선택해 주세요
