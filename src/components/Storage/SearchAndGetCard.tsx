@@ -2,36 +2,44 @@ import { useState, useEffect } from "react";
 import SearchInput from "../SearchInput";
 import Sorting from "./Sorting";
 import TeamBox from "./TeamBox";
-import { useRouter } from "next/navigation";
 import Modal from "../common/Modal";
 
 interface Team {
   teamName: string;
   teamPeopleCount: number;
-  participants: string;
   cardDate: string;
-  content: string;
+  participants: string;
   isFav: boolean;
 }
 
-const SearchAndGetCard = ({
-  ver,
-  teamData,
-  setTeamData,
-  newTeamIndex,
-  usedNewTeam,
-  setUsedNewTeam,
-  isEdit,
-}: {
+type GuestBookProps = {
   ver: "방명록" | "명함";
   teamData: Team[];
   setTeamData: React.Dispatch<React.SetStateAction<Team[]>>;
-  newTeamIndex?: number | null;
-  usedNewTeam?: boolean;
-  setUsedNewTeam?: (value: boolean) => void;
   isEdit: "edit" | "complete";
-}) => {
-  const router = useRouter();
+  isLoading?: boolean;
+};
+
+type NameCardProps = GuestBookProps & {
+  isNewData?: boolean;
+  setIsNewData?: (value: boolean) => void;
+  setIsCamera?: (value: boolean) => void;
+};
+
+// type SearchAndGetCardProps = GuestBookProps | NameCardProps;
+
+const SearchAndGetCard = (props: NameCardProps) => {
+  const {
+    ver,
+    teamData,
+    setTeamData,
+    isEdit,
+    isLoading,
+    isNewData,
+    setIsNewData,
+    setIsCamera,
+  } = props;
+
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isModal, setIsModal] = useState(false);
@@ -40,7 +48,9 @@ const SearchAndGetCard = ({
   const [toggleFav, setToggleFav] = useState<number | null>(null);
 
   const addCardBtn = () => {
-    router.push("/card/camera");
+    if (ver === "명함" && setIsCamera) {
+      setIsCamera(true); // setIsCamera가 정의되어 있을 때만 호출
+    }
   };
 
   useEffect(() => {
@@ -96,7 +106,6 @@ const SearchAndGetCard = ({
     const selectedTeamNames = selectedTeamBoxes.map(
       (index) => filteredTeamData[index].teamName,
     );
-    console.log(selectedTeamNames);
     setTeamData((prevData) =>
       prevData.filter((team) => !selectedTeamNames.includes(team.teamName)),
     );
@@ -176,11 +185,11 @@ const SearchAndGetCard = ({
               onSelect={handleSelectTeamBox}
               team={team}
               index={index}
-              newTeamIndex={newTeamIndex}
-              usedNewTeam={usedNewTeam}
-              setUsedNewTeam={setUsedNewTeam}
               setToggleFav={() => setToggleFav(index)}
-              ver={ver}
+              isLoading={isLoading}
+              {...(ver === "명함" ? { isNewData } : {})} // 명함일 때만 isNewData 전달
+              {...(ver === "명함" ? { setIsNewData } : {})}
+              ver="방명록"
             />
           ))}
         </div>

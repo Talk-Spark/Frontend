@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import starIcon from "@/public/nameCard/Star.svg";
 import starPinkIcon from "@/public/nameCard/pinkStar.svg";
 import Image from "next/image";
@@ -8,19 +9,18 @@ interface TeamBoxProps {
   team: {
     teamName: string;
     teamPeopleCount: number;
-    participants: string;
     cardDate: string;
-    content: string;
+    participants: string;
     isFav: boolean;
   };
   index: number;
   isSelected: boolean;
   isEdit: "complete" | "edit";
   onSelect: (index: number) => void;
-  newTeamIndex?: number | null;
-  usedNewTeam?: boolean;
-  setUsedNewTeam?: (value: boolean) => void;
   setToggleFav: (index: number) => void;
+  isNewData?: boolean;
+  setIsNewData?: (value: boolean) => void;
+  isLoading?: boolean;
   ver: "명함" | "방명록";
 }
 
@@ -30,27 +30,26 @@ const TeamBox = ({
   isSelected,
   isEdit,
   onSelect,
-  newTeamIndex,
-  usedNewTeam,
-  setUsedNewTeam,
   setToggleFav,
+  setIsNewData,
+  isNewData,
+  isLoading,
   ver,
 }: TeamBoxProps) => {
   const [bgColor, setBgColor] = useState("bg-gray-1");
   const router = useRouter();
 
   useEffect(() => {
-    if (newTeamIndex === index && !usedNewTeam) {
+    if (isNewData && index === 0 && !isLoading && setIsNewData) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
-      if (setUsedNewTeam) {
-        setUsedNewTeam(true);
-      }
+      setIsNewData(false);
       setTimeout(() => {
         setBgColor("bg-gray-1");
       }, 3000);
     }
-  }, [newTeamIndex, index, usedNewTeam, setUsedNewTeam]);
+  }, [isNewData]);
 
+  // 선택되었을때 메인 컬러
   const boxBgColor = isSelected
     ? "bg-sub-palePink-55 border-sub-palePink"
     : bgColor;
@@ -93,7 +92,7 @@ const TeamBox = ({
     return content;
   };
 
-  const previewContent = getPreviewContent(team.content);
+  const previewContent = getPreviewContent(team.participants);
 
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -103,7 +102,7 @@ const TeamBox = ({
   return (
     <div
       onClick={() => showDetailCard()}
-      className={`flex h-[7.2rem] w-full cursor-pointer flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEdit && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
+      className={`flex h-[7.2rem] w-full cursor-pointer flex-col justify-between gap-[0.4rem] rounded-[1.2rem] border-[0.1rem] ${boxBgColor} ${isEdit === "complete" && "cursor-pointer"} px-[1.6rem] py-[1.4rem]`}
     >
       <div className="flex justify-between">
         <div className="flex gap-[0.4rem]">
@@ -128,5 +127,4 @@ const TeamBox = ({
     </div>
   );
 };
-
 export default TeamBox;
