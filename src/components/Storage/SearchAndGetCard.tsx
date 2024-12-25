@@ -12,25 +12,34 @@ interface Team {
   isFav: boolean;
 }
 
-const SearchAndGetCard = ({
-  ver,
-  teamData,
-  setTeamData,
-  isEdit,
-  setIsCamera,
-  isNewData,
-  setIsNewData,
-  isLoading,
-}: {
+type GuestBookProps = {
   ver: "방명록" | "명함";
   teamData: Team[];
   setTeamData: React.Dispatch<React.SetStateAction<Team[]>>;
   isEdit: "edit" | "complete";
-  setIsCamera: (value: boolean) => void;
-  isNewData: boolean;
-  setIsNewData: (value: boolean) => void;
   isLoading?: boolean;
-}) => {
+};
+
+type NameCardProps = GuestBookProps & {
+  isNewData?: boolean;
+  setIsNewData?: (value: boolean) => void;
+  setIsCamera?: (value: boolean) => void;
+};
+
+// type SearchAndGetCardProps = GuestBookProps | NameCardProps;
+
+const SearchAndGetCard = (props: NameCardProps) => {
+  const {
+    ver,
+    teamData,
+    setTeamData,
+    isEdit,
+    isLoading,
+    isNewData,
+    setIsNewData,
+    setIsCamera,
+  } = props;
+
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isModal, setIsModal] = useState(false);
@@ -39,7 +48,9 @@ const SearchAndGetCard = ({
   const [toggleFav, setToggleFav] = useState<number | null>(null);
 
   const addCardBtn = () => {
-    setIsCamera(true);
+    if (ver === "명함" && setIsCamera) {
+      setIsCamera(true); // setIsCamera가 정의되어 있을 때만 호출
+    }
   };
 
   useEffect(() => {
@@ -175,9 +186,10 @@ const SearchAndGetCard = ({
               team={team}
               index={index}
               setToggleFav={() => setToggleFav(index)}
-              isNewData={isNewData}
-              setIsNewData={setIsNewData}
               isLoading={isLoading}
+              {...(ver === "명함" ? { isNewData } : {})} // 명함일 때만 isNewData 전달
+              {...(ver === "명함" ? { setIsNewData } : {})}
+              ver="방명록"
             />
           ))}
         </div>
