@@ -18,6 +18,7 @@ export type FormData = {
   slogan: string; // 자기소개(string)
   tmi: string; // 명함 소개(string)
   cardThema: string; // 선택한 캐릭터(string)
+  sparkUserId: number; // 스파크 유저 아이디(number)
 };
 
 const Page = () => {
@@ -34,6 +35,7 @@ const Page = () => {
     slogan: "",
     tmi: "",
     cardThema: "",
+    sparkUserId: 0,
   });
 
   // 사용자 입력 데이터 추가
