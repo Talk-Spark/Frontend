@@ -3,12 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import cameraIcon from "@/public/Image/entry/camera.svg";
 import Image from "next/image";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { post } from "@/src/apis";
 
 interface MyRun {
-  cardId: number;
-  name: string;
+  cardId: number; // 입장하기 : 방 아이디, 명함보관함: 카드 아이디
+  name: string; // 입장하기 : 방 이름, 명함보관함: 개인 이름
 }
 
 const ReadCode = ({
@@ -17,17 +17,18 @@ const ReadCode = ({
   setIsNewData,
   setIsCamera,
   qrVer,
-  setIsLoading,
   isLoading,
+  setIsLoading,
 }: {
   myRun: MyRun | null;
   setMyRun: React.Dispatch<React.SetStateAction<MyRun | null>>;
   setIsNewData: (value: boolean) => void;
   setIsCamera: (value: boolean) => void;
   qrVer: "room" | "card";
-  setIsLoading: (value: boolean) => void;
-  isLoading: boolean;
+  isLoading?: boolean;
+  setIsLoading?: (value: boolean) => void;
 }) => {
+  const router = useRouter();
   const QrOptions = {
     preferredCamera: "environment",
     maxScansPerSecond: 10,
@@ -49,9 +50,13 @@ const ReadCode = ({
     try {
       const parsedData = JSON.parse(result.data);
       setMyRun({
-        cardId: Number(parsedData.cardId),
+        cardId: Number(parsedData.cardId), // string -> number
         name: parsedData.name,
       });
+      if (qrVer === "card") {
+        setIsCamera(false);
+        setIsNewData(true);
+      }
     } catch (error) {
       console.error("Error parsing QR code data:", error);
       setMyRun(null);
@@ -62,6 +67,7 @@ const ReadCode = ({
     }
   };
 
+  // 큐알 스캐너 코드
   useEffect(() => {
     const videoElem = videoRef.current;
     if (videoElem) {
@@ -91,15 +97,17 @@ const ReadCode = ({
             cardId: myRun?.cardId,
             sparkUserId: user?.id,
           };
-          try {
-            setIsLoading(true);
-            /* 명함 보관함에 개인 명함 저장 */
-            await post("/api/store/ind", requestData);
-          } catch (e) {
-            console.log(e);
+          if (setIsLoading) {
+            try {
+              setIsLoading(true);
+              /* 명함 보관함에 개인 명함 저장 */
+              await post("/api/store/ind", requestData);
+            } catch (e) {
+              console.log(e);
+            }
+            setIsLoading(false);
+            setIsNewData(true);
           }
-          setIsLoading(false);
-          setIsNewData(true);
         };
         getResponse();
       } else if (qrVer === "room") {
