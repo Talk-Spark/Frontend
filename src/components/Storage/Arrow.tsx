@@ -3,7 +3,7 @@ import leftArrow from "@/public/nameCard/leftArrow.svg";
 import Image from "next/image";
 
 interface ArrowProps {
-  otherCards: Array<{ cardId: number }>;
+  otherCards: Array<{ storedCardId: number }>;
   previous: () => void;
   next: () => void;
   currentIndex: number;

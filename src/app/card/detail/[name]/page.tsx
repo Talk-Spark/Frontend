@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Slider from "react-slick"; // 모듈 추가
 import Image from "next/image";
 import favStar from "@/public/nameCard/Star.svg";
@@ -8,91 +8,45 @@ import StorageNameCard from "@/src/components/StorageNameCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Arrow from "@/src/components/Storage/Arrow";
+import { useParams } from "next/navigation";
+import { instance } from "@/src/apis";
 
-type NameCardProps = {
-  cardId: number;
-  teamName: string;
+type OthersNameCardProps = {
+  storedCardId: number;
   name: string;
   age: number;
   major: string;
   mbti?: string;
   hobby?: string;
   lookAlike?: string;
-  selfDescription?: string;
+  slogan?: string;
   tmi?: string;
-  color?: "pink" | "green" | "yellow" | "blue";
-  isFull?: boolean;
-  isStorage?: boolean;
+  cardThema?: "pink" | "green" | "yellow" | "blue";
 };
-
-// 더미 데이터
-const otherCards: NameCardProps[] = [
-  {
-    cardId: 1,
-    teamName: "멋쟁이 데모팀",
-    name: "최정인",
-    age: 28,
-    major: "전공1",
-    mbti: "INTJ",
-    hobby: "독서, 운동",
-    lookAlike: "텍스트영역텍스트영역텍스트영역텍스트",
-    selfDescription: "텍스트영역텍스트영역텍스트영역텍스트",
-    tmi: "텍스트영역텍스트영역텍스트영역텍스트",
-    color: "blue",
-    isFull: true,
-    isStorage: false,
-  },
-  {
-    cardId: 2,
-    teamName: "프론트엔드팀",
-    name: "김동욱",
-    age: 26,
-    major: "전공2",
-    mbti: "ENTP",
-    hobby: "텍스트영역텍스트영역텍스트영역텍스트",
-    lookAlike: "텍스트영역텍스트영역텍스트영역텍스트",
-    selfDescription: "텍스트영역텍스트영역텍스트영역텍스트",
-    tmi: "텍스트영역텍스트영역텍스트영역텍스트",
-    color: "pink",
-    isFull: true,
-    isStorage: false,
-  },
-  {
-    cardId: 3,
-    teamName: "백엔드팀",
-    name: "박하경",
-    age: 30,
-    major: "전공3",
-    mbti: "INFJ",
-    hobby: "텍스트영역텍스트영역텍스트영역텍스트",
-    lookAlike: "텍스트영역텍스트영역텍스트영역텍스트",
-    selfDescription: "텍스트영역텍스트영역텍스트영역텍스트",
-    tmi: "텍스트영역텍스트영역텍스트영역텍스트",
-    color: "green",
-    isFull: true,
-    isStorage: false,
-  },
-  {
-    cardId: 4,
-    teamName: "백엔드팀",
-    name: "김민우",
-    age: 30,
-    major: "전공3",
-    mbti: "INFJ",
-    hobby: "텍스트영역텍스트영역텍스트영역텍스트",
-    lookAlike: "텍스트영역텍스트영역텍스트영역텍스트",
-    selfDescription: "텍스트영역텍스트영역텍스트영역텍스트",
-    tmi: "텍스트영역텍스트영역텍스트영역텍스트",
-    color: "green",
-    isFull: true,
-    isStorage: false,
-  },
-];
 
 const DetailCard = () => {
   const [isFav, setIsFav] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const slickRef = useRef<Slider | null>(null);
+  const { name } = useParams();
+  const [otherCards, setOtherCards] = useState<OthersNameCardProps[]>([]);
+
+  useEffect(() => {
+    if (name) {
+      /* 팀 명함 조회하기 */
+      const getOthers = async () => {
+        try {
+          const res = await instance.get(`/api/storedCard/${name}`);
+          if (res.data) {
+            setOtherCards(res.data);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      getOthers();
+    }
+  }, []);
 
   const previous = useCallback(() => {
     slickRef.current?.slickPrev();
@@ -131,7 +85,7 @@ const DetailCard = () => {
       <div className="h-[60.3rem] w-[50rem]">
         <Slider {...sliderSettings} ref={slickRef}>
           {otherCards.map((card, index) => (
-            <div key={card.cardId} className="flex justify-center">
+            <div key={card.storedCardId} className="flex justify-center">
               <div
                 className={`${
                   index === currentIndex
@@ -139,7 +93,7 @@ const DetailCard = () => {
                     : "scale-95 opacity-80"
                 } flex w-[35rem] items-center justify-normal transition-all duration-200 ease-in-out`}
               >
-                <StorageNameCard {...card} />
+                <StorageNameCard {...card} isFull={true} isStorage={false} />
               </div>
             </div>
           ))}

@@ -15,17 +15,22 @@ import QrcodeDown from "./QrCode/QrCodeDown";
 import { instance } from "../apis";
 
 type NameCardProps = {
-  cardId: number;
-  teamName?: string;
+  id?: number; // 내 명함에만
+  kakaoId?: string;
+  ownerId?: number;
+
+  teamName?: string; // 보관함에서만
+  storedCardId?: number;
+
   name: string;
   age: number;
   major: string;
   mbti?: string;
   hobby?: string;
   lookAlike?: string;
-  selfDescription?: string;
+  slogan?: string;
   tmi?: string;
-  color?: "pink" | "green" | "yellow" | "blue";
+  cardThema?: "pink" | "green" | "yellow" | "blue";
   isFull?: boolean;
   isStorage?: boolean;
 };
@@ -37,57 +42,51 @@ const graphicColor: Record<string, StaticImageData> = {
   blue: blueGraphic,
 };
 
-const defaultCard: NameCardProps = {
-  cardId: 1,
-  name: "",
-  age: 0,
-  major: "",
-  mbti: "",
-  hobby: "",
-  lookAlike: "",
-  selfDescription: "",
-  tmi: "",
-  color: "pink",
-  isFull: false,
-  isStorage: false,
-};
-
 const StorageNameCard: React.FC<NameCardProps> = ({
-  cardId = 1,
+  ownerId = 1,
   name = "",
   age = 1,
   major = "",
   mbti = "",
   hobby = "",
   lookAlike = "",
-  selfDescription = "",
+  slogan = "",
   tmi = "",
-  color = "pink",
+  cardThema = "pink",
   isFull = false,
   isStorage = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
-  const [selectedColor, setSelectedColor] = useState(color); // 색상 상태
-  const [putData, setPutData] = useState<NameCardProps>(defaultCard); // 명함 수정하기
+  const [selectedColor, setSelectedColor] = useState(cardThema); // 색상 상태
+  const putData = {
+    sparkUserId: ownerId,
+    name,
+    age,
+    major,
+    mbti,
+    hobby,
+    lookAlike,
+    slogan,
+    tmi,
+    cardThema,
+  };
 
   const qrData = {
     // 큐알 다운로드 위한 객체
-    cardId: cardId,
+    cardId: ownerId,
     name: name,
   };
 
   const handleEditToggle = async () => {
     try {
-      setPutData((prev) => ({
-        ...(prev ?? {}),
-        color: selectedColor, // 선택한 color로 수정
-      }));
-
-      await instance.put(`/api/cards/${cardId}`, putData);
+      await instance.put(`/api/cards/${ownerId}`, {
+        ...putData,
+        cardThema: selectedColor,
+      });
+      setIsEditing((prev) => !prev); // 편집 상태 토글
     } catch (e) {
       console.log(e);
     }
-    setIsEditing((prev) => !prev); // 편집 상태 토글
   };
 
   const handleColorChange = (
@@ -262,7 +261,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
               </div>
               <div className="flex flex-1 flex-col gap-[0.4rem]">
                 <span className={`${categoryColor}`}>나는 이런 사람이야</span>
-                <p className={` ${contentTextColor}`}>{selfDescription}</p>
+                <p className={` ${contentTextColor}`}>{slogan}</p>
               </div>
             </div>
           </div>

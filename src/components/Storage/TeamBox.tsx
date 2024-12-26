@@ -6,13 +6,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface TeamBoxProps {
-  team: {
-    cardId: number;
-    teamName: string;
-    teamPeopleCount: number;
-    cardDate: string;
-    participants: string;
-    isFav: boolean;
+  team?: {
+    cardHolderId: number;
+    cardHolderName: string;
+    numOfTeammates: number;
+    teamNames: string[];
+    bookMark: boolean;
+    storedAt: string;
   };
   index: number;
   isSelected: boolean;
@@ -59,7 +59,7 @@ const TeamBox = ({
     if (isEdit === "complete") {
       onSelect(index);
     } else if (ver === "명함") {
-      router.push("/card/detail/[name]");
+      router.push(`/card/detail/${team.cardId}`);
     } else if (ver === "방명록") {
       router.push("/guest-book/[id]");
     }

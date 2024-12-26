@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 type CardHolderResponse = {
   cardHolderId: number;
   cardHolderName: string;
+  numOfTeammates: number;
   teamNames: string[];
   bookMark: boolean;
   storedAt: string;
@@ -21,38 +22,14 @@ type CardHolderResponse = {
 
 const Card = () => {
   const router = useRouter();
+  const [sortOption, setSortOption] = useState("최신순");
+  const [searchValue, setSearchValue] = useState<string>("");
   const [myRun, setMyRun] = useState<{
     cardId: number;
     name: string;
   } | null>(null);
 
-  type TeamData = {
-    cardId: number;
-    teamName: string;
-    teamPeopleCount: number;
-    cardDate: string;
-    participants: string;
-    isFav: boolean;
-  };
-
-  const [teamData, setTeamData] = useState<TeamData[]>([
-    {
-      cardId: 3,
-      teamName: "박승범",
-      participants: "박승범",
-      teamPeopleCount: 1,
-      isFav: false,
-      cardDate: "2024-12-25T14:25:30.100464",
-    },
-    {
-      cardId: 2,
-      teamName: "멋사 2팀",
-      participants: "박승범 박승범 박승범",
-      teamPeopleCount: 3,
-      isFav: false,
-      cardDate: "2024-12-25T14:23:32.260408",
-    },
-  ]);
+  const [teamData, setTeamData] = useState<CardHolderResponse[]>([]);
 
   /* 정렬 조건에 따른 명함 보관함 속 명함 조회 */
   useEffect(() => {
@@ -66,22 +43,16 @@ const Card = () => {
           };
 
           // API 호출
-          const response = await get("/api/storedCards");
+          // 쿼리 파라미터로 정렬 조건 추가
+          const queryParam = sortOption ? `?sort=${sortOption}` : "";
+          const response = await get(`/api/storedCards${queryParam}`);
 
           // 응답 데이터가 올바른 형식인지 확인
           const data = response.data as ApiResponse;
 
           if (data && data.cardHolders) {
             // 응답 데이터를 TeamData 형식으로 변환
-            const formattedData: TeamData[] = data.cardHolders.map((item) => ({
-              cardId: item.cardHolderId,
-              teamName: item.cardHolderName,
-              teamPeopleCount: item.teamNames.length || 0,
-              cardDate: item.storedAt,
-              participants: item.teamNames.join(" "),
-              isFav: item.bookMark,
-            }));
-            setTeamData(formattedData);
+            setTeamData(data.cardHolders);
           }
         } catch (error) {
           console.error("Error fetching stored cards:", error);
@@ -91,7 +62,7 @@ const Card = () => {
       }
     };
     fetchStoredCards();
-  }, []);
+  }, [sortOption, teamData, searchValue]);
 
   const [activeView, setActiveView] = useState<"mine" | "others">("others");
   const [isVisible, setIsVisible] = useState(false);
@@ -212,6 +183,9 @@ const Card = () => {
               isNewData={isNewData}
               setIsNewData={setIsNewData}
               isLoading={isLoading}
+              setSortOption={setSortOption}
+              setSearchValue={setSearchValue}
+              searchValue={searchValue}
             />
           ) : (
             <MyCard isVisible={isVisible} />
