@@ -132,7 +132,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
             : team,
         ),
       );
-      /* 보관된 명함에 대한 즐겨찾기 PUT */
+      /* 보관된 명함에 대한 즐겨찾기 PUT (배열) */
       const putFav = async () => {
         await put(`/api/storedCard/${selectedTeam.cardHolderId}`);
       };

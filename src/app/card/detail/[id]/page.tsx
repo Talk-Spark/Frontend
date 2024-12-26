@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Arrow from "@/src/components/Storage/Arrow";
 import { useParams } from "next/navigation";
-import { instance } from "@/src/apis";
+import { instance, put } from "@/src/apis";
 
 type OthersNameCardProps = {
   storedCardId: number;
@@ -28,15 +28,15 @@ const DetailCard = () => {
   const [isFav, setIsFav] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const slickRef = useRef<Slider | null>(null);
-  const { name } = useParams();
+  const { id } = useParams();
   const [otherCards, setOtherCards] = useState<OthersNameCardProps[]>([]);
 
   useEffect(() => {
-    if (name) {
+    if (id) {
       /* 팀 명함 조회하기 */
       const getOthers = async () => {
         try {
-          const res = await instance.get(`/api/storedCard/${name}`);
+          const res = await instance.get(`/api/storedCard/${id}`);
           if (res.data) {
             setOtherCards(res.data);
           }
@@ -47,6 +47,14 @@ const DetailCard = () => {
       getOthers();
     }
   }, []);
+
+  useEffect(() => {
+    /* 보관된 명함에 대한 즐겨찾기 PUT */
+    const putFav = async () => {
+      await put(`/api/storedCard/${id}`);
+    };
+    putFav();
+  }, [isFav]);
 
   const previous = useCallback(() => {
     slickRef.current?.slickPrev();
