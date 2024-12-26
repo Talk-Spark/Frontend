@@ -16,8 +16,8 @@ const SearchInput = ({
   searchValue: string;
   placeholderText: string;
   isQr: boolean;
-  onSearch: () => void; // 엔터 키 입력 시 호출되는 함수
-  setIsCamera: (value: boolean) => void;
+  onSearch?: () => void; // 엔터 키 입력 시 호출되는 함수 (최신)
+  setIsCamera?: (value: boolean) => void; //(최신)
 }) => {
   const [value, setValue] = useState("");
   const borderBT = searchValue ? "border-b-black" : "border-b-gray-4 ";
@@ -27,14 +27,14 @@ const SearchInput = ({
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && onSearch) {
       setSearchValue(value);
       onSearch();
     }
   };
 
   const onCamera = () => {
-    setIsCamera(true);
+    if (setIsCamera) setIsCamera(true);
   };
   return (
     <div

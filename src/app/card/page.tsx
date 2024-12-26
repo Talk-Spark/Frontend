@@ -12,7 +12,7 @@ import ReadCode from "@/src/components/QrCode/ReadCode";
 
 const Card = () => {
   const [myRun, setMyRun] = useState<{
-    cardId: string;
+    cardId: number;
     name: string;
   } | null>(null);
 
@@ -167,6 +167,7 @@ const Card = () => {
           setMyRun={setMyRun}
           setIsNewData={setIsNewData}
           setIsCamera={setIsCamera}
+          qrVer="room"
         />
       ) : (
         <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center">

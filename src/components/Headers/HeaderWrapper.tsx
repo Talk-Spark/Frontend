@@ -68,8 +68,6 @@ const HeaderWrapper = () => {
         title: "입장하기",
         button2Action: () => {},
       };
-    } else if (pathname === "/login" || pathname === "/landing") {
-      return {};
     } else if (pathname === "/creating-room/result") {
       return {
         title: "방 개설하기",
