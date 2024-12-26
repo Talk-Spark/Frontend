@@ -63,6 +63,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.17.5
+      '@types/qrcode.react':
+        specifier: ^1.0.5
+        version: 1.0.5
       '@types/react':
         specifier: ^18
         version: 18.3.12
@@ -585,6 +588,9 @@ packages:
 
   '@types/prop-types@15.7.13':
     resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
+
+  '@types/qrcode.react@1.0.5':
+    resolution: {integrity: sha512-BghPtnlwvrvq8QkGa1H25YnN+5OIgCKFuQruncGWLGJYOzeSKiix/4+B9BtfKF2wf5ja8yfyWYA3OXju995G8w==}
 
   '@types/react-dom@18.3.1':
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
@@ -2676,6 +2682,10 @@ snapshots:
   '@types/parse-json@4.0.2': {}
 
   '@types/prop-types@15.7.13': {}
+
+  '@types/qrcode.react@1.0.5':
+    dependencies:
+      '@types/react': 18.3.12
 
   '@types/react-dom@18.3.1':
     dependencies:
