@@ -87,13 +87,7 @@ const Page = () => {
           />
         );
       case 4:
-        return (
-          <Step4
-            onNext={setFormData}
-            formData={formData}
-            onChange={handleChange}
-          />
-        );
+        return <Step4 formData={formData} onChange={handleChange} />;
       default:
         return null;
     }

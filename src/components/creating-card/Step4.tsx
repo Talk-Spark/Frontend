@@ -3,40 +3,32 @@ import Button from "../common/Button";
 import ProfileImage from "../ProfileImage";
 import { FormData } from "@/src/app/(onBoarding)/creating-card/page";
 import { useRouter } from "next/navigation";
-import { instance } from "@/src/apis";
+import { post } from "@/src/apis";
 
-type cardThema = "PINK" | "YELLOW" | "GREEN" | "BLUE";
+// type cardThema = "PINK" | "YELLOW" | "GREEN" | "BLUE";
 
 type Step4Props = {
-  onNext: (formData: FormData) => void;
   formData: FormData;
   onChange: (key: keyof FormData, value: string) => void;
 };
 
-const Step4 = ({ onNext, formData, onChange }: Step4Props) => {
+const Step4 = ({ formData, onChange }: Step4Props) => {
   const router = useRouter();
 
-  const sendCardData = async (formData: FormData) => {
-    try {
-      const response = await instance.post("/api/cards", formData);
-      console.log("response: ", response.data);
-    } catch (error) {
-      console.error("Error sending card data: ", error);
-      throw error;
-    }
-  };
-
-  // todo: 명함 정보 담아서 서버로 보내기
   const handleNextClick = async () => {
-    const user = localStorage.getItem("user");
-    const userObj = JSON.parse(user || "");
-    const sparkUserId = userObj.sparkUserId;
-    console.log("sparkUserId: ", sparkUserId);
-    onChange("sparkUserId", sparkUserId);
+    const userObj = localStorage.getItem("user");
+    if (!userObj) {
+      alert("로그인 정보가 없습니다.");
+      return;
+    }
+    const sparkUserId = JSON.parse(userObj).sparkUserId;
 
     try {
-      onNext(formData); // formData에 최종 정보 저장
-      await sendCardData(formData); // 서버로 명함 정보 전송
+      const response = post("/api/cards", {
+        ...formData,
+        sparkUserId: sparkUserId,
+      });
+      console.log("response: ", response);
       router.push("/creating-card/result");
     } catch (error) {
       console.error("명함을 생성하지 못했습니다: ", error);
