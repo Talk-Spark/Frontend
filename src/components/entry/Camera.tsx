@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import cameraIcon from "@/public/entry/camera.svg";
 import Image from "next/image";
+import cameraIcon from "@/public/Image/entry/camera.svg";
 
 const CameraPage = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);

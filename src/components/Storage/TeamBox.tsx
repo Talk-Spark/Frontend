@@ -5,15 +5,26 @@ import starPinkIcon from "@/public/nameCard/pinkStar.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+interface CardBox {
+  cardHolderId: number;
+  cardHolderName: string;
+  numOfTeammates: number;
+  teamNames: string[];
+  bookMark: boolean;
+  storedAt: string;
+}
+interface RoomBox {
+  roomId: number;
+  roomName: string;
+  roomPeopleCount: number;
+  roomDateTime: string;
+  guestBookData: string[];
+  guestBookFavorited: boolean;
+}
+
 interface TeamBoxProps {
-  team?: {
-    cardHolderId: number;
-    cardHolderName: string;
-    numOfTeammates: number;
-    teamNames: string[];
-    bookMark: boolean;
-    storedAt: string;
-  };
+  team?: CardBox;
+  room?: RoomBox;
   index: number;
   isSelected: boolean;
   isEdit: "complete" | "edit";
@@ -25,18 +36,20 @@ interface TeamBoxProps {
   ver: "명함" | "방명록";
 }
 
-const TeamBox = ({
-  team,
-  index,
-  isSelected,
-  isEdit,
-  onSelect,
-  setToggleFav,
-  setIsNewData,
-  isNewData,
-  isLoading,
-  ver,
-}: TeamBoxProps) => {
+const TeamBox = (props: TeamBoxProps) => {
+  const {
+    team,
+    room,
+    index,
+    isSelected,
+    isEdit,
+    isLoading,
+    isNewData,
+    onSelect,
+    setToggleFav,
+    setIsNewData,
+    ver,
+  } = props;
   const [bgColor, setBgColor] = useState("bg-gray-1");
   const router = useRouter();
 
@@ -58,10 +71,10 @@ const TeamBox = ({
   const showDetailCard = () => {
     if (isEdit === "complete") {
       onSelect(index);
-    } else if (ver === "명함") {
-      router.push(`/card/detail/${team.cardId}`);
-    } else if (ver === "방명록") {
-      router.push("/guest-book/[id]");
+    } else if (ver === "명함" && team) {
+      router.push(`/card/detail/${team?.cardHolderId}`);
+    } else if (ver === "방명록" && room) {
+      router.push(`/guest-book/${room?.roomId}`);
     }
     onSelect(index);
   };
@@ -73,16 +86,20 @@ const TeamBox = ({
     return `${month}월 ${day}일`;
   };
 
-  const formattedDate = formatDate(team.cardDate);
+  const formattedDate = team
+    ? formatDate(team?.storedAt)
+    : room && formatDate(room?.roomDateTime);
 
-  const participantsClean = team.participants.split(" ");
   const maxVisible = 4; // 보여지는 최대 이름 수
   const maxText = 18; // 보여지는 방명록 메세지 최대 길이 수
-
   const displayedParticipants =
-    participantsClean.length > maxVisible
-      ? `${participantsClean.slice(0, maxVisible).join(" ")} ...`
-      : participantsClean.join(" ");
+    team && team.teamNames.length > maxVisible
+      ? `${team.teamNames.slice(0, maxVisible).join(" ")} ...`
+      : team?.teamNames.join(" ");
+
+  const content = team
+    ? displayedParticipants
+    : room && room.guestBookData[room.guestBookData.length - 1];
 
   const getPreviewContent = (content?: string) => {
     if (ver === "방명록" && content) {
@@ -93,7 +110,13 @@ const TeamBox = ({
     return content;
   };
 
-  const previewContent = getPreviewContent(team.participants);
+  const previewContent = getPreviewContent(content);
+
+  const dataName = team ? team.cardHolderName : room && room.roomName;
+
+  const dataNum = team ? team.numOfTeammates : room && room.roomPeopleCount;
+
+  const dataBookMark = team ? team.bookMark : room && room.guestBookData;
 
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -107,13 +130,11 @@ const TeamBox = ({
     >
       <div className="flex justify-between">
         <div className="flex gap-[0.4rem]">
-          <span className="text-body-2-bold text-gray-11">{team.teamName}</span>
-          <span className="text-body-2-med text-gray-7">
-            {team.teamPeopleCount}
-          </span>
+          <span className="text-body-2-bold text-gray-11">{dataName}</span>
+          <span className="text-body-2-med text-gray-7">{dataNum}</span>
         </div>
         <Image
-          src={team.isFav ? starPinkIcon : starIcon}
+          src={dataBookMark ? starPinkIcon : starIcon}
           onClick={handleFavClick}
           alt="즐겨찾기"
           className="cursor-pointer"

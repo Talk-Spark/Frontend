@@ -1,49 +1,59 @@
 "use client";
 import Header from "@/src/components/Headers/Header";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Page = () => {
   const [isEdit, setIsEdit] = useState<"edit" | "complete">("edit");
   const [isLoading, setIsLoading] = useState(false);
+  const [sortOption, setSortOption] = useState("최신순");
+  const [searchValue, setSearchValue] = useState<string>("");
+
   const handleCompleteClick = () => {
     setIsEdit((prev) => (prev === "edit" ? "complete" : "edit"));
     setIsLoading(false); // api 연결 시 삭제
   };
 
-  type TeamData = {
-    cardId: number;
-    teamName: string;
-    teamPeopleCount: number;
-    participants: string;
-    cardDate: string;
-    isFav: boolean;
+  type RoomData = {
+    roomId: number;
+    roomName: string;
+    roomPeopleCount: number;
+    roomDateTime: string;
+    guestBookData: string[];
+    guestBookFavorited: boolean;
   };
 
-  const [teamData, setTeamData] = useState<TeamData[]>([
-    // 더미데이터
-    // {
-    //   teamName: "멋쟁이 데모팀",
-    //   teamPeopleCount: 5,
-    //   cardDate: "2024-11-03 14:30:15",
-    //   participants: "박하경 진예원 이나윤 진예원 진예원",
-    //   isFav: true,
-    // },
-    // {
-    //   teamName: "프론트엔드팀",
-    //   teamPeopleCount: 3,
-    //   cardDate: "2024-11-02 10:15:10",
-    //   participants: "김동욱 공준혁 최정인",
-    //   isFav: false,
-    // },
-    // {
-    //   teamName: "백엔드팀",
-    //   teamPeopleCount: 3,
-    //   cardDate: "2024-11-01 09:05:20",
-    //   participants: "김민우 이윤정 박승범",
-    //   isFav: false,
-    // },
-  ]);
+  const [roomData, setRoomData] = useState<RoomData[]>([]);
+
+  /* 정렬 조건에 따른 명함 보관함 속 명함 조회 */
+  useEffect(() => {
+    // const fetchStoredCards = async () => {
+    //   if (!isLoading) {
+    //     try {
+    //       setIsLoading(true);
+    //       // API 응답 타입 정의
+    //       type ApiResponse = {
+    //         cardHolders: RoomData[];
+    //       };
+    //       // API 호출
+    //       // 쿼리 파라미터로 정렬 조건 추가
+    //       const queryParam = sortOption ? `?sort=${sortOption}` : "";
+    //       const response = await get(`/api/storedCards${queryParam}`);
+    //       // 응답 데이터가 올바른 형식인지 확인
+    //       const data = response.data as ApiResponse;
+    //       if (data && data.cardHolders) {
+    //         // 응답 데이터를 TeamData 형식으로 변환
+    //         setRoomData(data.cardHolders);
+    //       }
+    //     } catch (error) {
+    //       console.error("Error fetching stored cards:", error);
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   }
+    // };
+    // fetchStoredCards();
+  }, [sortOption, roomData, searchValue]);
 
   return (
     <div className="-mx-[2rem] w-[calc(100%+4rem)]">
@@ -55,11 +65,14 @@ const Page = () => {
         showButton1={true}
       />{" "}
       <SearchAndGetCard
-        setTeamData={setTeamData}
-        teamData={teamData}
         ver="방명록"
+        setRoomData={setRoomData}
+        roomData={roomData}
         isEdit={isEdit}
         isLoading={isLoading}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        setSortOption={setSortOption}
       />
     </div>
   );

@@ -17,6 +17,7 @@ interface Team {
 interface Room {
   roomId: number;
   roomName: string;
+  roomPeopleCount: number;
   roomDateTime: string;
   guestBookData: string[];
   guestBookFavorited: boolean;
@@ -34,8 +35,8 @@ type GuestBookProps = {
 };
 
 type NameCardProps = GuestBookProps & {
-  teamData: Team[];
-  setTeamData: React.Dispatch<React.SetStateAction<Team[]>>;
+  teamData?: Team[];
+  setTeamData?: React.Dispatch<React.SetStateAction<Team[]>>;
   isNewData?: boolean;
   setIsNewData?: (value: boolean) => void;
   setIsCamera?: (value: boolean) => void;
@@ -49,7 +50,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
     teamData,
     setTeamData,
     roomData,
-    setRoomData,
+    // setRoomData,
     isEdit,
     isLoading,
     setSortOption,
@@ -64,6 +65,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
   const [toggleFav, setToggleFav] = useState<number | null>(null);
+  const dataLength = teamData ? teamData?.length : roomData?.length;
 
   const addCardBtn = () => {
     if (ver === "명함" && setIsCamera) {
@@ -92,32 +94,34 @@ const SearchAndGetCard = (props: NameCardProps) => {
   };
 
   const handleDeleteSelected = async () => {
-    /* 보관된 명함 삭제 (선택)) API */
-    try {
-      // 선택된 팀 Id
-      const selectedTeamIds = selectedTeamBoxes.map(
-        (index) => teamData[index].cardHolderId,
-      );
+    if (teamData && setTeamData) {
+      /* 보관된 명함 삭제 (선택)) API */
+      try {
+        // 선택된 팀 Id
+        const selectedTeamIds = selectedTeamBoxes.map(
+          (index) => teamData[index].cardHolderId,
+        );
 
-      // 각 선택된 cardId에 대해 DELETE 요청 보내기
-      const deleteRequests = selectedTeamIds.map((cardHolderId) =>
-        instance.delete(`/api/storedCard/${cardHolderId}`),
-      );
+        // 각 선택된 cardId에 대해 DELETE 요청 보내기
+        const deleteRequests = selectedTeamIds.map((cardHolderId) =>
+          instance.delete(`/api/storedCard/${cardHolderId}`),
+        );
 
-      // 모든 DELETE 요청을 병렬로 처리
-      await Promise.all(deleteRequests);
+        // 모든 DELETE 요청을 병렬로 처리
+        await Promise.all(deleteRequests);
 
-      // 요청이 모두 완료되면 선택된 팀 박스를 초기화하고 모달을 닫기
-      setSelectedTeamBoxes([]);
-      setTeamData([]);
-      setIsModal(false);
-    } catch (error) {
-      console.error("삭제 중 오류 발생:", error);
+        // 요청이 모두 완료되면 선택된 팀 박스를 초기화하고 모달을 닫기
+        setSelectedTeamBoxes([]);
+        setTeamData([]);
+        setIsModal(false);
+      } catch (error) {
+        console.error("삭제 중 오류 발생:", error);
+      }
     }
   };
 
   useEffect(() => {
-    if (toggleFav !== null) {
+    if (toggleFav !== null && teamData && setTeamData) {
       const selectedTeam = teamData[toggleFav];
       if (!selectedTeam) return;
 
@@ -139,7 +143,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
   const handleDeleteAll = async () => {
     try {
       /* 보관된 명함 삭제하기 (전체)  API */
-      if (ver === "명함" && teamData) {
+      if (ver === "명함" && teamData && setTeamData) {
         const deleteRequests = teamData.map((data) =>
           instance.delete(`/api/storedCard/${data.cardHolderId}`),
         );
@@ -191,9 +195,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
             <span className="text-body-1-med text-gray-11">
               보관된 {ver === "명함" ? "명함" : "방명록"}
             </span>
-            <span className="text-body-1-bold text-gray-7">
-              {teamData.length}
-            </span>
+            <span className="text-body-1-bold text-gray-7">{dataLength}</span>
           </div>
           <Sorting
             deleteModal={deleteModal}
@@ -203,7 +205,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
         </div>
         <div className="flex w-full flex-col gap-[1.2rem]">
           {ver === "명함"
-            ? teamData.map((team, index) => (
+            ? teamData?.map((team, index) => (
                 <TeamBox
                   key={index}
                   isSelected={selectedTeamBoxes.includes(index)}
@@ -225,7 +227,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
                   index={index}
                   setToggleFav={() => setToggleFav(index)}
                   isLoading={isLoading}
-                  {...(ver === "방명록" ? { room, setRoomData } : {})}
+                  {...(ver === "방명록" ? { room } : {})}
                   ver={ver}
                 />
               ))}

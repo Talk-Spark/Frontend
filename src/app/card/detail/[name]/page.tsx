@@ -41,7 +41,7 @@ const DetailCard = () => {
             setOtherCards(res.data);
           }
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
       };
       getOthers();

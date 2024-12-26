@@ -44,7 +44,15 @@ const Card = () => {
 
           // API 호출
           // 쿼리 파라미터로 정렬 조건 추가
-          const queryParam = sortOption ? `?sort=${sortOption}` : "";
+
+          // 쿼리 파라미터 생성 함수
+          const getQueryParam = () => {
+            if (sortOption === "즐겨찾기") return "?searchType=Bookmark";
+            if (sortOption === "가나다순") return "?searchType=Alphabet";
+            return ""; // 최신순 기본값
+          };
+
+          const queryParam = getQueryParam();
           const response = await get(`/api/storedCards${queryParam}`);
 
           // 응답 데이터가 올바른 형식인지 확인

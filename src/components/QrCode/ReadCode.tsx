@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
-import cameraIcon from "@/public/entry/camera.svg";
+import cameraIcon from "@/public/Image/entry/camera.svg";
 import Image from "next/image";
 import router from "next/router";
 import { post } from "@/src/apis";

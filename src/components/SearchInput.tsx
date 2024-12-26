@@ -1,7 +1,7 @@
 "use client";
-import searchIcon from "@/public/entry/search.svg";
-import scannerIcon from "@/public/entry/scanner.svg";
 import Image from "next/image";
+import searchIcon from "@/public/Image/entry/search.svg";
+import scannerIcon from "@/public/Image/entry/scanner.svg";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
