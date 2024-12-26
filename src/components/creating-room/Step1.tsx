@@ -34,7 +34,11 @@ const Step1 = ({ onNext, formData, onChange }: Step1Props) => {
           </div>
         </div>
       </div>
-      <Button onClick={onNext} variant="black">
+      <Button
+        onClick={onNext}
+        variant={formData.name ? "black" : "gray"}
+        disabled={!formData.name}
+      >
         다음으로
       </Button>
     </div>

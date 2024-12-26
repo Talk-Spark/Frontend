@@ -56,13 +56,7 @@ const CreatingRoomPage = () => {
           />
         );
       case 3:
-        return (
-          <Step3
-            onNext={handleNextStep}
-            formData={roomData}
-            onChange={handleChange}
-          />
-        );
+        return <Step3 formData={roomData} onChange={handleChange} />;
     }
   };
 

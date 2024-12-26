@@ -14,7 +14,6 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRouter } from "next/navigation";
 
 interface Step3Props {
-  onNext: () => void;
   formData: RoomDataForm;
   onChange: (data: Partial<RoomDataForm>) => void;
 }
