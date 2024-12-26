@@ -12,6 +12,7 @@ import { useState } from "react";
 import Button from "../common/Button";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRouter } from "next/navigation";
+import { post } from "@/src/apis";
 
 interface Step3Props {
   onNext: () => void;
@@ -57,10 +58,31 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
     onChange({ difficulty: levelId });
   };
 
+  const createNewRoom = async () => {
+    const userObj = localStorage.getItem("user");
+    if (!userObj) {
+      alert("로그인 정보가 없습니다.");
+      return;
+    }
+    const sparkUserId = JSON.parse(userObj).sparkUserId;
+    try {
+      const response = await post("/api/rooms", {
+        roomName: formData.name,
+        maxPeople: formData.participants,
+        difficult: formData.difficulty,
+        hostId: sparkUserId,
+      });
+
+      //roomId를 사용할 일이 있으면 사용
+      const roomId = response.data;
+      router.push("/creating-room/result");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleNextClick = () => {
-    // todo: 데이터 전송
-    router.push("/creating-room/result");
-    console.log(formData);
+    createNewRoom();
   };
 
   return (
