@@ -1,7 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation"; // 'next/navigation'에서 useRouter import
-import Lottie from "lottie-react";
 import startLottie from "@/public/entry/countdown_white.json";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+});
 
 const Start = () => {
   const router = useRouter();

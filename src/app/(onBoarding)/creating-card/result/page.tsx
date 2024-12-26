@@ -2,7 +2,11 @@
 
 import Button from "@/src/components/common/Button";
 import animationData from "./creating-card.json";
-import Lottie from "react-lottie-player";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("react-lottie-player"), {
+  ssr: false,
+});
 
 const Page = () => {
   return (
