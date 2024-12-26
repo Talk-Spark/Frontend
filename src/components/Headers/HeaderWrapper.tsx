@@ -1,10 +1,10 @@
 "use client";
-
 import Header from "./Header";
 import { usePathname } from "next/navigation";
 
 const HeaderWrapper = () => {
   const pathname = usePathname();
+
   const getHeaderProps = () => {
     if (pathname === "/" || pathname === "/page1") {
       return {
@@ -37,11 +37,29 @@ const HeaderWrapper = () => {
         button2Type: "next",
         button2Action: () => {},
       };
-    } else if (pathname === "/page6") {
+      // } else if (pathname === "/card") {
+      //   return {
+      //     showButton1: true,
+      //     title: "명함 보관함",
+      //     button2Type: isEditing ? "complete" : "edit", // 편집 상태에 따라 버튼 타입 변경
+      //     button2Action: isEditing ? handleCompleteClick : handleEditClick,
+      //   };
+      // } else if (pathname.startsWith("/card/camera")) {
       return {
         showButton1: true,
-        title: "TEXT텍스트영역",
-        button2Type: "exit",
+        title: "명함 추가하기",
+        button2Action: () => {},
+      };
+    } else if (pathname.startsWith("/card/detail")) {
+      return {
+        showButton1: true,
+        title: "명함 보관함",
+        button2Action: () => {},
+      };
+    } else if (pathname.startsWith("/card/camera")) {
+      return {
+        showButton1: true,
+        title: "명함 추가하기",
         button2Action: () => {},
       };
     } else if (pathname.startsWith("/team/")) {
@@ -51,12 +69,10 @@ const HeaderWrapper = () => {
         button2Action: () => {},
       };
     } else if (pathname === "/login" || pathname === "/landing") {
+      return {};
+    } else if (pathname === "/creating-room/result") {
       return {
-        title: "",
-      };
-    } else if (pathname === "/creating-card/result") {
-      return {
-        title: "TalkSpark",
+        title: "방 개설하기",
       };
     }
 
