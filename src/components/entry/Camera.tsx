@@ -18,13 +18,11 @@ const CameraPage = () => {
           videoRef.current.srcObject = stream;
 
           // load()를 호출하지 않아도 srcObject 설정으로 브라우저가 자동으로 로드
-          videoRef.current
-            .play()
-            .catch((err) => console.error("Error playing video:", err));
+          videoRef.current.play().catch();
         }
       } catch (err) {
         setError("카메라에 접근할 수 없습니다. 권한을 확인해주세요.");
-        console.error("Error accessing camera: ", err);
+        console.log(err);
       }
     };
 
