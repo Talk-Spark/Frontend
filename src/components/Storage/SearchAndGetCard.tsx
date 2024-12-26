@@ -19,8 +19,8 @@ interface Room {
   roomName: string;
   roomPeopleCount: number;
   roomDateTime: string;
-  guestBookData: string[];
   guestBookFavorited: boolean;
+  preViewContent: string;
 }
 
 type GuestBookProps = {
@@ -29,6 +29,7 @@ type GuestBookProps = {
   setRoomData?: React.Dispatch<React.SetStateAction<Room[]>>;
   isEdit: "edit" | "complete";
   isLoading?: boolean;
+  setIsLoading?: (value: boolean) => void;
   setSortOption: (option: string) => void;
   setSearchValue: (value: string) => void;
   searchValue: string;
@@ -50,9 +51,10 @@ const SearchAndGetCard = (props: NameCardProps) => {
     teamData,
     setTeamData,
     roomData,
-    // setRoomData,
+    setRoomData,
     isEdit,
     isLoading,
+    setIsLoading,
     setSortOption,
     isNewData,
     setIsNewData,
@@ -94,7 +96,8 @@ const SearchAndGetCard = (props: NameCardProps) => {
   };
 
   const handleDeleteSelected = async () => {
-    if (teamData && setTeamData) {
+    if (teamData && setTeamData && setIsLoading) {
+      setIsLoading(true);
       /* 보관된 명함 삭제 (선택)) API */
       try {
         // 선택된 팀 Id
@@ -117,26 +120,71 @@ const SearchAndGetCard = (props: NameCardProps) => {
       } catch (error) {
         console.error("삭제 중 오류 발생:", error);
       }
+      setIsLoading(false);
+    } else if (roomData && setIsLoading && setRoomData) {
+      setIsLoading(true);
+      /* 보관된 명함 삭제 (선택)) API */
+      try {
+        // 선택된 방명록 Id
+        const selectedRoomIds = selectedTeamBoxes.map(
+          (index) => roomData[index].roomId,
+        );
+
+        // 각 선택된 roomId에 대해 DELETE 요청 보내기
+        const deleteRequests = selectedRoomIds.map((roomId) =>
+          instance.delete(`/api/storedCard/${roomId}`),
+        );
+
+        // 모든 DELETE 요청을 병렬로 처리
+        await Promise.all(deleteRequests);
+
+        // 요청이 모두 완료되면 선택된 방명록 박스를 초기화하고 모달을 닫기
+        setSelectedTeamBoxes([]);
+        setRoomData([]);
+        setIsModal(false);
+      } catch (error) {
+        console.error("삭제 중 오류 발생:", error);
+      }
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (toggleFav !== null && teamData && setTeamData) {
-      const selectedTeam = teamData[toggleFav];
-      if (!selectedTeam) return;
+    if (toggleFav !== null) {
+      if (teamData && setTeamData) {
+        /* 보관된 명함에 대한 즐겨찾기 PUT */
+        const selectedTeam = teamData[toggleFav];
+        if (!selectedTeam) return;
 
-      setTeamData((prevData) =>
-        prevData.map((team) =>
-          team.cardHolderName === selectedTeam.cardHolderName
-            ? { ...team, bookMark: !team.bookMark }
-            : team,
-        ),
-      );
-      /* 보관된 명함에 대한 즐겨찾기 PUT */
-      const putFav = async () => {
-        await put(`/api/storedCard/${selectedTeam.cardHolderId}`);
-      };
-      putFav();
+        setTeamData((prevData) =>
+          prevData.map((team) =>
+            team.cardHolderName === selectedTeam.cardHolderName
+              ? { ...team, bookMark: !team.bookMark }
+              : team,
+          ),
+        );
+        const putFav = async () => {
+          await put(`/api/storedCard/${selectedTeam.cardHolderId}`);
+        };
+        putFav();
+      } else if (roomData && setRoomData) {
+        /* 보관된 방명록에 대한 즐겨찾기 PUT (배열) */
+        const selectedTeam = roomData[toggleFav];
+        if (!selectedTeam) return;
+
+        // 작동 불완전시 toggleFav를 페이지에서 관리, fetch시 의존성 배열로
+        setRoomData((prevData) =>
+          prevData.map((room) =>
+            room.roomName === selectedTeam.roomName
+              ? { ...room, bookMark: !room.guestBookFavorited }
+              : room,
+          ),
+        );
+        const putFav = async () => {
+          await put(`/api/guest-books/${selectedTeam.roomId}`);
+        };
+        putFav();
+      }
     }
   }, [toggleFav]);
 
@@ -150,12 +198,13 @@ const SearchAndGetCard = (props: NameCardProps) => {
         await Promise.all(deleteRequests);
 
         setTeamData([]);
-      } else if (ver === "방명록" && roomData) {
+      } else if (ver === "방명록" && roomData && setRoomData) {
         /* 방명록 삭제하기  API */
         const deleteRequests = roomData.map((data) =>
-          instance.delete(`/api/storedCard/${data.roomId}`),
+          instance.delete(`/api/guest-books/${data.roomId}`),
         );
         await Promise.all(deleteRequests);
+        setRoomData([]);
       }
 
       setSelectedTeamBoxes([]);

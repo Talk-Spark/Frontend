@@ -1,15 +1,60 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import FixedComment from "@/src/components/guest-book/FixedComment";
 import MyTalk from "@/src/components/guest-book/MyTalk";
 import YourTalk from "@/src/components/guest-book/YourTalk";
 import CommnetInput from "@/src/components/guest-book/CommentInput";
 import Header from "@/src/components/Headers/Header";
+import { AxiosResponse } from "axios";
+import { instance } from "@/src/apis";
+
+interface GuestBookDataProps {
+  guestBookId: number;
+  sparkUserName: string;
+  guestBookContent: string;
+  guestBookDateTime: string;
+  ownerGuestBook: boolean;
+  cardThema: "pink" | "yellow" | "green" | "blue";
+}
+
+interface RoomDataProps {
+  roomId: number;
+  roomName: string;
+  roomDateTime: string;
+  guestBookData: GuestBookDataProps[];
+  guestBookFavorited: boolean;
+}
 
 const Page = () => {
   const [commentValue, setCommentValue] = useState("");
-  const date = "2024-11-03 14:30:15";
-  const roomName = "멋쟁이 데모팀";
+  const [guestDetailData, setGuestDetailData] = useState<RoomDataProps | null>(
+    null,
+  );
+  const [sendData, setSendData] = useState(false);
+
+  const { id } = useParams(); // roomId 파라미터 가져온 후 get
+
+  /* 방명록 내용 조회하기 (상세정보) */
+  const fetchGuestBookData = async () => {
+    if (id) {
+      try {
+        const response = await instance.get<RoomDataProps>(
+          `/api/guest-books/${id}`,
+        );
+        setGuestDetailData(response.data);
+      } catch (error) {
+        console.error("Error fetching guest book data:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchGuestBookData();
+  }, [sendData]);
+
+  const date = guestDetailData ? guestDetailData.roomDateTime : "";
+  const roomName = guestDetailData ? guestDetailData.roomName : "";
 
   const formatDate = (dateString: string) => {
     const [year, month, day] = dateString.split(" ")[0].split("-");
@@ -24,37 +69,6 @@ const Page = () => {
 
     return `${meridiem} ${formattedHour}:${minute.toString().padStart(2, "0")}`;
   }
-
-  const guestBookData: {
-    guestBookId: string;
-    isOwnerGuestBook: boolean;
-    sparkUserName: string;
-    guestBookContent: string;
-    guestBookDateTime: string;
-  }[] = [
-    // 더미데이터
-    // {
-    //   guestBookId: "1",
-    //   isOwnerGuestBook: true, // 본인이 작성한 방명록만 true, 나머지는 false
-    //   sparkUserName: "작성자 이름",
-    //   guestBookContent: "내 방명록작성!!!!",
-    //   guestBookDateTime: "2024-11-03 14:30:15",
-    // },
-    // {
-    //   guestBookId: "2",
-    //   isOwnerGuestBook: false,
-    //   sparkUserName: "이름이름",
-    //   guestBookContent: "너 방명록작성!!!!",
-    //   guestBookDateTime: "2024-11-03 14:30:15",
-    // },
-    // {
-    //   guestBookId: "3",
-    //   isOwnerGuestBook: false,
-    //   sparkUserName: "이름이름",
-    //   guestBookContent: "방명록작성!!!!",
-    //   guestBookDateTime: "2024-11-03 14:30:15",
-    // },
-  ];
 
   return (
     <div>
@@ -71,8 +85,8 @@ const Page = () => {
           />
           {/* Guest Book Data */}
           <div className="mt-[1.6rem] flex flex-col gap-[1.6rem]">
-            {guestBookData.map((data) =>
-              data.isOwnerGuestBook ? (
+            {guestDetailData?.guestBookData.map((data) =>
+              data.ownerGuestBook ? (
                 <MyTalk
                   key={data.guestBookId}
                   content={data.guestBookContent}
@@ -85,6 +99,7 @@ const Page = () => {
                   content={data.guestBookContent}
                   dateTime={data.guestBookDateTime}
                   formatTimeWithMeridiem={formatTimeWithMeridiem}
+                  color={data.cardThema}
                 />
               ),
             )}
@@ -93,6 +108,8 @@ const Page = () => {
         <CommnetInput
           commentValue={commentValue}
           setCommentValue={setCommentValue}
+          roomId={guestDetailData?.roomId}
+          setSendData={setSendData}
         />
       </div>
     </div>

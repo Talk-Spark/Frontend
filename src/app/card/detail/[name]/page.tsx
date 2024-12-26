@@ -25,7 +25,7 @@ type OthersNameCardProps = {
 };
 
 const DetailCard = () => {
-  const [isFav, setIsFav] = useState(false);
+  const [isFav, setIsFav] = useState(false); // 여기 즐겨찾기 put api 구현 필요
   const [currentIndex, setCurrentIndex] = useState(0);
   const slickRef = useRef<Slider | null>(null);
   const { name } = useParams();

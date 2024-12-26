@@ -7,27 +7,55 @@ import Image from "next/image";
 import NewIcon from "@/public/guest-book/new.svg";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
+import { instance } from "@/src/apis";
+import { setTimeout } from "timers";
 
 type CommentInputProps = {
+  roomId?: number;
   commentValue: string;
   setCommentValue: (value: string) => void;
+  setSendData: (value: boolean) => void;
 };
-const CommnetInput = ({ setCommentValue, commentValue }: CommentInputProps) => {
+
+const CommnetInput = ({
+  setCommentValue,
+  commentValue,
+  roomId,
+  setSendData,
+}: CommentInputProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isCheck, setIsCheck] = useState(false);
 
-  const handleCheck = () => {
-    setIsCheck((prev) => !prev);
-  };
+  const handleCheck = () => setIsCheck((prev) => !prev);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentValue(e.target.value);
   };
 
-  const handleClickGuestBook = () => {
+  const handleClickGuestBook = async () => {
+    if (!commentValue.trim()) {
+      console.error("방명록 내용을 입력해주세요.");
+      return;
+    }
     /* 전송 버튼 클릭시 post 요청 후 새로고침처럼 get요청 */
-    setCommentValue(""); // 전송 후 입력 필드 초기화
+    /* 방명록 작성하기 POST */
+    const queryParam = isCheck ? "true" : "false";
+
+    try {
+      const response = await instance.post(
+        `/api/guest-books/${roomId}?anonymity=${queryParam}`,
+        { content: commentValue.trim() },
+      );
+
+      if (response.status === 200) {
+        console.log("방명록 작성 성공:", response.data);
+      }
+    } catch (error) {
+      console.error("방명록 작성 중 오류 발생:", error);
+    }
+    setCommentValue("");
+    setSendData(true);
   };
 
   // 애니메이션 핸들러
