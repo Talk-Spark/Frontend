@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { Suspense } from "react";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -75,4 +76,10 @@ const Page = () => {
   return <div>리다이렉션중...</div>;
 };
 
-export default Page;
+export default function PageWithSuspense() {
+  return (
+    <Suspense>
+      <Page />
+    </Suspense>
+  );
+}

@@ -1,9 +1,12 @@
+"use client";
 import Button from "@/src/components/common/Button";
 import kakaoImage from "@/public/Image/onBoarding/kakaoImage.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // todo: 버튼들 기능 구현, QR코드 실제 생성
 const Result = () => {
+  const router = useRouter();
   return (
     <div className="mt-[4rem] flex flex-col items-center justify-center gap-[9.2rem]">
       <div className="flex flex-col items-center justify-center gap-[2rem]">
@@ -16,7 +19,10 @@ const Result = () => {
       </div>
       <div className="flex flex-col items-center justify-center gap-[1.2rem]">
         <Button variant="pink">시작하기</Button>
-        <p className="text-body-2-med text-gray-7 underline decoration-solid decoration-1 underline-offset-4">
+        <p
+          className="text-body-2-med text-gray-7 underline decoration-solid decoration-1 underline-offset-4"
+          onClick={() => router.push("/home")}
+        >
           홈으로 가기
         </p>
       </div>
