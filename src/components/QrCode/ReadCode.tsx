@@ -3,10 +3,11 @@ import { useEffect, useRef } from "react";
 import QrScanner from "qr-scanner";
 import cameraIcon from "@/public/entry/camera.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface MyRun {
-  cardId: string;
-  name: string;
+  cardId: number; // 입장하기 : 방 아이디, 명함보관함: 카드 아이디
+  name: string; // 입장하기 : 방 이름, 명함보관함: 개인 이름
 }
 
 const ReadCode = ({
@@ -14,12 +15,15 @@ const ReadCode = ({
   setMyRun,
   setIsNewData,
   setIsCamera,
+  qrVer,
 }: {
   myRun: MyRun | null;
   setMyRun: React.Dispatch<React.SetStateAction<MyRun | null>>;
   setIsNewData: (value: boolean) => void;
   setIsCamera: (value: boolean) => void;
+  qrVer: "room" | "card";
 }) => {
+  const router = useRouter();
   const QrOptions = {
     preferredCamera: "environment",
     maxScansPerSecond: 10,
@@ -40,17 +44,20 @@ const ReadCode = ({
     try {
       const parsedData = JSON.parse(result.data);
       setMyRun({
-        cardId: parsedData.cardId,
+        cardId: Number(parsedData.cardId), // string -> number
         name: parsedData.name,
       });
-      setIsCamera(false);
-      setIsNewData(true);
+      if (qrVer === "card") {
+        setIsCamera(false);
+        setIsNewData(true);
+      }
     } catch (error) {
       console.error("Error parsing QR code data:", error);
       setMyRun(null);
     }
   };
 
+  // 큐알 스캐너 코드
   useEffect(() => {
     const videoElem = videoRef.current;
     if (videoElem) {
@@ -68,26 +75,40 @@ const ReadCode = ({
   }, []);
 
   useEffect(() => {
-    // if (myRun) {
-    //   const getResponse = async () => {
-    //     if (!myRun || !user?.id) return;
-    //     const requestData = {
-    //       storeType: "IND",
-    //       name: myRun?.name,
-    //       cardId: myRun?.cardId,
-    //       sparkUserId: user?.id,
-    //     };
-    //     try {
-    //       const response = await post("/api/store/ind", requestData);
-    //     } catch (e) {
-    //       console.log(e);
-    //     } finally {
-    //       // 병렬 상태 업데이트
-    //       setIsNewData(true);
-    //     }
-    //   };
-    //   getResponse();
-    // }
+    if (myRun) {
+      // 큐알 스캔이 되고 값이 입력되었을때
+      if (qrVer === "card") {
+        // 명함보관함 명함 추가하기
+        // const getResponse = async () => {
+        //   if (!myRun || !user?.id) return;
+        //   const requestData = {
+        //     storeType: "IND",
+        //     name: myRun?.name,
+        //     cardId: myRun?.cardId,
+        //     sparkUserId: user?.id,
+        //   };
+        //   try {
+        //     const response = await post("/api/store/ind", requestData);
+        //   } catch (e) {
+        //     console.log(e);
+        //   } finally {
+        //     setIsNewData(true);
+        //   }
+        // };
+        // getResponse();
+      } else if (qrVer === "room") {
+        /* 입장하기에서 qr스캐너 (웹소켓) */
+        const entryResponse = async () => {
+          try {
+            // const response = await post("/api/rooms/join", myRun.cardId); // 방 입장하기 post
+            router.push(`/team/${myRun.cardId}`);
+          } catch (e) {
+            console.log(e);
+          }
+        };
+        entryResponse();
+      }
+    }
   }, [myRun]);
 
   return (

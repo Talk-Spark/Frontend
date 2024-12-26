@@ -62,23 +62,10 @@ const HeaderWrapper = () => {
         title: "명함 추가하기",
         button2Action: () => {},
       };
-    } else if (pathname === "/entry") {
-      return {
-        showButton1: true,
-        title: "입장하기",
-        button2Action: () => {},
-      };
     } else if (pathname.startsWith("/team/")) {
       return {
         showButton1: true,
         title: "입장하기",
-        button2Action: () => {},
-      };
-    } else if (pathname.startsWith("/entry/camera")) {
-      return {
-        showButton1: true,
-        title: "TEXT텍스트영역",
-        button2Type: "settings",
         button2Action: () => {},
       };
     } else if (pathname === "/creating-room/result") {
