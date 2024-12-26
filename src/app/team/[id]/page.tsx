@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 // import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import ProfileImage from "@/src/components/ProfileImage";
-// import axios from "axios";
 
 interface Participant {
   name: string;
