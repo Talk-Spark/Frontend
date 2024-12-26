@@ -1,5 +1,5 @@
 type InputFieldProps = {
-  label: string;
+  label?: string;
   id: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

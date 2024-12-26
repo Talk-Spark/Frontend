@@ -25,17 +25,17 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
 
   const oneCard: NameCardProps = {
-    name: "최정인",
-    age: 28,
-    color: "blue",
     cardId: 1,
     teamName: "팀명",
+    name: "최정인",
+    age: 28,
     major: "전공",
     mbti: "INTJ",
     hobby: "텍스트영역텍스트영역텍스트영역텍스트",
     lookAlike: "텍스트영역텍스트영역텍스트영역텍스트",
     selfDescription: "텍스트영역텍스트영역텍스트영역텍스트",
     tmi: "텍스트영역텍스트영역텍스트영역텍스트",
+    color: "blue",
     isFull: true,
     isStorage: true,
   };
