@@ -6,6 +6,7 @@ import Step1 from "@/src/components/creating-room/Step1";
 import Step2 from "@/src/components/creating-room/Step2";
 import Step3 from "@/src/components/creating-room/Step3";
 import Modal from "@/src/components/common/Modal";
+import { useRouter } from "next/navigation";
 
 export type RoomDataForm = {
   name: string;
@@ -14,6 +15,7 @@ export type RoomDataForm = {
 };
 
 const CreatingRoomPage = () => {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [roomData, setRoomData] = useState<RoomDataForm>({
@@ -21,6 +23,10 @@ const CreatingRoomPage = () => {
     participants: 2,
     difficulty: 0,
   });
+
+  const handleRouting = (addr: string) => {
+    router.push(addr);
+  };
 
   const handleNextStep = () => {
     setCurrentStep((prev) => prev + 1);
@@ -86,7 +92,7 @@ const CreatingRoomPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAction={() => {
-          alert("나가기(홈으로 이동 구현하기)");
+          handleRouting("/home");
         }}
         title="방 만들기를 나가시겠어요?"
         description="지금까지 작성한 내용이 저장되지 않아요"
