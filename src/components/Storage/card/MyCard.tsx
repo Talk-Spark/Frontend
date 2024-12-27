@@ -1,13 +1,12 @@
 "use client";
-import Button from "../common/Button";
+import Button from "../../common/Button";
 import { useEffect, useState } from "react";
-import StorageNameCard from "../StorageNameCard";
+import StorageNameCard from "../../StorageNameCard";
 import QrCard from "./QrCard";
 import { instance } from "@/src/apis";
 
-type MyNameCardProps = {
-  id: number;
-  kakaoId: string;
+type CardDataProps = {
+  // 기본 정보
   name: string;
   age: number;
   major: string;
@@ -16,26 +15,52 @@ type MyNameCardProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  ownerId?: number;
-  cardThema?: "pink" | "green" | "yellow" | "blue";
+  cardThema: "pink" | "green" | "yellow" | "blue";
+};
+
+type MyNameCardProps = CardDataProps & {
+  // 내 명함 response 바디
+  // response body
+  id: number;
+  kakaoId: string;
+  ownerId: number;
+};
+
+type PutCardProps = CardDataProps & {
+  // 내 명함 req putData
+  sparkUserId: number;
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
+
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
-  const [oneCard, setOneCard] = useState<MyNameCardProps | undefined>(
-    undefined,
-  );
+  const [oneCard, setOneCard] = useState<MyNameCardProps>({
+    // 현재 정보 (편집 전)
+    id: 4,
+    kakaoId: "3776885192",
+    name: "박승범",
+    age: 24,
+    major: "컴퓨터공학",
+    mbti: "ISTJ",
+    hobby: "코딩",
+    lookAlike: "너구리",
+    slogan: "코딩하는 너구리",
+    tmi: "TalkSparkIsFun!!!",
+    ownerId: 2,
+    cardThema: "green",
+  });
 
   /* 내 명함 조회하기 API */
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await instance.get("/api/cards");
-      const cardRes = response.data[0];
-      setOneCard(cardRes);
-    };
-    fetchData();
-  });
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await instance.get("/api/cards");
+  //     const cardRes = response.data[0];
+  //     setOneCard(cardRes);
+  //   };
+  //   fetchData();
+  // });
 
   const cardBackground =
     oneCard?.cardThema === "blue"
@@ -80,7 +105,13 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
                 bottom: 0,
               }}
             >
-              <StorageNameCard {...oneCard} isFull={true} isStorage={true} />
+              <StorageNameCard
+                oneCard={oneCard}
+                isFull={true}
+                isStorage={true}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+              />
             </div>
             {/* 뒷면 카드 */}
             <div
@@ -103,7 +134,12 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
             </div>
           </div>
         </div>
-        <Button onClick={() => setIsFlipped((prev) => !prev)}>{btnText}</Button>
+        <Button
+          disabled={isEditing}
+          onClick={() => setIsFlipped((prev) => !prev)}
+        >
+          {btnText}
+        </Button>
       </div>
     </div>
   );

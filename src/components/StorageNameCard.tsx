@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import whiteMajorIcon from "@/public/storageNameCard/blueMajorIcon.svg";
 import pinkMajorIcon from "@/public/storageNameCard/pinkMajorIcon.svg";
 import blackMajorIcon from "@/public/storageNameCard/blackMajorIcon.svg";
-
 import Image, { StaticImageData } from "next/image";
 import whitePencil from "@/public/storageNameCard/pencil.svg";
 import blackPencil from "@/public/storageNameCard/blackPencil.svg";
@@ -13,27 +12,39 @@ import blueGraphic from "@/public/storageNameCard/blueGraphics.svg";
 import yellowGraphic from "@/public/storageNameCard/yellowGraphics.svg";
 import QrcodeDown from "./QrCode/QrCodeDown";
 import { instance } from "../apis";
+import CardDetailData from "./Storage/card/CardDataDetail";
+import CardDataDetail from "./Storage/card/CardDataDetail";
+import { yellow } from "@mui/material/colors";
 
-type NameCardProps = {
-  id?: number; // 내 명함에만
-  kakaoId?: string;
-  ownerId?: number;
+/* 
+1. 뒷면 그래픽 위치 조정
+2. 명함 수정하기 PUT
+3. 애니메이션 수정(시간 되면)
+*/
 
-  teamName?: string; // 보관함에서만
-  storedCardId?: number;
+// type NameCardProps = {
+//   oneCard: CardData
+//   id?: number; // 내 명함에만 id = cardID
+//   kakaoId?: string;
+//   ownerId?: number;
+//   isEditing?: boolean;
+//   setIsEditing?: (value: boolean) => void;
 
-  name: string;
-  age: number;
-  major: string;
-  mbti?: string;
-  hobby?: string;
-  lookAlike?: string;
-  slogan?: string;
-  tmi?: string;
-  cardThema?: "pink" | "green" | "yellow" | "blue";
-  isFull?: boolean;
-  isStorage?: boolean;
-};
+//   teamName?: string; // 보관함에서만
+//   storedCardId?: number; // 보관된 명함 개별 조회 팀원들 Id = storedCardId
+
+//   name: string;
+//   age: number;
+//   major: string;
+//   mbti?: string;
+//   hobby?: string;
+//   lookAlike?: string;
+//   slogan?: string;
+//   tmi?: string;
+//   cardThema: "pink" | "green" | "yellow" | "blue";
+//   isFull?: boolean;
+//   isStorage?: boolean;
+// };
 
 const graphicColor: Record<string, StaticImageData> = {
   pink: pinkGraphic,
@@ -42,57 +53,81 @@ const graphicColor: Record<string, StaticImageData> = {
   blue: blueGraphic,
 };
 
+type CardDataProps = {
+  // 기본 정보
+  name: string;
+  age: number;
+  major: string;
+  mbti?: string;
+  hobby?: string;
+  lookAlike?: string;
+  slogan?: string;
+  tmi?: string;
+  cardThema: "pink" | "green" | "yellow" | "blue";
+};
+
+type MyNameCardProps = CardDataProps & {
+  // 내 명함 response 바디
+  // response body
+  id: number;
+  kakaoId: string;
+  ownerId: number;
+};
+
+type PutCardProps = CardDataProps & {
+  // 내 명함 req putData
+  sparkUserId: number;
+};
+
+type NameCardProps = {
+  oneCard: MyNameCardProps;
+  isFull?: boolean;
+  isStorage?: boolean;
+  isEditing?: boolean;
+  setIsEditing?: (value: boolean) => void;
+};
+
 const StorageNameCard: React.FC<NameCardProps> = ({
-  ownerId = 1,
-  name = "",
-  age = 1,
-  major = "",
-  mbti = "",
-  hobby = "",
-  lookAlike = "",
-  slogan = "",
-  tmi = "",
-  cardThema = "pink",
+  oneCard,
   isFull = false,
   isStorage = false,
+  isEditing,
+  setIsEditing,
 }) => {
-  const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
-  const [selectedColor, setSelectedColor] = useState(cardThema); // 색상 상태
-  const putData = {
-    sparkUserId: ownerId,
-    name,
-    age,
-    major,
-    mbti,
-    hobby,
-    lookAlike,
-    slogan,
-    tmi,
-    cardThema,
-  };
+  // const [selectedColor, setSelectedColor] = useState(oneCard.cardThema); // 색상 상태
+  const [putData, setPutData] = useState<PutCardProps>({
+    sparkUserId: oneCard.ownerId,
+    ...oneCard,
+  });
+  const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
 
-  const qrData = {
-    // 큐알 다운로드 위한 객체
-    cardId: ownerId,
-    name: name,
-  };
+  // const qrData = {
+  //   // 큐알 다운로드 위한 객체
+  //   cardId: id, // 명함 ID
+  //   name: name,
+  // };
 
   const handleEditToggle = async () => {
-    try {
-      await instance.put(`/api/cards/${ownerId}`, {
-        ...putData,
-        cardThema: selectedColor,
-      });
-      setIsEditing((prev) => !prev); // 편집 상태 토글
-    } catch (e) {
-      console.log(e);
+    if (setIsEditing) {
+      if (isEditing) {
+        try {
+          await instance.put(`/api/cards/${oneCard.ownerId}`, {
+            ...putData,
+            cardThema: putData.cardThema,
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      setIsEditing(!isEditing); // 편집 상태 토글
     }
   };
 
   const handleColorChange = (
     newColor: "pink" | "green" | "yellow" | "blue",
   ) => {
-    setSelectedColor(newColor); // 색상 변경만 처리
+    setPutData({ ...putData, cardThema: newColor }); // 색상 변경만 처리
+    // 색상 변경
   };
 
   // 편집 모드일 때 렌더링되는 색상 변경 UI
@@ -109,8 +144,8 @@ const StorageNameCard: React.FC<NameCardProps> = ({
           <button
             key={c}
             onClick={() => handleColorChange(c)}
-            className={`h-[2.8rem] w-[2.8rem] rounded-full border-2 ${btnColor(c)} ${
-              selectedColor === c ? "border-white" : "border-transparent"
+            className={`h-[2.8rem] w-[2.8rem] rounded-full border-2 ${btnColor[c]} ${
+              putData?.cardThema === c ? "border-white" : "border-transparent"
             }`}
           ></button>
         ))}
@@ -149,13 +184,9 @@ const StorageNameCard: React.FC<NameCardProps> = ({
         : "text-gray-12";
   const contentTextColor =
     selectedColor === "blue"
-      ? "text-gray-3 text-body-2-med "
+      ? "text-gray-3 text-body-2-med"
       : " text-body-2-med text-gray-10";
 
-  const categoryColor =
-    selectedColor === "blue"
-      ? "text-body-2-bold text-white"
-      : " text-body-2-bold text-gray-12";
   const completeBtn =
     selectedColor === "blue"
       ? "text-body-1-bold text-gray-1"
@@ -163,14 +194,12 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 
   const nameTextColor = selectedColor === "blue" ? "text-white" : "text-black";
 
-  const btnColor = (c: string) =>
-    c === "pink"
-      ? "bg-sub-pink"
-      : c === "yellow"
-        ? "bg-sub-yellow"
-        : c === "green"
-          ? "bg-sub-mint"
-          : "bg-sub-blue";
+  const btnColor = {
+    pink: "bg-sub-pink",
+    yellow: "bg-sub-yellow",
+    green: "bg-sub-mint",
+    blue: "bg-sub-blue",
+  };
 
   //301 + 192 = 493
   return (
@@ -187,8 +216,8 @@ const StorageNameCard: React.FC<NameCardProps> = ({
               <div
                 className={`flex items-center gap-[1.2rem] ${nameTextColor}`}
               >
-                <span className="text-headline-2">{name}</span>
-                <span className="text-subhead-med">{age}세</span>
+                <span className="text-headline-2">{oneCard.name}</span>
+                <span className="text-subhead-med">{oneCard.age}세</span>
               </div>
               <div className="flex h-[4.1rem] gap-[1.2rem]">
                 {isFull &&
@@ -206,10 +235,10 @@ const StorageNameCard: React.FC<NameCardProps> = ({
                         </button>
                       )}
                       <button>
-                        <QrcodeDown
-                          selectedColor={selectedColor}
+                        {/* <QrcodeDown
+                          selectedColor={putData.cardThema}
                           qrData={qrData}
-                        />
+                        /> */}
                       </button>
                     </>
                   ) : (
@@ -226,14 +255,14 @@ const StorageNameCard: React.FC<NameCardProps> = ({
                   height={24}
                 />
                 <div className={`text-body-2-med ${nameTextColor}`}>
-                  {major}
+                  {oneCard.major}
                 </div>
               </div>
               <div className="flex items-center gap-[0.4rem]">
                 <div className={`text-body-2-bold ${mbtiColor}`}>
-                  {mbti ? "MBTI" : ""}
+                  {oneCard.mbti ? "MBTI" : ""}
                 </div>
-                <div className={` ${contentTextColor}`}>{mbti}</div>
+                <div className={contentTextColor}>{oneCard.mbti}</div>
               </div>
             </div>
             <Image src={graphicImageUrl} alt="그래픽 이미지" />
@@ -241,30 +270,13 @@ const StorageNameCard: React.FC<NameCardProps> = ({
         </div>
         {/* 두 번째 사각형 - 하단 */}
         {isFull && (
-          <div
-            className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor]}`}
-          >
-            <div className="flex flex-1 flex-col gap-[1.6rem]">
-              <div className="flex flex-1 flex-col gap-[0.4rem]">
-                <span className={`${categoryColor}`}>취미</span>
-                <p className={` ${contentTextColor}`}>{hobby}</p>
-              </div>
-              <div className="flex flex-1 flex-col gap-[0.4rem]">
-                <span className={`${categoryColor}`}>TMI</span>
-                <p className={` ${contentTextColor}`}>{tmi}</p>
-              </div>
-            </div>
-            <div className="flex flex-1 flex-col gap-[1.6rem]">
-              <div className="flex flex-1 flex-col gap-[0.4rem]">
-                <span className={`${categoryColor}`}>닮은 꼴</span>
-                <p className={` ${contentTextColor}`}>{lookAlike}</p>
-              </div>
-              <div className="flex flex-1 flex-col gap-[0.4rem]">
-                <span className={`${categoryColor}`}>나는 이런 사람이야</span>
-                <p className={` ${contentTextColor}`}>{slogan}</p>
-              </div>
-            </div>
-          </div>
+          <CardDataDetail
+            oneCard={oneCard}
+            putData={putData}
+            setPutData={setPutData}
+            contentTextColor={contentTextColor}
+            isEditing={isEditing}
+          />
         )}
       </div>
     </div>

@@ -3,7 +3,7 @@ import blueGraphic from "@/public/nameCard/blueStorageGraphic.svg";
 import yellowGraphic from "@/public/nameCard/yellowStorageGraphic.svg";
 import pinkGraphic from "@/public/nameCard/pinkStoragePink.svg";
 import mintGraphic from "@/public/nameCard/mintStorageGraphic.svg";
-import QrCode from "../QrCode/QrCode";
+import QrCode from "../../QrCode/QrCode";
 
 type SelectedColor = "pink" | "green" | "yellow" | "blue";
 
@@ -13,7 +13,7 @@ type QrCardProps = {
   cardId: number;
 };
 
-const QrCard = ({ name = "", color = "pink" }: QrCardProps) => {
+const QrCard = ({ name = "", color = "pink", cardId = 1 }: QrCardProps) => {
   const graphicColor: Record<string, StaticImageData> = {
     pink: pinkGraphic,
     green: mintGraphic,
@@ -35,20 +35,29 @@ const QrCard = ({ name = "", color = "pink" }: QrCardProps) => {
     blue: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
   };
 
+  const positionStyles = {
+    pink: "top-[3.8rem]",
+    yellow: "top-[3.6rem]",
+    green: "top-[3.2rem]",
+    blue: "top-[1.3rem]",
+  };
+
   return (
     <div className="h-[49.2rem] w-[33.5rem] rounded-[2rem]">
       <div
         className={`"flex h-[30.1rem] rounded-[2rem] ${backColorTop[color]}`}
       >
         <div className="flex h-full w-full items-center justify-center">
-          <QrCode cardId="1" name="최정인" size={200} />{" "}
+          <QrCode cardId={cardId} name={name} size={200} />{" "}
         </div>
       </div>
       <div
         className={`relative flex h-[19.2rem] flex-col items-center gap-[2.7rem] overflow-hidden rounded-[20px] px-[2.8rem] text-headline-1 ${backColorBottom[color]}`}
       >
         <span className="mt-[2.4rem]">{name}</span>
-        <div className="absolute top-[2.6rem] flex h-full w-full justify-center rounded-[2rem] bg-white-storage">
+        <div
+          className={`absolute ${positionStyles[color]} flex h-full w-full justify-center rounded-[2rem] bg-white-storage`}
+        >
           <Image src={graphicColor[color]} alt="그래픽 이미지" />
         </div>
       </div>

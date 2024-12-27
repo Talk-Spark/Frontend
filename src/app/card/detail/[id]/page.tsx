@@ -7,7 +7,7 @@ import favPinkStar from "@/public/nameCard/pinkStar.svg";
 import StorageNameCard from "@/src/components/StorageNameCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Arrow from "@/src/components/Storage/Arrow";
+import Arrow from "@/src/components/Storage/card/Arrow";
 import { useParams } from "next/navigation";
 import { instance, put } from "@/src/apis";
 

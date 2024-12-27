@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
-import MyCard from "@/src/components/Storage/MyCard";
+import MyCard from "@/src/components/Storage/card/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
 import Header from "@/src/components/Headers/Header";
 import Logout from "@/src/components/Storage/Logout";
