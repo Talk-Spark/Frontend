@@ -31,11 +31,12 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await instance.get("/api/cards");
-      const cardRes = response.data[0];
+      const cardRes = response.data.data[0];
       setOneCard(cardRes);
+      console.log(cardRes);
     };
     fetchData();
-  });
+  }, []);
 
   const cardBackground =
     oneCard?.cardThema === "blue"
@@ -74,6 +75,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               } w-full transition-opacity duration-700`}
               style={{
                 position: "absolute",
+                backfaceVisibility: "hidden",
                 top: 0,
                 left: 0,
                 right: 0,

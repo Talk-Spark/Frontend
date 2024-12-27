@@ -38,18 +38,21 @@ const QrCard = ({ name = "", color = "pink" }: QrCardProps) => {
   return (
     <div className="h-[49.2rem] w-[33.5rem] rounded-[2rem]">
       <div
-        className={`"flex h-[30.1rem] rounded-[2rem] ${backColorTop[color]}`}
+        className={`"flex h-[30.1rem] rounded-[2rem] ${backColorTop[color.toLocaleLowerCase()]}`}
       >
         <div className="flex h-full w-full items-center justify-center">
           <QrCode cardId="1" name="최정인" size={200} />{" "}
         </div>
       </div>
       <div
-        className={`relative flex h-[19.2rem] flex-col items-center gap-[2.7rem] overflow-hidden rounded-[20px] px-[2.8rem] text-headline-1 ${backColorBottom[color]}`}
+        className={`relative flex h-[19.2rem] flex-col items-center gap-[2.7rem] overflow-hidden rounded-[20px] px-[2.8rem] text-headline-1 ${backColorBottom[color.toLocaleLowerCase()]}`}
       >
         <span className="mt-[2.4rem]">{name}</span>
         <div className="absolute top-[2.6rem] flex h-full w-full justify-center rounded-[2rem] bg-white-storage">
-          <Image src={graphicColor[color]} alt="그래픽 이미지" />
+          <Image
+            src={graphicColor[color.toLocaleLowerCase()]}
+            alt="그래픽 이미지"
+          />
         </div>
       </div>
     </div>
