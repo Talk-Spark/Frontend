@@ -1,8 +1,11 @@
 "use client";
+
+import { useRouter } from "next/navigation";
 import Header from "./Header";
 import { usePathname } from "next/navigation";
 
 const HeaderWrapper = () => {
+  const router = useRouter();
   const pathname = usePathname();
 
   const getHeaderProps = () => {
@@ -68,12 +71,45 @@ const HeaderWrapper = () => {
         title: "입장하기",
         button2Action: () => {},
       };
-    } else if (pathname === "/creating-room/result") {
+    } else if (pathname.startsWith("/entry/camera")) {
       return {
-        title: "방 개설하기",
+        showButton1: true,
+        title: "입장하기",
+        button2Action: () => {},
+      };
+    } else if (pathname === "/login" || pathname === "/landing") {
+      return {
+        title: "",
+      };
+    } else if (pathname === "/creating-card/result") {
+      return {
+        title: "TalkSpark",
       };
     }
 
+    else if (pathname === "/flow") {
+      return {
+        showButton1: false,
+        title: "명함 맞추기",
+      };
+    }
+    else if (pathname === "/game-end") {
+      return {
+        title: "최종 스코어",
+        button2Type: "next",
+        button2Action: () => {
+          router.push("/all-cards");
+        },
+      };
+    } else if (pathname === "/all-cards") {
+      return {
+        title: "전체 명함 공개",
+        button2Type: "next",
+        button2Action: () => {
+          /*방명록 페이지로 이동하는 알맞은 로직 필요*/
+        },
+      };
+    }
     return null;
   };
 

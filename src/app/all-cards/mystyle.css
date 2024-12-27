@@ -1,0 +1,71 @@
+.myclass{    
+    .swiper-slide{
+        width: 33.5rem;
+    }
+
+    .swiper-button-prev, .swiper-button-next{
+        top: 525px;
+        z-index: 11;
+        &::after{
+            background-image: url('../../../src/asset/icon.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            display: inline-block;
+            width: 24px; /* 아이콘의 크기에 맞게 조절 */
+            height: 24px;
+            content: '';
+        }
+    }
+    .swiper-button-prev::after{
+        transform: rotate(180deg); /* 왼쪽 화살표로 회전 */
+    }
+    .swiper-button-prev{
+        left: 106.5px;
+    }
+    .swiper-button-next{
+        right: 106.5px;
+    }
+
+    
+    .swiper-pagination-fraction{
+        top: 515px;
+
+        color: var(--Grayscale-Gray_12, #1A1E22);
+        font-feature-settings: 'case' on;
+        
+        /* Body/Body_2_med */
+        font-family: SUIT;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 145%; /* 20.3px */
+        letter-spacing: -0.014px;
+    }
+    
+    .swiper-pagination-total{
+        color: var(--Grayscale-Gray_12, #1A1E22);
+        font-feature-settings: 'case' on;
+        
+        /* Body/Body_2_med */
+        font-family: SUIT;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 145%; /* 20.3px */
+        letter-spacing: -0.014px;
+    }
+    
+    .swiper-pagination-current{
+        color: var(--Main-Pink, #FF006A);
+        font-feature-settings: 'case' on;
+
+        /* Body/Body_2_bold */
+        font-family: SUIT;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 145%; /* 20.3px */
+        letter-spacing: -0.014px;
+    }
+}
+
