@@ -31,11 +31,11 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await instance.get("/api/cards");
-      const cardRes = response.data[0];
+      const cardRes = response.data.data[0];
       setOneCard(cardRes);
     };
     fetchData();
-  });
+  }, []);
 
   const cardBackground =
     oneCard?.cardThema === "blue"
@@ -50,6 +50,8 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
     return <div></div>; // oneCard가 로드되지 않은 경우 로딩 표시
   }
 
+  //만약 필요하면 이걸로 렌더링
+  const { id, kakaoId, ...filteredProp } = oneCard;
   return (
     <div
       className={`${cardBackground} h-[100vh] w-full transform items-center justify-center bg-gray-1 px-[2rem]`}
@@ -74,6 +76,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               } w-full transition-opacity duration-700`}
               style={{
                 position: "absolute",
+                backfaceVisibility: "hidden",
                 top: 0,
                 left: 0,
                 right: 0,
