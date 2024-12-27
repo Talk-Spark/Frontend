@@ -1,8 +1,8 @@
 "use client";
-import searchIcon from "@/public/entry/search.svg";
-import scannerIcon from "@/public/entry/scanner.svg";
 import Image from "next/image";
 import { useState } from "react";
+import searchIcon from "@/public/Image/entry/search.svg";
+import scannerIcon from "@/public/Image/entry/scanner.svg";
 
 const SearchInput = ({
   setSearchValue,

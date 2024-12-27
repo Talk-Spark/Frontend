@@ -12,19 +12,25 @@ import greenGraphic from "@/public/storageNameCard/greenGraphics.svg";
 import blueGraphic from "@/public/storageNameCard/blueGraphics.svg";
 import yellowGraphic from "@/public/storageNameCard/yellowGraphics.svg";
 import QrcodeDown from "./QrCode/QrCodeDown";
+import { instance } from "../apis";
 
 type NameCardProps = {
-  cardId: number;
-  teamName: string;
+  id?: number; // 내 명함에만
+  kakaoId?: string;
+  ownerId?: number;
+
+  teamName?: string; // 보관함에서만
+  storedCardId?: number;
+
   name: string;
   age: number;
   major: string;
   mbti?: string;
   hobby?: string;
   lookAlike?: string;
-  selfDescription?: string;
+  slogan?: string;
   tmi?: string;
-  color?: "pink" | "green" | "yellow" | "blue";
+  cardThema?: "pink" | "green" | "yellow" | "blue";
   isFull?: boolean;
   isStorage?: boolean;
 };
@@ -37,30 +43,57 @@ const graphicColor: Record<string, StaticImageData> = {
 };
 
 const StorageNameCard: React.FC<NameCardProps> = ({
-  cardId = 1,
+  ownerId = 1,
   name = "",
   age = 1,
   major = "",
   mbti = "",
   hobby = "",
   lookAlike = "",
-  selfDescription = "",
+  slogan = "",
   tmi = "",
-  color = "pink",
+  cardThema = "pink",
   isFull = false,
   isStorage = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
-  const [selectedColor, setSelectedColor] = useState(color); // 색상 상태
+  const [selectedColor, setSelectedColor] = useState(cardThema); // 색상 상태
+  const putData = {
+    sparkUserId: ownerId,
+    name,
+    age,
+    major,
+    mbti,
+    hobby,
+    lookAlike,
+    slogan,
+    tmi,
+    cardThema,
+  };
+
   const qrData = {
     // 큐알 다운로드 위한 객체
-    cardId: cardId,
+    cardId: ownerId,
     name: name,
   };
 
-  const handleEditToggle = () => setIsEditing((prev) => !prev); // 편집 상태 토글
-  const handleColorChange = (newColor: "pink" | "green" | "yellow" | "blue") =>
+  const handleEditToggle = async () => {
+    try {
+      await instance.put(`/api/cards/${ownerId}`, {
+        ...putData,
+        cardThema: selectedColor,
+      });
+      setIsEditing((prev) => !prev); // 편집 상태 토글
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleColorChange = (
+    newColor: "pink" | "green" | "yellow" | "blue",
+  ) => {
     setSelectedColor(newColor); // 색상 변경만 처리
+  };
 
   // 편집 모드일 때 렌더링되는 색상 변경 UI
   const renderColorChangeButtons = () => (
@@ -172,7 +205,6 @@ const StorageNameCard: React.FC<NameCardProps> = ({
                           />
                         </button>
                       )}
-
                       <button>
                         <QrcodeDown
                           selectedColor={selectedColor}
@@ -207,7 +239,6 @@ const StorageNameCard: React.FC<NameCardProps> = ({
             <Image src={graphicImageUrl} alt="그래픽 이미지" />
           </div>
         </div>
-
         {/* 두 번째 사각형 - 하단 */}
         {isFull && (
           <div
@@ -230,7 +261,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
               </div>
               <div className="flex flex-1 flex-col gap-[0.4rem]">
                 <span className={`${categoryColor}`}>나는 이런 사람이야</span>
-                <p className={` ${contentTextColor}`}>{selfDescription}</p>
+                <p className={` ${contentTextColor}`}>{slogan}</p>
               </div>
             </div>
           </div>

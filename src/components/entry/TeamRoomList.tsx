@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import arrowIcon from "@/public/entry/arrowLeft.svg";
+import arrowIcon from "@/public/Image/entry/arrowLeft.svg";
 
 interface GameRoom {
   roomId: number;

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-// import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
@@ -9,78 +8,81 @@ import Header from "@/src/components/Headers/Header";
 import Logout from "@/src/components/Storage/Logout";
 import Modal from "@/src/components/common/Modal";
 import ReadCode from "@/src/components/QrCode/ReadCode";
+import { get, instance } from "@/src/apis";
+import { useRouter } from "next/navigation";
+
+type CardHolderResponse = {
+  cardHolderId: number;
+  cardHolderName: string;
+  numOfTeammates: number;
+  teamNames: string[];
+  bookMark: boolean;
+  storedAt: string;
+};
 
 const Card = () => {
+  const router = useRouter();
+  const [sortOption, setSortOption] = useState("최신순");
+  const [searchValue, setSearchValue] = useState<string>("");
   const [myRun, setMyRun] = useState<{
     cardId: number;
     name: string;
   } | null>(null);
 
-  type TeamData = {
-    teamName: string;
-    teamPeopleCount: number;
-    cardDate: string;
-    participants: string;
-    isFav: boolean;
-  };
+  const [teamData, setTeamData] = useState<CardHolderResponse[]>([]);
 
-  const [teamData, setTeamData] = useState<TeamData[]>([]);
+  /* 정렬 조건에 따른 명함 보관함 속 명함 조회 */
+  useEffect(() => {
+    const fetchStoredCards = async () => {
+      if (!isLoading) {
+        try {
+          setIsLoading(true);
+          // API 응답 타입 정의
+          type ApiResponse = {
+            cardHolders: CardHolderResponse[];
+          };
 
-  // useEffect(() => {
-  //   const fetchStoredCards = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       // API 응답 타입 정의
-  //       type CardHolderResponse = {
-  //         cardHolderName: string;
-  //         teamNames: string[];
-  //         bookMark: boolean;
-  //         storedAt: string;
-  //       };
+          // API 호출
+          // 쿼리 파라미터로 정렬 조건 추가
 
-  //       type ApiResponse = {
-  //         cardHolders: CardHolderResponse[];
-  //       };
+          // 쿼리 파라미터 생성 함수
+          const getQueryParam = () => {
+            if (sortOption === "즐겨찾기") return "?searchType=Bookmark";
+            if (sortOption === "가나다순") return "?searchType=Alphabet";
+            return ""; // 최신순 기본값
+          };
 
-  //       // API 호출
-  //       const response = await get("/api/storedCards");
+          const queryParam = getQueryParam();
+          const response = await get(`/api/storedCards${queryParam}`);
 
-  //       // 응답 데이터가 올바른 형식인지 확인
-  //       const data = response.data as ApiResponse;
+          // 응답 데이터가 올바른 형식인지 확인
+          const data = response.data as ApiResponse;
 
-  //       if (data && data.cardHolders) {
-  //         // 응답 데이터를 TeamData 형식으로 변환
-  //         const formattedData: TeamData[] = data.cardHolders.map((item) => ({
-  //           teamName: item.cardHolderName,
-  //           teamPeopleCount: item.teamNames.length || 0,
-  //           cardDate: item.storedAt,
-  //           participants: item.teamNames.join(" "),
-  //           isFav: item.bookMark,
-  //         }));
-  //         setTeamData(formattedData);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching stored cards:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchStoredCards();
-  // }, []);
+          if (data && data.cardHolders) {
+            // 응답 데이터를 TeamData 형식으로 변환
+            setTeamData(data.cardHolders);
+          }
+        } catch (error) {
+          console.error("Error fetching stored cards:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+    fetchStoredCards();
+  }, [sortOption, teamData, searchValue]);
 
   const [activeView, setActiveView] = useState<"mine" | "others">("others");
   const [isVisible, setIsVisible] = useState(false);
   const [isEdit, setIsEdit] = useState<"edit" | "complete">("edit");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false); // 로그아웃 | 회원탈퇴 모달
   const [modalAction, setModalAction] = useState<"logout" | "delete" | null>(
     null,
   );
-  const [confirmModal, setConfirmModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false); // 확정 모달
   const [isCamera, setIsCamera] = useState(false);
-  // const [user, setUser] = useState<{ name: string; id: number } | null>(null);
   const [isNewData, setIsNewData] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleToggle = (view: "mine" | "others") => {
     setActiveView(view);
@@ -92,34 +94,6 @@ const Card = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const loggedInUser = localStorage.getItem("user"); // 로그인한 사용자 정보 (localStorage 사용 예시)
-  //   if (loggedInUser) {
-  //     setUser(JSON.parse(loggedInUser)); // 로그인 정보가 있다면 상태에 저장
-  //   }
-  // }, []);
-
-  // Qr인식시 개인 명함 post
-  // useEffect(() => {
-  //   const getResponse = async () => {
-  //     if (!myRun || !user?.id) return;
-  //     const requestData = {
-  //       storeType: "IND",
-  //       name: myRun?.name,
-  //       cardId: myRun?.cardId,
-  //       sparkUserId: user?.id,
-  //     };
-
-  //     try {
-  //       const response = await post("/api/store/ind", requestData);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-
-  //   getResponse();
-  // }, [myRun]);
-
   const handleCompleteClick = () => {
     if (activeView === "mine") {
       setIsModalVisible((prev) => !prev);
@@ -128,12 +102,19 @@ const Card = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    if (!confirmModal) {
-      setConfirmModal(false);
+  const handleCloseModal = async () => {
+    if (modalAction === "logout") {
+      // 로그아웃 -> 로컬스토리지 user 객체 전체 삭제
+      localStorage.removeItem("user");
+    } else if (modalAction === "delete") {
+      /* 회원탈퇴 API */
+      try {
+        await instance.delete("/api/member/leave");
+      } catch (e) {
+        console.log(e);
+      }
     }
-
-    setIsModalVisible(false);
+    router.push("/"); // 메인 홈으로 이동
   };
 
   const mineSettingBtn: "settings" | "edit" | "complete" =
@@ -162,19 +143,23 @@ const Card = () => {
         />
       </div>
       {isCamera ? (
-        <ReadCode
-          myRun={myRun}
-          setMyRun={setMyRun}
-          setIsNewData={setIsNewData}
-          setIsCamera={setIsCamera}
-          qrVer="room"
-        />
+        <div className="-mx-[2rem] w-[calc(100%+4rem)]">
+          <ReadCode
+            myRun={myRun}
+            setMyRun={setMyRun}
+            setIsNewData={setIsNewData}
+            setIsCamera={setIsCamera}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
+            qrVer="card"
+          />
+        </div>
       ) : (
         <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center">
           <Modal
             isOpen={confirmModal}
-            onClose={() => setConfirmModal(false)}
-            onAction={handleCloseModal}
+            onAction={() => setConfirmModal(false)}
+            onClose={handleCloseModal}
             title={
               modalAction === "delete"
                 ? "회원 탈퇴 하시겠어요?"
@@ -205,7 +190,10 @@ const Card = () => {
               setIsCamera={setIsCamera}
               isNewData={isNewData}
               setIsNewData={setIsNewData}
-              // isLoading={isLoading}
+              isLoading={isLoading}
+              setSortOption={setSortOption}
+              setSearchValue={setSearchValue}
+              searchValue={searchValue}
             />
           ) : (
             <MyCard isVisible={isVisible} />

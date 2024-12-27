@@ -1,9 +1,9 @@
-import searchGraphic from "@/public/entry/searchGraphic.svg";
-import starPink from "@/public/entry/starPink.svg";
-import starBlue from "@/public/entry/starBlue.svg";
-import starMint from "@/public/entry/starMint.svg";
-import starYellow from "@/public/entry/starYellow.svg";
 import Image from "next/image";
+import searchGraphic from "@/public/Image/entry/searchGraphic.svg";
+import starPink from "@/public/Image/entry/starPink.svg";
+import starBlue from "@/public/Image/entry/starBlue.svg";
+import starMint from "@/public/Image/entry/starMint.svg";
+import starYellow from "@/public/Image/entry/starYellow.svg";
 
 const FindRoom = ({ findText }: { findText: string }) => {
   return (

@@ -1,53 +1,54 @@
 "use client";
 import Button from "../common/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StorageNameCard from "../StorageNameCard";
 import QrCard from "./QrCard";
+import { instance } from "@/src/apis";
 
-type NameCardProps = {
-  cardId: number;
-  teamName: string;
+type MyNameCardProps = {
+  id: number;
+  kakaoId: string;
   name: string;
   age: number;
   major: string;
   mbti?: string;
   hobby?: string;
   lookAlike?: string;
-  selfDescription?: string;
+  slogan?: string;
   tmi?: string;
-  color?: "pink" | "green" | "yellow" | "blue";
-  isFull?: boolean;
-  isStorage?: boolean;
+  ownerId?: number;
+  cardThema?: "pink" | "green" | "yellow" | "blue";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
+  const [oneCard, setOneCard] = useState<MyNameCardProps | undefined>(
+    undefined,
+  );
 
-  const oneCard: NameCardProps = {
-    cardId: 1,
-    teamName: "팀명",
-    name: "최정인",
-    age: 28,
-    major: "전공",
-    mbti: "INTJ",
-    hobby: "텍스트영역텍스트영역텍스트영역텍스트",
-    lookAlike: "텍스트영역텍스트영역텍스트영역텍스트",
-    selfDescription: "텍스트영역텍스트영역텍스트영역텍스트",
-    tmi: "텍스트영역텍스트영역텍스트영역텍스트",
-    color: "blue",
-    isFull: true,
-    isStorage: true,
-  };
+  /* 내 명함 조회하기 API */
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await instance.get("/api/cards");
+      const cardRes = response.data[0];
+      setOneCard(cardRes);
+    };
+    fetchData();
+  });
 
   const cardBackground =
-    oneCard.color === "blue"
+    oneCard?.cardThema === "blue"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : oneCard.color === "green"
+      : oneCard?.cardThema === "green"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
-        : oneCard.color === "yellow"
+        : oneCard?.cardThema === "yellow"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"
           : "bg-gradient-to-b from-[#ffffff] to-[#fdcbdf]";
+
+  if (!oneCard) {
+    return <div></div>; // oneCard가 로드되지 않은 경우 로딩 표시
+  }
 
   return (
     <div
@@ -79,7 +80,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
                 bottom: 0,
               }}
             >
-              <StorageNameCard {...oneCard} />
+              <StorageNameCard {...oneCard} isFull={true} isStorage={true} />
             </div>
             {/* 뒷면 카드 */}
             <div
@@ -95,8 +96,8 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               }}
             >
               <QrCard
-                color={oneCard.color || "pink"}
-                cardId={oneCard.cardId}
+                color={oneCard.cardThema || "pink"}
+                cardId={oneCard.ownerId || 1}
                 name={oneCard.name}
               />
             </div>
