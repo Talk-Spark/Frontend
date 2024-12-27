@@ -1,11 +1,13 @@
 "use client";
 
+import { instance } from "@/src/apis";
 import Step1 from "@/src/components/creating-card/Step1";
 import Step2 from "@/src/components/creating-card/Step2";
 import Step3 from "@/src/components/creating-card/Step3";
 import Step4 from "@/src/components/creating-card/Step4";
 import Header from "@/src/components/Headers/Header";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 // 명함에 담을 데이터 타입
 export type FormData = {
