@@ -4,7 +4,7 @@ type InputFieldProps = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
-  type: string | number;
+  type: string;
   maxLength?: number;
 };
 
