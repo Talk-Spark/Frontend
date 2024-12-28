@@ -10,7 +10,7 @@ interface NameCardProps {
 const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
   const backgroundImage = {
     PINK: "/Image/home/pinkBackgroundImage.svg",
-    GREEN: "/Image/home/mintBackgroundImage.svg",
+    MINT: "/Image/home/mintBackgroundImage.svg",
     YELLOW: "/Image/home/yellowBackgroundImage.svg",
     BLUE: "/Image/home/blueBackgroundImage.svg",
   };
