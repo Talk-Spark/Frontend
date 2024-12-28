@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { useParams } from "next/navigation";
 import { useParams } from "next/navigation";
 import ProfileImage from "@/src/components/ProfileImage";
@@ -7,6 +7,8 @@ import FindRoom from "@/src/components/entry/FindRoom";
 import { Start } from "@mui/icons-material";
 import { AxiosResponse } from "axios";
 import { get } from "@/src/apis";
+import { io, Socket } from "socket.io-client";
+import { getUserData } from "@/src/utils";
 
 //  참가자들 정보
 interface Participant {
@@ -49,21 +51,106 @@ const TeamDetail = () => {
     }
   }, []);
 
+  /*
+  방에 입장했을 때 소켓 연결 및 joinRoom 메세지 전송
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
+      transports: ["websocket"],
+    });
+
+    //이 2가지 과정은 적절하게 위치 옮길 필요 존재.
+    socketRef.current.emit("joinRoom", { roomId, accessToken, isHost });
+    socketRef.current.on("roomUpdate", (info) => {
+      //info 객체를 가지고 적절한 동작 수행! (방을 세팅하는)
+      {
+        "name": "사람이름",
+        "isOwner": false // 방장이면 true, 아니면 false
+        "userId" //아마 이것도 추가로 넘겨준다고 했음
+      },
+      ...
+    });
+
+    //그리고 방장 여부는 받아오기
+    get("/api/rooms/host");
+
+    //방 퇴장 시
+    socketRef.current.emit("leaveRoom", { roomId, accessToken, isHost });
+    socketRef.current.disconnect();
+
+    //(only 방장) 게임 시작 버튼
+  const handleStartGame = (roomId: string) => {
+    socketRef.current?.emit("startGame", { roomId });
+  };
+
+  socketRef.current?.on("startGame", () => {
+    //startGame을 보내고, 그에 대한 응답이 왔을 시 flow로 넘어가는 로직
+    router.push("/flow/방아이디 어쩌구")
+  });
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
+*/
+
   /* 방 정보 보기 api 요청 웹소켓 수정 필요 */
   useEffect(() => {
-    const fetchTeamData = async () => {
-      if (id) {
-        try {
-          const response: AxiosResponse<GameRoomDetail> = await get(
-            `/api/rooms/${id}`,
-          ); // AxiosResponse<GameRoomDetail> 타입 지정
-          setTeamData(response.data);
-        } catch (err) {
-          console.error("Error fetching team data:", err);
-        }
-      }
-    };
-    fetchTeamData();
+    // const fetchTeamData = async () => {
+    //   if (id) {
+    //     try {
+    //       const response: AxiosResponse<GameRoomDetail> = await get(
+    //         `/api/rooms/${id}`,
+    //       ); // AxiosResponse<GameRoomDetail> 타입 지정
+    //       setTeamData(response.data);
+    //     } catch (err) {
+    //       console.error("Error fetching team data:", err);
+    //     }
+    //   }
+    // };
+    // fetchTeamData();
+
+    // const socketRef = useRef<Socket | null>(null);
+    // socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
+    //   transports: ["websocket"],
+    // });
+
+    console.log(getUserData());
+    const user = getUserData();
+
+    //   //이 2가지 과정은 적절하게 위치 옮길 필요 존재.
+    //   socketRef.current.emit("joinRoom", { roomId : id, accessToken, isHost });
+    //   socketRef.current.on("roomUpdate", (info) => {
+    //     //info 객체를 가지고 적절한 동작 수행! (방을 세팅하는)
+    //     {
+    //       "name": "사람이름",
+    //       "isOwner": false // 방장이면 true, 아니면 false
+    //       "userId" //아마 이것도 추가로 넘겨준다고 했음
+    //     },
+    //     ...
+    //   });
+
+    //   //그리고 방장 여부는 받아오기
+    //   get("/api/rooms/host");
+
+    //   //방 퇴장 시
+    //   socketRef.current.emit("leaveRoom", { roomId, accessToken, isHost });
+    //   socketRef.current.disconnect();
+
+    //   //(only 방장) 게임 시작 버튼
+    // const handleStartGame = (roomId: string) => {
+    //   socketRef.current?.emit("startGame", { roomId });
+    // };
+
+    // socketRef.current?.on("startGame", () => {
+    //   //startGame을 보내고, 그에 대한 응답이 왔을 시 flow로 넘어가는 로직
+    //   router.push("/flow/방아이디 어쩌구")
+    // });
+
+    //   return () => {
+    //     socketRef.current?.disconnect();
+    //   };
   }, [id]);
 
   if (!teamData) {
