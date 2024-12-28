@@ -1,22 +1,26 @@
 "use client";
 
+import { instance } from "@/src/apis";
 import Step1 from "@/src/components/creating-card/Step1";
 import Step2 from "@/src/components/creating-card/Step2";
 import Step3 from "@/src/components/creating-card/Step3";
 import Step4 from "@/src/components/creating-card/Step4";
 import Header from "@/src/components/Headers/Header";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
+// 명함에 담을 데이터 타입
 export type FormData = {
-  name: string;
-  age: string;
-  major: string;
-  mbti: string;
-  hobby: string;
-  lookAlike: string;
-  intro: string;
-  tmi: string;
-  selectedCharacter: string;
+  name: string; // 이름(string)
+  age: number; // 나이(number)
+  major: string; // 전공(string)
+  mbti: string; // mbti(string)
+  hobby: string; // 취미(string)
+  lookAlike: string; // 외모(string)
+  slogan: string; // 자기소개(string)
+  tmi: string; // 명함 소개(string)
+  cardThema: string; // 선택한 캐릭터(string)
+  sparkUserId: number; // 스파크 유저 아이디(number)
 };
 
 const Page = () => {
@@ -25,18 +29,19 @@ const Page = () => {
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    age: "",
+    age: 0,
     major: "",
     mbti: "",
     hobby: "",
     lookAlike: "",
-    intro: "",
+    slogan: "",
     tmi: "",
-    selectedCharacter: "",
+    cardThema: "",
+    sparkUserId: 0,
   });
 
   // 사용자 입력 데이터 추가
-  const handleChange = (key: keyof FormData, value: string) => {
+  const handleChange = (key: keyof FormData, value: string | number) => {
     setFormData((prev) => ({
       ...prev,
       [key]: value,
@@ -84,13 +89,7 @@ const Page = () => {
           />
         );
       case 4:
-        return (
-          <Step4
-            onNext={setFormData}
-            formData={formData}
-            onChange={handleChange}
-          />
-        );
+        return <Step4 formData={formData} onChange={handleChange} />;
       default:
         return null;
     }

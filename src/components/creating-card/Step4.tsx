@@ -3,23 +3,36 @@ import Button from "../common/Button";
 import ProfileImage from "../ProfileImage";
 import { FormData } from "@/src/app/(onBoarding)/creating-card/page";
 import { useRouter } from "next/navigation";
+import { post } from "@/src/apis";
 
-type CharacterColor = "pink" | "yellow" | "green" | "blue";
+// type cardThema = "PINK" | "YELLOW" | "GREEN" | "BLUE";
 
 type Step4Props = {
-  onNext: (formData: FormData) => void;
   formData: FormData;
   onChange: (key: keyof FormData, value: string) => void;
 };
 
-const Step4 = ({ onNext, formData, onChange }: Step4Props) => {
+const Step4 = ({ formData, onChange }: Step4Props) => {
   const router = useRouter();
 
-  // todo: 명함 정보 담아서 서버로 보내기
-  const handleNextClick = () => {
-    onNext(formData);
-    router.push("/creating-card/result");
-    console.log(formData);
+  const handleNextClick = async () => {
+    const userObj = localStorage.getItem("user");
+    if (!userObj) {
+      alert("로그인 정보가 없습니다.");
+      return;
+    }
+    const sparkUserId = JSON.parse(userObj).sparkUserId;
+
+    try {
+      const response = post("/api/cards", {
+        ...formData,
+        sparkUserId: sparkUserId,
+      });
+      console.log("response: ", response);
+      router.push("/creating-card/result");
+    } catch (error) {
+      console.error("명함을 생성하지 못했습니다: ", error);
+    }
   };
 
   return (
@@ -39,31 +52,29 @@ const Step4 = ({ onNext, formData, onChange }: Step4Props) => {
         <div>
           <h2 className="mb-[2rem] text-headline-5 text-black">명함 설정</h2>
           <div className="grid grid-cols-2 grid-rows-2 gap-[1.2rem]">
-            {(["pink", "yellow", "green", "blue"] as CharacterColor[]).map(
-              (color) => (
-                <div
-                  key={color}
-                  onClick={() => onChange("selectedCharacter", color)}
-                  className="cursor-pointer"
-                >
-                  <ProfileImage
-                    color={color}
-                    isSelected={formData.selectedCharacter === color}
-                    size={148}
-                    backColor={
-                      formData.selectedCharacter === color ? "blue" : "gray"
-                    }
-                  />
-                </div>
-              ),
-            )}
+            {["pink", "yellow", "green", "blue"].map((color) => (
+              <div
+                key={color}
+                onClick={() => onChange("cardThema", color.toUpperCase())}
+                className="cursor-pointer"
+              >
+                <ProfileImage
+                  color={color as "pink" | "yellow" | "green" | "blue"}
+                  isSelected={formData.cardThema === color.toUpperCase()}
+                  size={148}
+                  backColor={
+                    formData.cardThema === color.toUpperCase() ? "blue" : "gray"
+                  }
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
       <Button
         onClick={handleNextClick}
-        variant={formData.selectedCharacter ? "black" : "gray"}
-        disabled={!formData.selectedCharacter}
+        variant={formData.cardThema ? "black" : "gray"}
+        disabled={!formData.cardThema}
       >
         다음으로
       </Button>

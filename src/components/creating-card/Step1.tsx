@@ -6,7 +6,7 @@ import { FormData } from "@/src/app/(onBoarding)/creating-card/page";
 export type StepProps = {
   onNext: () => void;
   formData: FormData;
-  onChange: (key: keyof FormData, value: string) => void;
+  onChange: (key: keyof FormData, value: string | number) => void;
 };
 
 const Step1 = ({ onNext, formData, onChange }: StepProps) => {
@@ -45,6 +45,16 @@ const Step1 = ({ onNext, formData, onChange }: StepProps) => {
     }
   };
 
+  const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const age = parseInt(value, 10);
+
+    // 숫자인지 확인
+    if (!isNaN(age)) {
+      onChange("age", age);
+    }
+  };
+
   const fields = [
     {
       label: "이름",
@@ -57,9 +67,8 @@ const Step1 = ({ onNext, formData, onChange }: StepProps) => {
     {
       label: "나이",
       id: "age",
-      value: formData.age,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        onChange("age", e.target.value),
+      value: formData.age === 0 ? "" : formData.age.toString(),
+      onChange: handleAgeChange,
       placeholder: "숫자만 입력해 주세요",
       type: "number",
     },

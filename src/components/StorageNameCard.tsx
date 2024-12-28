@@ -1,30 +1,36 @@
 "use client";
-import React, { useState } from "react"; // useState 추가
+import React, { useState } from "react";
 import whiteMajorIcon from "@/public/storageNameCard/blueMajorIcon.svg";
 import pinkMajorIcon from "@/public/storageNameCard/pinkMajorIcon.svg";
 import blackMajorIcon from "@/public/storageNameCard/blackMajorIcon.svg";
 
 import Image, { StaticImageData } from "next/image";
 import whitePencil from "@/public/storageNameCard/pencil.svg";
-import whiteDown from "@/public/storageNameCard/down.svg";
 import blackPencil from "@/public/storageNameCard/blackPencil.svg";
-import blackDown from "@/public/storageNameCard/blackDown.svg";
 import pinkGraphic from "@/public/storageNameCard/pinkGraphics.svg";
 import greenGraphic from "@/public/storageNameCard/greenGraphics.svg";
 import blueGraphic from "@/public/storageNameCard/blueGraphics.svg";
 import yellowGraphic from "@/public/storageNameCard/yellowGraphics.svg";
+import QrcodeDown from "./QrCode/QrCodeDown";
+import { instance } from "../apis";
 
 type NameCardProps = {
-  teamName: string;
+  id?: number; // 내 명함에만
+  kakaoId?: string;
+  ownerId?: number;
+
+  teamName?: string; // 보관함에서만
+  storedCardId?: number;
+
   name: string;
   age: number;
   major: string;
   mbti?: string;
   hobby?: string;
   lookAlike?: string;
-  selfDescription?: string;
+  slogan?: string;
   tmi?: string;
-  color?: "pink" | "green" | "yellow" | "blue";
+  cardThema?: "pink" | "green" | "yellow" | "blue";
   isFull?: boolean;
   isStorage?: boolean;
 };
@@ -37,24 +43,57 @@ const graphicColor: Record<string, StaticImageData> = {
 };
 
 const StorageNameCard: React.FC<NameCardProps> = ({
+  ownerId = 1,
   name = "",
-  age = "",
+  age = 1,
   major = "",
   mbti = "",
   hobby = "",
   lookAlike = "",
-  selfDescription = "",
+  slogan = "",
   tmi = "",
-  color = "pink",
+  cardThema = "pink",
   isFull = false,
   isStorage = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
-  const [selectedColor, setSelectedColor] = useState(color); // 색상 상태
+  const [selectedColor, setSelectedColor] = useState(cardThema); // 색상 상태
+  const putData = {
+    sparkUserId: ownerId,
+    name,
+    age,
+    major,
+    mbti,
+    hobby,
+    lookAlike,
+    slogan,
+    tmi,
+    cardThema,
+  };
 
-  const handleEditToggle = () => setIsEditing((prev) => !prev); // 편집 상태 토글
-  const handleColorChange = (newColor: "pink" | "green" | "yellow" | "blue") =>
+  const qrData = {
+    // 큐알 다운로드 위한 객체
+    cardId: ownerId,
+    name: name,
+  };
+
+  const handleEditToggle = async () => {
+    try {
+      await instance.put(`/api/cards/${ownerId}`, {
+        ...putData,
+        cardThema: selectedColor,
+      });
+      setIsEditing((prev) => !prev); // 편집 상태 토글
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleColorChange = (
+    newColor: "pink" | "green" | "yellow" | "blue",
+  ) => {
     setSelectedColor(newColor); // 색상 변경만 처리
+  };
 
   // 편집 모드일 때 렌더링되는 색상 변경 UI
   const renderColorChangeButtons = () => (
@@ -96,7 +135,6 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   // blue, pink, yellow, green 별 다른 text, graphic 적용
   const graphicImageUrl = graphicColor[selectedColor] || graphicColor.pink;
   const pencilImageUrl = selectedColor === "blue" ? whitePencil : blackPencil;
-  const downImageUrl = selectedColor === "blue" ? whiteDown : blackDown;
   const majorImageUrl =
     selectedColor === "blue"
       ? whiteMajorIcon
@@ -143,11 +181,11 @@ const StorageNameCard: React.FC<NameCardProps> = ({
       <div className="">
         <div className="">
           <div
-            className={`"flex flex-col gap-[0.4rem] rounded-[2rem] px-[2.8rem] pt-[2.4rem] ${backColorTop[selectedColor]}`}
+            className={`"flex flex-col gap-[0.4rem] rounded-[2rem] px-[2.8rem] pt-[2.4rem] ${backColorTop[selectedColor.toLocaleLowerCase()]}`}
           >
             <div className="flex h-[4.1rem] justify-between gap-[7rem]">
               <div
-                className={`flex items-center gap-[1.2rem] ${nameTextColor}`}
+                className={`flex items-center gap-[1.2rem] ${nameTextColor.toLocaleLowerCase}`}
               >
                 <span className="text-headline-2">{name}</span>
                 <span className="text-subhead-med">{age}세</span>
@@ -163,18 +201,14 @@ const StorageNameCard: React.FC<NameCardProps> = ({
                             alt="편집 아이콘"
                             width={24}
                             height={24}
-                            className="mb-[1.7rem]"
+                            className="mb-[1.7rem] cursor-pointer"
                           />
                         </button>
                       )}
-
                       <button>
-                        <Image
-                          src={downImageUrl}
-                          alt="다운로드 아이콘"
-                          width={24}
-                          height={24}
-                          className="mb-[1.7rem]"
+                        <QrcodeDown
+                          selectedColor={selectedColor}
+                          qrData={qrData}
                         />
                       </button>
                     </>
@@ -205,11 +239,10 @@ const StorageNameCard: React.FC<NameCardProps> = ({
             <Image src={graphicImageUrl} alt="그래픽 이미지" />
           </div>
         </div>
-
         {/* 두 번째 사각형 - 하단 */}
         {isFull && (
           <div
-            className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor]}`}
+            className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor.toLocaleLowerCase()]}`}
           >
             <div className="flex flex-1 flex-col gap-[1.6rem]">
               <div className="flex flex-1 flex-col gap-[0.4rem]">
@@ -228,7 +261,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
               </div>
               <div className="flex flex-1 flex-col gap-[0.4rem]">
                 <span className={`${categoryColor}`}>나는 이런 사람이야</span>
-                <p className={` ${contentTextColor}`}>{selfDescription}</p>
+                <p className={` ${contentTextColor}`}>{slogan}</p>
               </div>
             </div>
           </div>

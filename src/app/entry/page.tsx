@@ -4,52 +4,72 @@ import SearchInput from "@/src/components/SearchInput";
 import TeamRoomList from "@/src/components/entry/TeamRoomList";
 import { useState } from "react";
 import FindRoom from "@/src/components/entry/FindRoom";
+import { instance } from "@/src/apis";
+import ReadCode from "@/src/components/QrCode/ReadCode";
+import Header from "@/src/components/Headers/Header";
 
 // 방 타입 정의
 interface GameRoom {
   roomId: number;
   roomName: string;
   hostName: string;
-  participants: number;
+  currentPeople: number;
+  maxPeople: number;
 }
 
 const Entry = () => {
   const [searchValue, setSearchValue] = useState<string>("");
-
-  // 게임 방 목록 (기본 정보)
-  // const [gameRooms, setGameRooms] = useState<GameRoom[]>([]);
   const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
+  const [isCamera, setIsCamera] = useState(false);
+  const [myRun, setMyRun] = useState<{
+    cardId: number;
+    name: string;
+  } | null>(null);
+
+  const setIsNewData = () => {};
 
   // 방 검색하기 api
 
   const handleSearch = async () => {
-    // api 연결 전 임시 함수
     setFilteredRooms([]);
-    // try {
-    //   const response = await axios.get(`/api/rooms`, {
-    //     params: { search: searchValue }, // 검색어를 쿼리 매개변수로 전달
-    //   });
-    //   setFilteredRooms(response.data); // 검색 결과를 상태에 저장
-    // } catch (err) {
-    //   console.error("Error fetching team data:", err);
-    // }
+    try {
+      const response = await instance.get("/api/rooms", {
+        params: { searchName: searchValue }, // 검색어를 쿼리 매개변수로 전달
+      });
+      setFilteredRooms(response.data);
+    } catch (err) {
+      console.error("Error fetching team data:", err);
+    }
   };
-  // useEffect(() => {
-  //   const fetchGameRooms = async () => {
-  //     try {
-  //       const response = await axios.get(`/api/rooms`);
-  //       setGameRooms(response.data); // 기본 방 목록 설정
-  //       setFilteredRooms(response.data); // 필터링된 목록도 초기화
-  //     } catch (err) {
-  //       console.error("Error fetching game rooms:", err);
-  //     }
-  //   };
 
-  //   fetchGameRooms();
-  // }, []);
+  const headerBtn1 = () => {
+    if (isCamera) {
+      setIsCamera(false);
+    } else {
+      window.history.back();
+    }
+  };
 
   return (
     <div className="w-full">
+      <Header
+        showButton1={true}
+        button1Action={headerBtn1}
+        title="입장하기"
+        padding={false}
+      />
+
+      {isCamera && (
+        <div className="w-[calc(100%+4rem) -mx-[2rem]">
+          <ReadCode
+            myRun={myRun}
+            setMyRun={setMyRun}
+            setIsCamera={setIsCamera}
+            setIsNewData={setIsNewData}
+            qrVer="room"
+          />
+        </div>
+      )}
       <div className="my-[2.4rem] my-[2rem] flex flex-col">
         <span className="text-headline-3 text-black">팀 방 찾기</span>
         <SearchInput
@@ -57,13 +77,14 @@ const Entry = () => {
           setSearchValue={setSearchValue}
           placeholderText={"팀 방 검색"}
           isQr={true}
+          setIsCamera={setIsCamera}
           onSearch={handleSearch}
         />
       </div>
       {filteredRooms.length > 0 ? (
         <TeamRoomList gameRooms={filteredRooms} />
       ) : (
-        <FindRoom />
+        <FindRoom findText={"우리 팀을 찾아보아요~"} />
       )}
     </div>
   );

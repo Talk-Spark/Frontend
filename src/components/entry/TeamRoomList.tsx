@@ -1,12 +1,13 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import arrowIcon from "@/public/entry/arrowLeft.svg";
+import arrowIcon from "@/public/Image/entry/arrowLeft.svg";
 
 interface GameRoom {
   roomId: number;
-  roomName: string; // 방 이름
-  hostName: string; // 방장 이름
-  participants: number;
+  roomName: string;
+  hostName: string;
+  currentPeople: number;
+  maxPeople: number;
 }
 
 interface TeamRoomListProps {
@@ -16,7 +17,7 @@ interface TeamRoomListProps {
 const TeamRoomList: React.FC<TeamRoomListProps> = ({ gameRooms }) => {
   const router = useRouter();
   const handleTeamClick = (roomId: number) => {
-    // roomName을 쿼리로 전달
+    // roomId을 쿼리로 전달
     router.push(`/team/${encodeURIComponent(roomId)}`);
   };
 
@@ -34,7 +35,7 @@ const TeamRoomList: React.FC<TeamRoomListProps> = ({ gameRooms }) => {
             <div className="flex gap-[0.4rem]">
               <span className="text-body-2-bold">{gameRoom.roomName}</span>
               <span className="text-body-2-med text-gray-7">
-                {gameRoom.participants}
+                {gameRoom.currentPeople}
               </span>
             </div>
           </div>
