@@ -51,7 +51,7 @@ const MyCard = () => {
         <div
           className="flex items-center text-body-1-med text-gray-7"
           onClick={() => {
-            router.push("/card");
+            router.push("/card?view=mine");
           }}
         >
           내 명함
