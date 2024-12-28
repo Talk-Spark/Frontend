@@ -10,6 +10,7 @@ import Modal from "@/src/components/common/Modal";
 import ReadCode from "@/src/components/QrCode/ReadCode";
 import { get, instance } from "@/src/apis";
 import { useRouter } from "next/navigation";
+import router from "next/router";
 
 type CardHolderResponse = {
   cardHolderId?: number;
@@ -93,6 +94,12 @@ const Card = () => {
       }, 100);
     }
   };
+
+  useEffect(() => {
+    if (activeView === "mine") {
+      handleToggle("mine");
+    }
+  }, []);
 
   const handleCompleteClick = () => {
     if (activeView === "mine") {
@@ -190,8 +197,8 @@ const Card = () => {
             }
             description={
               modalAction === "delete"
-                ? "로그인 상태여야 서비스를 이용할 수 있어요"
-                : "재가입 시에도 이용 내역이 복구되지 않아요"
+                ? "재가입 시에도 이용 내역이 복구되지 않아요"
+                : "로그인 상태여야 서비스를 이용할 수 있어요"
             }
             actionText="돌아가기"
             buttonText={modalAction === "delete" ? "탈퇴하기" : "로그아웃"}

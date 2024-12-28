@@ -12,7 +12,7 @@ type QrCardProps = {
   cardId: number;
 };
 
-const QrCard = ({ name = "", color = "PINK", cardId = "1" }: QrCardProps) => {
+const QrCard = ({ name = "", color = "PINK", cardId = 1 }: QrCardProps) => {
   const graphicColor: Record<string, StaticImageData> = {
     PINK: pinkGraphic,
     GREEN: mintGraphic,

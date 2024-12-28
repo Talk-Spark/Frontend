@@ -48,7 +48,6 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
       } catch (e) {
         console.log(e);
       }
-      console.log(setOneCard);
     };
     if (!isEditing) {
       fetchData();

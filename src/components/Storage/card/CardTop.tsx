@@ -225,7 +225,8 @@ const CardTop = ({
                 style={{ width: `${inputWidth}px` }}
                 name="name"
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className="inline bg-transparent"
+                className="inline bg-transparent focus:outline-none"
+                maxLength={6}
               />
             ) : (
               <span> {oneCard?.name}</span>
@@ -235,13 +236,14 @@ const CardTop = ({
             {isEditing ? (
               <input
                 ref={ageRef}
-                value={`${putData?.age || oneCard.age}세`}
+                value={`${putData?.age || 0}세`}
                 name="age"
                 style={{ width: `${ageWidth}px` }}
                 onChange={(e) =>
                   handleInputChange("age", parseInt(e.target.value, 10))
                 }
-                className="bg-transparent"
+                className="bg-transparent focus:outline-none"
+                maxLength={4}
               />
             ) : (
               <span>{oneCard?.age}세</span>
@@ -266,13 +268,13 @@ const CardTop = ({
                     />
                   </button>
                 )}
-                <button onClick={handleDownload}>
+                <button onClick={handleDownload} className="w-[2.4rem]">
                   <Image
                     src={downImageUrl}
                     alt="다운로드 아이콘"
                     width={26}
                     height={26}
-                    className="mb-[1.7rem] cursor-pointer"
+                    className="mb-[1.7rem] w-[2.4rem] cursor-pointer"
                   />
                 </button>
               </>
@@ -291,13 +293,14 @@ const CardTop = ({
               height={24}
             />
           </div>
-          <div className={`text-body-2-med ${nameTextColor} w-[15.5rem]`}>
+          <div className={`text-body-2-med ${nameTextColor} w-[10.5rem]`}>
             {isEditing ? (
               <textarea
                 value={putData?.major || ""}
                 name="major"
                 onChange={(e) => handleInputChange("major", e.target.value)}
-                className="absolute top-[0.2rem] bg-transparent"
+                className="absolute top-[0.2rem] bg-transparent focus:outline-none"
+                maxLength={11}
               />
             ) : (
               <span className="absolute top-[0.2rem]">{oneCard?.major}</span>
