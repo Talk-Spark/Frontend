@@ -12,9 +12,13 @@ const Page = () => {
   /* 내 명함 조회하기 API */
   useEffect(() => {
     const fetchData = async () => {
-      const response = await instance.get("/api/cards");
-      const cardRes = response.data.data[0];
-      if (cardRes) router.push("/home"); //만약 이미 존재한다면 해당 과정 생략
+      try {
+        const response = await instance.get("/api/cards");
+        const cardRes = response.data.data[0];
+        if (cardRes) router.push("/home"); //만약 이미 존재한다면 해당 과정 생략
+      } catch (e) {
+        //console.error(e);
+      }
     };
     fetchData();
   }, []);
