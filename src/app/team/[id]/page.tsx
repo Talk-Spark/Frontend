@@ -11,7 +11,7 @@ import { get } from "@/src/apis";
 //  참가자들 정보
 interface Participant {
   name: string;
-  color: "pink" | "green" | "yellow" | "blue";
+  color: "PINK" | "MINT" | "YELLOW" | "BLUE";
   isOwner: boolean;
 }
 
