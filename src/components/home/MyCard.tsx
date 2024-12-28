@@ -62,7 +62,7 @@ const MyCard = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <StorageNameCard {...cardInfo} />
+        {cardInfo && <StorageNameCard {...cardInfo} />}
       </div>
     </div>
   );

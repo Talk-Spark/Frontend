@@ -12,7 +12,6 @@ const Page = () => {
   useEffect(() => {
     const fetchToken = async () => {
       const code = searchParams.get("code");
-      console.log("code: ", code);
 
       if (code) {
         try {
@@ -33,9 +32,7 @@ const Page = () => {
             },
           );
 
-          console.log("response: ", response.data);
           const access_token = response.data.access_token;
-          console.log("access_token: ", access_token);
 
           // 서버에 토큰 전달
           const serverResponse = await axios.post(
@@ -59,8 +56,6 @@ const Page = () => {
             roleNames: serverResponse.data.roleNames[0],
             sparkUserId: serverResponse.data.sparkUserId,
           };
-
-          console.log("user: ", user);
 
           localStorage.setItem("user", JSON.stringify(user));
           router.push("/landing");
