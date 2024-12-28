@@ -17,7 +17,7 @@ type MyNameCardProps = {
   slogan?: string;
   tmi?: string;
   ownerId?: number;
-  cardThema?: "pink" | "green" | "yellow" | "blue";
+  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
@@ -39,11 +39,11 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   }, []);
 
   const cardBackground =
-    oneCard?.cardThema === "blue"
+    oneCard?.cardThema === "BLUE"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : oneCard?.cardThema === "green"
+      : oneCard?.cardThema === "GREEN"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
-        : oneCard?.cardThema === "yellow"
+        : oneCard?.cardThema === "YELLOW"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"
           : "bg-gradient-to-b from-[#ffffff] to-[#fdcbdf]";
 
@@ -98,7 +98,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               }}
             >
               <QrCard
-                color={oneCard.cardThema || "pink"}
+                color={oneCard.cardThema || "PINK"}
                 cardId={oneCard.ownerId || 1}
                 name={oneCard.name}
               />
