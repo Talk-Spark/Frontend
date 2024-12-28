@@ -11,8 +11,6 @@ interface CardResponse {
   };
 }
 
-// type cardThema = "PINK" | "YELLOW" | "MINT" | "BLUE";
-
 type Step4Props = {
   formData: FormData;
   onChange: (key: keyof FormData, value: string) => void;
@@ -34,7 +32,6 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
         ...formData,
         sparkUserId: sparkUserId,
       });
-      console.log("response: ", response);
       const data = (response.data as CardResponse).data;
       localStorage.setItem("cardId", String(data.cardId));
       router.push("/creating-card/result");
@@ -67,11 +64,7 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
                 className="cursor-pointer"
               >
                 <ProfileImage
-                  color={
-                    color === "MINT"
-                      ? "GREEN"
-                      : (color as "PINK" | "YELLOW" | "BLUE")
-                  }
+                  color={color as "PINK" | "YELLOW" | "MINT" | "BLUE"}
                   isSelected={formData.cardThema === color.toUpperCase()}
                   size={148}
                   backColor={
