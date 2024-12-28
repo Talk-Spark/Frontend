@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { GuestBookMessage } from "./BookStorage";
+// import { GuestBookMessage } from "./BookStorage";
 import backgroundImage from "@/public/Image/home/pinkBackgroundImage.svg";
 import chatImage1 from "@/public/Image/home/chat_1.svg";
 import chatImage2 from "@/public/Image/home/chat_2.svg";
@@ -7,7 +7,7 @@ import chatImage3 from "@/public/Image/home/chat_3.svg";
 
 interface GuestBookProps {
   name: string; // 팀 이름
-  messages: GuestBookMessage[]; // 방명록 목록
+  messages: string; // 방명록 미리보기
 }
 
 const GuestBookComponent = ({ name, messages }: GuestBookProps) => {
@@ -17,8 +17,8 @@ const GuestBookComponent = ({ name, messages }: GuestBookProps) => {
     chatImage[Math.floor(Math.random() * chatImage.length)];
 
   // 최신 방명록 메시지 추출
-  const latestMessage =
-    messages[messages.length - 1]?.message || "메시지가 없습니다.";
+  // const latestMessage =
+  //   messages[messages.length - 1]?.message || "메시지가 없습니다.";
 
   return (
     <div
@@ -36,7 +36,7 @@ const GuestBookComponent = ({ name, messages }: GuestBookProps) => {
         <Image src={randomChatImage} alt="guestbook" />
       </div>
       <div className="absolute bottom-[1.6rem] h-[1.7rem] w-[13.2rem] overflow-hidden text-ellipsis whitespace-nowrap text-caption-med text-gray-9">
-        {latestMessage}
+        {messages || "메시지가 없습니다."}
       </div>
     </div>
   );
