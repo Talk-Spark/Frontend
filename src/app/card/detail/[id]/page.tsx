@@ -7,12 +7,12 @@ import favPinkStar from "@/public/nameCard/pinkStar.svg";
 import StorageNameCard from "@/src/components/StorageNameCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Arrow from "@/src/components/Storage/Arrow";
+import Arrow from "@/src/components/Storage/card/Arrow";
 import { useParams } from "next/navigation";
 import { instance, put } from "@/src/apis";
 
 type OthersNameCardProps = {
-  storedCardId: number;
+  storedCardId?: number;
   name: string;
   age: number;
   major: string;
@@ -21,7 +21,12 @@ type OthersNameCardProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
+
+
+  bookMark?: boolean;
+  cardHolderName?: string;
   cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
+
 };
 
 const DetailCard = () => {
@@ -87,24 +92,29 @@ const DetailCard = () => {
           onClick={() => setIsFav(!isFav)}
           alt="즐겨찾기"
         />
-        <span className="text-headline-5">멋쟁이 데모팀😎</span>
+        <span className="text-headline-5">{otherCards[0]?.cardHolderName}</span>
       </div>
       {/* 슬라이더 */}
       <div className="h-[60.3rem] w-[50rem]">
         <Slider {...sliderSettings} ref={slickRef}>
-          {otherCards.map((card, index) => (
-            <div key={card.storedCardId} className="flex justify-center">
-              <div
-                className={`${
-                  index === currentIndex
-                    ? "scale-100 opacity-100"
-                    : "scale-95 opacity-80"
-                } flex w-[35rem] items-center justify-normal transition-all duration-200 ease-in-out`}
-              >
-                <StorageNameCard {...card} isFull={true} isStorage={false} />
+          {otherCards &&
+            otherCards.map((card, index) => (
+              <div key={card.storedCardId} className="flex justify-center">
+                <div
+                  className={`${
+                    index === currentIndex
+                      ? "scale-100 opacity-100"
+                      : "scale-95 opacity-80"
+                  } flex w-[35rem] items-center justify-normal transition-all duration-200 ease-in-out`}
+                >
+                  <StorageNameCard
+                    oneCard={card}
+                    isFull={true}
+                    isStorage={false}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </Slider>
         <Arrow
           otherCards={otherCards}

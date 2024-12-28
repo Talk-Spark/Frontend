@@ -6,8 +6,8 @@ import Modal from "../common/Modal";
 import { instance, put } from "@/src/apis";
 
 interface Team {
-  cardHolderId: number;
-  cardHolderName: string;
+  cardHolderId?: number;
+  cardHolderName?: string;
   numOfTeammates: number;
   teamNames: string[];
   bookMark: boolean;
@@ -262,8 +262,8 @@ const SearchAndGetCard = (props: NameCardProps) => {
                   onSelect={handleSelectTeamBox}
                   index={index}
                   setToggleFav={() => setToggleFav(index)}
+                  team={team}
                   isLoading={isLoading}
-                  {...(ver === "명함" ? { isNewData, setIsNewData, team } : {})} // 명함일 때만 isNewData 전달
                   ver={ver}
                 />
               ))

@@ -11,17 +11,17 @@ import { instance } from "@/src/apis";
 import { setTimeout } from "timers";
 
 type CommentInputProps = {
-  roomId?: number;
+  roomId: number;
   commentValue: string;
   setCommentValue: (value: string) => void;
-  setSendData: (value: boolean) => void;
+  fetchGuestBookData: () => void;
 };
 
 const CommnetInput = ({
-  setCommentValue,
-  commentValue,
   roomId,
-  setSendData,
+  commentValue,
+  setCommentValue,
+  fetchGuestBookData,
 }: CommentInputProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -55,12 +55,13 @@ const CommnetInput = ({
       console.error("방명록 작성 중 오류 발생:", error);
     }
     setCommentValue("");
-    setSendData(true);
+    fetchGuestBookData();
   };
 
   // 애니메이션 핸들러
   const handleNew = () => {
     setIsAnimating(true);
+    fetchGuestBookData();
     setTimeout(() => setIsAnimating(false), 300);
   };
 
@@ -113,7 +114,7 @@ const CommnetInput = ({
           ref={textareaRef}
           placeholder="내용을 작성해 주세요"
           aria-label="댓글 입력 필드"
-          className="search-reset w-full resize-none bg-transparent py-[0.5rem] text-body-1-med text-gray-12 placeholder-gray-4 focus:outline-none"
+          className="search-reset w-full resize-none overflow-hidden bg-transparent py-[0.5rem] text-body-1-med text-gray-12 placeholder-gray-4 focus:outline-none"
           onChange={handleChange}
           value={commentValue}
           maxLength={200}

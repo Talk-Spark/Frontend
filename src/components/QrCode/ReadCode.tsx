@@ -47,15 +47,25 @@ const ReadCode = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const handleScan = (result: QrScanner.ScanResult) => {
+    // 큐알이 인식 되어도 없는 명함, 방일시에는?
     try {
-      const parsedData = JSON.parse(result.data);
-      setMyRun({
-        cardId: Number(parsedData.cardId), // string -> number
-        name: parsedData.name,
-      });
-      if (qrVer === "card") {
-        setIsCamera(false);
-        setIsNewData(true);
+      const url = new URL(result.data);
+      const cardId = url.searchParams.get("cardId");
+      const name = url.searchParams.get("name");
+
+      // const parsedData = JSON.parse(result.data);
+      if (cardId && name) {
+        setMyRun({
+          // cardId: Number(parsedData.cardId), // string -> number
+          // name: parsedData.name,
+          cardId: Number(cardId), // string -> number
+          name,
+        });
+
+        if (qrVer === "card") {
+          setIsCamera(false);
+          setIsNewData(true);
+        }
       }
     } catch (error) {
       console.error("Error parsing QR code data:", error);
