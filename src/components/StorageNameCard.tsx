@@ -66,6 +66,13 @@ const defaultCard: MyNameCardProps = {
   storedCardId: 1,
 };
 
+// const graphicColor: Record<string, StaticImageData> = {
+//   PINK: pinkGraphic,
+//   GREEN: greenGraphic,
+//   YELLOW: yellowGraphic,
+//   BLUE: blueGraphic,
+// };
+
 const StorageNameCard: React.FC<NameCardProps> = ({
   oneCard = defaultCard,
   isFull = false,
@@ -116,11 +123,38 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   }, [putData]);
 
   // blue, pink, yellow, green 별 다른 text, graphic 적용
+
+  // 편집 모드일 때 렌더링되는 색상 변경 UI
+  // const renderColorChangeButtons = () => (
+  //   <div className="absolute right-[2.8rem] top-[3.2rem] flex flex-col gap-[1.6rem]">
+  //     <button
+  //       onClick={handleEditToggle}
+  //       className={`rounded-lg ${completeBtn}`}
+  //     >
+  //       완료
+  //     </button>
+  //     <div className="flex w-full flex-col items-center justify-around gap-[1.4rem]">
+  //       {(["PINK", "YELLOW", "GREEN", "BLUE"] as const).map((c) => (
+  //         <button
+  //           key={c}
+  //           onClick={() => handleColorChange(c)}
+  //           className={`h-[2.8rem] w-[2.8rem] rounded-full border-2 ${btnColor(c)} ${
+  //             selectedColor === c ? "border-white" : "border-transparent"
+  //           }`}
+  //         ></button>
+  //       ))}
+  //     </div>
+  //   </div>
+  // );
+
+  // blue, pink, yellow, green 별 다른 text, graphic 적용
+
   const contentTextColor =
     selectedColor === "BLUE"
-      ? "text-gray-3 text-body-2-med"
+      ? "text-gray-3 text-body-2-med "
       : " text-body-2-med text-gray-10";
 
+  //301 + 192 = 493
   return (
     <div
       ref={cardRef}

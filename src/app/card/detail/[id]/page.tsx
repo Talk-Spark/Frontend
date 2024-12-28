@@ -21,9 +21,10 @@ type OthersNameCardProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema?: "pink" | "green" | "yellow" | "blue";
+
   bookMark?: boolean;
   cardHolderName?: string;
+  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
 };
 
 const DetailCard = () => {

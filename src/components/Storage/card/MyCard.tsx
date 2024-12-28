@@ -23,7 +23,7 @@ type MyNameCardProps = CardDataProps & {
   // response body
   id: number;
   kakaoId: string;
-  ownerId: number;
+  ownerId?: number;
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
