@@ -26,7 +26,6 @@ type MyNameCardProps = CardDataProps & {
   ownerId: number;
 };
 
-
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태

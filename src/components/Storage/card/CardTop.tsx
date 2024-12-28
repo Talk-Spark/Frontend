@@ -8,6 +8,8 @@ import pinkMajorIcon from "@/public/storageNameCard/pinkMajorIcon.svg";
 import blackMajorIcon from "@/public/storageNameCard/blackMajorIcon.svg";
 import whitePencil from "@/public/storageNameCard/pencil.svg";
 import blackPencil from "@/public/storageNameCard/blackPencil.svg";
+import blackDown from "@/public/storageNameCard/blackDown.svg";
+import whiteDown from "@/public/storageNameCard/down.svg";
 import { instance } from "@/src/apis";
 import { useEffect, useRef, useState } from "react";
 
@@ -64,6 +66,7 @@ type CardDetailDataProps = {
   isStorage?: boolean;
   isFull?: boolean;
   setIsEditing?: (value: boolean) => void;
+  handleDownload: () => void;
 };
 
 const CardTop = ({
@@ -75,6 +78,7 @@ const CardTop = ({
   isStorage = false,
   isFull = false,
   setIsEditing,
+  handleDownload,
 }: CardDetailDataProps) => {
   const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
   const graphicImageUrl = graphicColor[selectedColor] || graphicColor.PINK;
@@ -91,6 +95,7 @@ const CardTop = ({
       : selectedColor === "PINK"
         ? "text-main-pink"
         : "text-gray-12";
+  const downImageUrl = selectedColor === "BLUE" ? whiteDown : blackDown;
 
   const completeBtn =
     selectedColor === "BLUE"
@@ -259,12 +264,15 @@ const CardTop = ({
                     />
                   </button>
                 )}
-                <button>
-                  {/* <QrcodeDown
-                          selectedColor={putData.cardThema}
-                          qrData={qrData}
-                        /> */}
-                </button>
+                <div onClick={handleDownload}>
+                  <Image
+                    src={downImageUrl}
+                    alt="다운로드 아이콘"
+                    width={26}
+                    height={26}
+                    className="mb-[1.7rem] cursor-pointer"
+                  />
+                </div>
               </>
             ) : (
               renderColorChangeButtons()
