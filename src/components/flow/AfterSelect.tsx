@@ -35,6 +35,7 @@ interface AfterSelectProps {
   socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
+  isGameEnd :boolean
 }
 const AfterSelect = ({
   cardStep,
@@ -42,11 +43,11 @@ const AfterSelect = ({
   socketRef,
   roomId,
   isHost,
+  isGameEnd
 }: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
   const [isAllCorrect, setIsAllCorrect] = useState(true);
   const [isQuizEnd, setIsQuizEnd] = useState(false);
-  const [isGameEnd, setIsGameEnd] = useState(true);
 
   const router = useRouter();
 
@@ -62,11 +63,9 @@ const AfterSelect = ({
 
   const handleNextPerson = () => {
     socketRef.current.emit("next", { roomId });
-    //todo: 그냥 다음으로 넘어가는게 아니라, on을 기준으로 판단해야 해서..
-    //매우 중요 todo : 그냥 부모 요소에서 전부 on 해야할 듯!
-    if (isGameEnd) {
-      socketRef.current.on("scores", () => {}); //todo: 아마 부모 요소에서 처리해야할 수도 있음 (최종 스코어 가져오기)
-      router.push("/game-end"); //최종스코어 창으로 이동!;
+   
+    if (isGameEnd) { //게임 종료 여부는 부모 요소로부터 받아옴(on으로)
+      router.push("/game-end"); //최종스코어 창으로 이동!
     } else {
       //맞출 사람이 더 남았을 경우 - 초기화 작업
       setIsBefore(true);

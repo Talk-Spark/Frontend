@@ -17,6 +17,8 @@ import Button from "@/src/components/common/Button";
 import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
 import { CardFlowType } from "@/src/app/(flow)/flow/page";
 import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
+import { getUserData } from "@/src/utils";
+import { useSearchParams } from "next/navigation";
 
 interface BeforeSelectProps {
   cardStep: number;
@@ -66,6 +68,8 @@ const BeforeSelect = ({
   roomId,
   isHost,
 }: BeforeSelectProps) => {
+  const user = getUserData();
+ 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
   const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
@@ -86,7 +90,6 @@ const BeforeSelect = ({
 
   useEffect(() => {
     //만약 순서 꼬이면 emit과 on의 순서 바꿔보기
-    socketRef.current.emit("getQuestion", { roomId });
     socketRef.current.on("question", (data) => {
       console.log(data); //실제로 데이터 형식 보고 데이터 연결하기
       //그래도 일단 노션에 있는거 믿고 작성
@@ -107,22 +110,9 @@ const BeforeSelect = ({
       setQuizInfo(quizData);
       setCardStep(CARD_FIELD_NUMBER[quizData.fieldName]);
     });
+    socketRef.current.emit("getQuestion", { roomId });
 
-    //todo: 형식 변환될 가능성 있음. (요청해봄)
-    //todo2: 이거 데이터 오면, 해당 데이터를 가지고 AfterSelect로 넘어가는 로직 필요 (아마 부모요소에서 배열을 세팅한다음, isBefore세팅해서 넘어가면 될 듯)
-    socketRef.current.on(
-      "singleQuestionScoreBoard",
-      (data: NumberBooleanMap) => {
-        const entries = Object.entries(data); // [key, value] 배열로 변환
-        entries.forEach(([userId, isMatched]) => {
-          if (isMatched) {
-            console.log(`User ${userId} answered correctly.`);
-          } else {
-            console.log(`User ${userId} answered incorrectly.`);
-          }
-        });
-      },
-    );
+    
 
     const handleClickOutSide = (e: MouseEvent) => {
       if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
@@ -149,8 +139,8 @@ const BeforeSelect = ({
       setIsAnswerSeleted(true);
       //todo: userId 식별할 수 있는 방법 상의한 후, 그 userId를 잘 실어서 보내야함.
       socketRef.current.emit("submitSelection", {
-        roomId,
-        sparkUserId: userId,
+        roomId : roomId,
+        sparkUserId: user?.sparkUserId,
         answer: selectedButton,
       });
     }

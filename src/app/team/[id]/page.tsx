@@ -3,7 +3,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 // import { useParams } from "next/navigation";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ProfileImage from "@/src/components/ProfileImage";
 import FindRoom from "@/src/components/entry/FindRoom";
 import { Start } from "@mui/icons-material";
@@ -39,6 +39,7 @@ interface RoomUpdateProps {
 const TeamDetail = () => {
   //2.4.0 버전을 사용하기 때문에 타입 미존재(4.8.1 은 에러 발생)
   const socketRef = useRef<any>(null);
+  const router = useRouter();
 
   const [user, setUser] = useState<UserLocalData | null>(null);
   const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost"));
@@ -78,11 +79,10 @@ const TeamDetail = () => {
         if (arr.length) setUserDatas(arr);
       });
 
+      //게임이 시작되었을 떄
       socketRef.current?.on("startGame", (data: any) => {
         console.log("gameStart:", data);
-
-        //startGame을 보내고, 그에 대한 응답이 왔을 시 flow로 넘어가는 로직
-        //router.push("/flow/방아이디 어쩌구");
+        router.push(`/flow?roomId=${id}`);
       });
 
       const handleBeforeUnload = () => {

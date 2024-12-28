@@ -27,49 +27,6 @@ export interface NameCardObjProps {
   selfDescription: string;
   tmi: string;
 }
-/*
-  방에 입장했을 때 소켓 연결 및 joinRoom 메세지 전송
-  const socketRef = useRef<Socket | null>(null);
-
-  useEffect(() => {
-    socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
-      transports: ["websocket"],
-    });
-
-    //이 2가지 과정은 적절하게 위치 옮길 필요 존재.
-    socketRef.current.emit("joinRoom", { roomId, accessToken, isHost });
-    socketRef.current.on("roomUpdate", (info) => {
-      //info 객체를 가지고 적절한 동작 수행! (방을 세팅하는)
-      {
-        "name": "사람이름",
-        "isOwner": false // 방장이면 true, 아니면 false
-        "userId" //아마 이것도 추가로 넘겨준다고 했음
-      },
-      ...
-    });
-
-    //그리고 방장 여부는 받아오기
-    get("/api/rooms/host");
-
-    //방 퇴장 시
-    socketRef.current.emit("leaveRoom", { roomId, accessToken, isHost });
-    socketRef.current.disconnect();
-
-    //(only 방장) 게임 시작 버튼
-  const handleStartGame = (roomId: string) => {
-    socketRef.current?.emit("startGame", { roomId });
-  };
-
-  socketRef.current?.on("startGame", () => {
-    //startGame을 보내고, 그에 대한 응답이 왔을 시 flow로 넘어가는 로직
-    router.push("/flow/방아이디 어쩌구")
-  });
-
-    return () => {
-      socketRef.current?.disconnect();
-    };
-  }, []);
-*/
 
 const Flow = () => {
   /* 
@@ -78,31 +35,27 @@ const Flow = () => {
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
 
-  const [isHost, setIsHost] = useState(false); //방장 여부
+  const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost")); //방장 여부
   const [isReady, setIsReady] = useState(false);
-  const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정
+  const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정 -> todo: 아마 현재 문제가 뭔지에 대해서...
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
+  const [isGameEnd, setIsGameEnd] = useState(false);
 
   const socketRef = useRef<any>(null);
 
   useEffect(() => {
-    socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
+    //여기서 다시 연결
+    socketRef.current = io("https://talkspark-dev-api.p-e.kr", {
       transports: ["websocket"],
     });
 
-    const isHostCheck = async () => {
-      const response = await get("/api/rooms/host");
-      console.log(response.data);
-      setIsHost(response.data as boolean);
-    };
-
-    isHostCheck();
-
     //방에 잘 접속했다는 메세지 전송
     socketRef.current.emit("joinGame", { roomId });
-    socketRef.current.on("gameJoined", () => {
+    socketRef.current.on("gameJoined", (data) => { //현재 이거 안됨(메세지가 안옴)
+      console.log(data); //데이터 없다고 하긴 함
       if (socketRef.current && isHost)
         socketRef.current.emit("prepareQuizzes", { roomId });
+
       setTimeout(() => {
         //3초 대기 후 진행
         setIsReady(true);
@@ -110,8 +63,36 @@ const Flow = () => {
     });
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기
-    socketRef.current.on("singleResult", () => {});
-    socketRef.current.on("lastResult", () => {});
+    socketRef.current.on("singleResult", (data) => {
+      console.log(data);
+    });
+    socketRef.current.on("lastResult", (data) => {
+      console.log(data);
+    });
+
+    //todo: 형식 변환될 가능성 있음. (요청해봄)
+    //todo2: 이거 데이터 오면, 해당 데이터를 가지고 AfterSelect로 넘어가는 로직 필요 (아마 부모요소에서 배열을 세팅한다음, isBefore세팅해서 넘어가면 될 듯)
+    socketRef.current.on(
+      "singleQuestionScoreBoard",
+      (data: NumberBooleanMap) => {
+        const entries = Object.entries(data); // [key, value] 배열로 변환
+        entries.forEach(([userId, isMatched]) => {
+          if (isMatched) {
+            console.log(`User ${userId} answered correctly.`);
+          } else {
+            console.log(`User ${userId} answered incorrectly.`);
+          }
+        });
+      },
+    );
+
+    // 최종 스코어 가져오기
+    socketRef.current.on("scores", (data) => {
+      console.log(data);
+      //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
+      //그리고 참고로 초기화도 잘 해줘야함 (로컬 스토리지) -> 아 아닌가? 그냥 그때마다 set할거니까 상관 없을수도?
+      setIsGameEnd(true);
+    }); 
 
     return () => {
       socketRef.current?.disconnect();
@@ -140,6 +121,7 @@ const Flow = () => {
             socketRef={socketRef as MutableRefObject<any>}
             roomId={roomId}
             isHost={isHost}
+            isGameEnd={isGameEnd}
           />
         )
       ) : (
