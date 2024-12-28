@@ -1,13 +1,12 @@
 "use client";
-import Button from "../common/Button";
+import Button from "../../common/Button";
 import { useEffect, useState } from "react";
-import StorageNameCard from "../StorageNameCard";
+import StorageNameCard from "../../StorageNameCard";
 import QrCard from "./QrCard";
 import { instance } from "@/src/apis";
 
-type MyNameCardProps = {
-  id: number;
-  kakaoId: string;
+type CardDataProps = {
+  // 기본 정보
   name: string;
   age: number;
   major: string;
@@ -16,34 +15,51 @@ type MyNameCardProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
+};
+
+type MyNameCardProps = CardDataProps & {
+  // 내 명함 response 바디
+  // response body
+  id: number;
+  kakaoId: string;
   ownerId?: number;
-  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
+  const [oneCard, setOneCard] = useState<MyNameCardProps>();
+  const [selectedColor, setSelectedColor] = useState(oneCard?.cardThema);
+
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
-  const [oneCard, setOneCard] = useState<MyNameCardProps | undefined>(
-    undefined,
-  );
 
   /* 내 명함 조회하기 API */
   useEffect(() => {
     const fetchData = async () => {
-      const response = await instance.get("/api/cards");
-      const cardRes = response.data.data[0];
-      setOneCard(cardRes);
-      console.log(cardRes);
+      try {
+        const response = await instance.get("/api/cards");
+        const cardRes = response.data.data[0];
+
+        if (oneCard !== cardRes) {
+          setOneCard(cardRes);
+        }
+        console.log(cardRes);
+      } catch (e) {
+        console.log(e);
+      }
     };
-    fetchData();
-  }, []);
+    if (!isEditing) {
+      fetchData();
+    }
+  }, [isEditing]);
 
   const cardBackground =
-    oneCard?.cardThema === "BLUE"
+    selectedColor === "BLUE"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : oneCard?.cardThema === "MINT"
+      : selectedColor === "MINT"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
-        : oneCard?.cardThema === "YELLOW"
+        : selectedColor === "YELLOW"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"
           : "bg-gradient-to-b from-[#ffffff] to-[#fdcbdf]";
 
@@ -82,7 +98,14 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
                 bottom: 0,
               }}
             >
-              <StorageNameCard {...oneCard} isFull={true} isStorage={true} />
+              <StorageNameCard
+                oneCard={oneCard}
+                isFull={true}
+                isStorage={true}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                setSelectedColor={setSelectedColor}
+              />
             </div>
             {/* 뒷면 카드 */}
             <div
@@ -105,7 +128,12 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
             </div>
           </div>
         </div>
-        <Button onClick={() => setIsFlipped((prev) => !prev)}>{btnText}</Button>
+        <Button
+          disabled={isEditing}
+          onClick={() => setIsFlipped((prev) => !prev)}
+        >
+          {btnText}
+        </Button>
       </div>
     </div>
   );
