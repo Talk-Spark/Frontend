@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowForwardIos } from "@mui/icons-material";
 import StorageNameCard from "../StorageNameCard";
 
@@ -11,6 +13,10 @@ const MyCard = () => {
     major: "컴퓨터공학",
     color: "blue" as "pink" | "green" | "yellow" | "blue",
   };
+
+  const cardId = localStorage.getItem("cardId");
+
+  // todo: cardId로 내 명함 정보 가져오기
 
   return (
     <div className="my-[3.2rem] flex flex-col gap-[1.6rem]">
