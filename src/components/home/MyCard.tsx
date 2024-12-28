@@ -12,7 +12,7 @@ const MyCard = () => {
     name: "이름이름",
     age: 23,
     major: "컴퓨터공학",
-    color: "blue" as "pink" | "green" | "yellow" | "blue",
+    color: "BLUE" as "PINK" | "GREEN" | "YELLOW" | "BLUE",
   };
 
   const router = useRouter();

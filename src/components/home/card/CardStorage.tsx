@@ -18,33 +18,33 @@ const CardStorage = () => {
     {
       teamName: "1팀",
       members: [
-        { id: 1, name: "김개발", color: "pink" },
-        { id: 2, name: "이코딩", color: "green" },
-        { id: 9, name: "정기획", color: "yellow" },
+        { id: 1, name: "김개발", color: "PINK" },
+        { id: 2, name: "이코딩", color: "GREEN" },
+        { id: 9, name: "정기획", color: "YELLOW" },
       ],
     },
     {
       teamName: "2팀",
       members: [
-        { id: 3, name: "이름이", color: "green" },
-        { id: 4, name: "이름이", color: "blue" },
-        { id: 10, name: "이름이", color: "yellow" },
+        { id: 3, name: "이름이", color: "GREEN" },
+        { id: 4, name: "이름이", color: "BLUE" },
+        { id: 10, name: "이름이", color: "YELLOW" },
       ],
     },
     {
       teamName: "3팀",
       members: [
-        { id: 5, name: "이름이", color: "blue" },
-        { id: 6, name: "이름이", color: "blue" },
-        { id: 11, name: "송기획", color: "yellow" },
+        { id: 5, name: "이름이", color: "BLUE" },
+        { id: 6, name: "이름이", color: "BLUE" },
+        { id: 11, name: "송기획", color: "YELLOW" },
       ],
     },
     {
       teamName: "4팀",
       members: [
-        { id: 7, name: "이름이", color: "pink" },
-        { id: 8, name: "이름이", color: "blue" },
-        { id: 12, name: "임기획", color: "yellow" },
+        { id: 7, name: "이름이", color: "PINK" },
+        { id: 8, name: "이름이", color: "BLUE" },
+        { id: 12, name: "임기획", color: "YELLOW" },
       ],
     },
   ];

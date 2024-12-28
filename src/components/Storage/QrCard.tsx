@@ -5,15 +5,14 @@ import pinkGraphic from "@/public/nameCard/pinkStoragePink.svg";
 import mintGraphic from "@/public/nameCard/mintStorageGraphic.svg";
 import QrCode from "../QrCode/QrCode";
 
-type SelectedColor = "pink" | "green" | "yellow" | "blue";
-
+type SelectedColor = "PINK" | "GREEN" | "YELLOW" | "BLUE";
 type QrCardProps = {
   name: string;
   color: SelectedColor;
   cardId: number;
 };
 
-const QrCard = ({ name = "", color = "pink" }: QrCardProps) => {
+const QrCard = ({ name = "", color = "PINK" }: QrCardProps) => {
   const graphicColor: Record<string, StaticImageData> = {
     pink: pinkGraphic,
     green: mintGraphic,

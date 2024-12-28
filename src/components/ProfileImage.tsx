@@ -12,21 +12,21 @@ import yellowCrown from "@/public/profile/yellowCrown.svg";
 import blueCrown from "@/public/profile/blueCrown.svg";
 
 const profileImages: Record<string, StaticImageData> = {
-  pink: pinkProfile,
-  green: greenProfile,
-  yellow: yellowProfile,
-  blue: blueProfile,
+  PINK: pinkProfile,
+  GREEN: greenProfile,
+  YELLOW: yellowProfile,
+  BLUE: blueProfile,
 };
 
 const crownImages: Record<string, StaticImageData> = {
-  pink: pinkCrown,
-  green: greenCrown,
-  yellow: yellowCrown,
-  blue: blueCrown,
+  PINK: pinkCrown,
+  GREEN: greenCrown,
+  YELLOW: yellowCrown,
+  BLUE: blueCrown,
 };
 
 interface ProfileImageProps {
-  color?: "pink" | "green" | "yellow" | "blue";
+  color?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
   alt?: string;
   isHost?: boolean;
   children?: ReactNode;
@@ -37,7 +37,7 @@ interface ProfileImageProps {
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
-  color = "pink",
+  color = "PINK",
   alt = "Profile",
   isHost = false,
   children,
@@ -46,11 +46,11 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   backColor = "blue",
   isSecond = false,
 }) => {
-  const profileImageUrl = profileImages[color] || profileImages.pink;
-  const crownImageUrl = crownImages[color] || crownImages.pink;
+  const profileImageUrl = profileImages[color] || profileImages.PINK;
+  const crownImageUrl = crownImages[color] || crownImages.PINK;
 
   const positionStyles = {
-    pink:
+    PINK:
       size === 36
         ? "top-3 right-1.5"
         : size === 52
@@ -60,7 +60,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             : size === 68
               ? "top-6 right-4"
               : "top-14 right-10",
-    green:
+    GREEN:
       size === 36
         ? "bottom-0.5 left-2"
         : size === 52
@@ -70,7 +70,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             : size === 68
               ? "bottom-1.5 left-4"
               : "bottom-3 left-9",
-    yellow:
+    YELLOW:
       size === 36
         ? "bottom-0 left-1.5"
         : size === 52
@@ -80,7 +80,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             : size === 68
               ? "bottom-0 left-3"
               : "bottom-1 left-8",
-    blue:
+    BLUE:
       size === 36
         ? "top-1 right-2"
         : size === 52
