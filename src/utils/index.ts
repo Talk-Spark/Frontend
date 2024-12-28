@@ -1,6 +1,6 @@
 import { access } from "fs";
 
-type UserLocalData = {
+export type UserLocalData = {
   accessToken: string;
   kakaoId: string;
   password: string;

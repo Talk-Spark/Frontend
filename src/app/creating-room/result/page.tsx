@@ -2,11 +2,18 @@
 import Button from "@/src/components/common/Button";
 import kakaoImage from "@/public/Image/onBoarding/kakaoImage.svg";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // todo: 버튼들 기능 구현, QR코드 실제 생성
 const Result = () => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const roomId = searchParams.get("roomId");
+
+  const handleHostStartGame = () => {
+    router.push(`/team/${roomId}`);
+  };
   return (
     <div className="mt-[4rem] flex flex-col items-center justify-center gap-[9.2rem]">
       <div className="flex flex-col items-center justify-center gap-[2rem]">
@@ -18,7 +25,9 @@ const Result = () => {
         </button>
       </div>
       <div className="flex flex-col items-center justify-center gap-[1.2rem]">
-        <Button variant="pink">시작하기</Button>
+        <Button variant="pink" onClick={handleHostStartGame}>
+          시작하기
+        </Button>
         <p
           className="text-body-2-med text-gray-7 underline decoration-solid decoration-1 underline-offset-4"
           onClick={() => router.push("/home")}
