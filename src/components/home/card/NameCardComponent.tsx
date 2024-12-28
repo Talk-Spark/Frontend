@@ -4,18 +4,18 @@ import { StoredCard } from "./CardStorage";
 
 interface NameCardProps {
   name: string; // 팀 이름
-  storedCards: StoredCard[]; // 저장된 명함 목록
+  storedCards: StoredCard[]; // 팀 내 저장된 명함 담은 배열
 }
 
 const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
   const backgroundImage = {
-    pink: "/Image/home/pinkBackgroundImage.svg",
-    green: "/Image/home/mintBackgroundImage.svg",
-    yellow: "/Image/home/yellowBackgroundImage.svg",
-    blue: "/Image/home/blueBackgroundImage.svg",
+    PINK: "/Image/home/pinkBackgroundImage.svg",
+    GREEN: "/Image/home/mintBackgroundImage.svg",
+    YELLOW: "/Image/home/yellowBackgroundImage.svg",
+    BLUE: "/Image/home/blueBackgroundImage.svg",
   };
   // 팀의 첫번째 팀원의 색상으로 배경색 지정
-  const firstMemberColor = storedCards[0].cardThema.toLowerCase();
+  const firstMemberColor = storedCards[0].cardThema;
   // console.log(firstMemberColor);
   const backgroundStyle = {
     backgroundImage: `url(${backgroundImage[firstMemberColor as keyof typeof backgroundImage]})`,
@@ -41,13 +41,7 @@ const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
               style={{ zIndex: index + 1 }}
             >
               <ProfileImage
-                color={
-                  member.cardThema.toLowerCase() as
-                    | "pink"
-                    | "yellow"
-                    | "blue"
-                    | "green"
-                }
+                color={member.cardThema as "PINK" | "MINT" | "YELLOW" | "BLUE"}
                 alt={member.name}
               />
               <div className="flex items-center text-caption-med text-gray-7">
