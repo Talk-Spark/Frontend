@@ -17,6 +17,8 @@ interface Participant {
   name: string;
   //todo: 이거 이따가 변환 필요 (대문자로)
   //color: "pink" | "green" | "yellow" | "blue";
+  //color: "PINK" | "MINT" | "YELLOW" | "BLUE";
+
   owner: boolean;
   sparkUserId: number;
 }
@@ -170,7 +172,7 @@ const TeamDetail = () => {
                   className="max-w-[(100%-4.8rem)/4] flex-1"
                   style={{ maxWidth: "calc((100% - 4.8rem) / 4)" }}
                 >
-                  <ProfileImage color={"pink"} isHost={participant.owner}>
+                  <ProfileImage color={"PINK"} isHost={participant.owner}>
                     {participant.name}
                   </ProfileImage>
                 </div>

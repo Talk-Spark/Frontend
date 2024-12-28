@@ -9,7 +9,7 @@ const MyTalk = ({ content, dateTime }: MyTalkProps) => {
       {/* 말풍선 */}
       <div className="flex items-end gap-[0.4rem]">
         {/* 날짜 */}
-        <span className="text-caption-med text-gray-6">
+        <span className="flex-1 text-caption-med text-gray-6">
           {new Date(dateTime).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",

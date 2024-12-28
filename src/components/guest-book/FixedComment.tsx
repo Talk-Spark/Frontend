@@ -13,19 +13,25 @@ const FixedComment = ({
 }: FixedCommentProps) => {
   const fixedComment = {
     commnets: ["방명록에 오신 걸 환영합니다!", "게임 후기와 인사를 남겨보아요"],
-    roomDateTime: "2024-10-21 10:00",
+    roomDateTime: date,
   };
 
   // 팀 이름에 따라 랜덤 색상
   const getColorFromString = (
     str: string,
-  ): "pink" | "green" | "yellow" | "blue" => {
-    const colors: ("pink" | "green" | "yellow" | "blue")[] = [
-      "pink",
-      "green",
-      "yellow",
-      "blue",
+  ): "PINK" | "MINT" | "YELLOW" | "BLUE" => {
+    const colors: ("PINK" | "MINT" | "YELLOW" | "BLUE")[] = [
+      "PINK",
+      "MINT",
+      "YELLOW",
+      "BLUE",
     ];
+
+    if (!str) {
+      // str이 없을 경우 기본 색상 반환
+      return "BLUE";
+    }
+
     const hash = str
       .split("")
       .reduce((acc, char) => acc + char.charCodeAt(0), 0);

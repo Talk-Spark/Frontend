@@ -70,13 +70,14 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
       alert("로그인 정보가 없습니다.");
       return;
     }
-    const sparkUserId = JSON.parse(userObj).sparkUserId;
+    // const sparkUserId = JSON.parse(userObj).sparkUserId;
+
     try {
       const response: AxiosResponse<RoomResponse> = await post("/api/rooms", {
         roomName: formData.name,
         maxPeople: formData.participants,
-        difficult: formData.difficulty,
-        hostId: sparkUserId,
+        difficulty: formData.difficulty,
+        // hostId: sparkUserId,
       });
 
       //roomId를 사용할 일이 있으면 사용
