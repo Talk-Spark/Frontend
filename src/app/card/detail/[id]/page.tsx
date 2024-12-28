@@ -25,7 +25,7 @@ type OthersNameCardProps = {
 
   bookMark?: boolean;
   cardHolderName?: string;
-  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 
 };
 

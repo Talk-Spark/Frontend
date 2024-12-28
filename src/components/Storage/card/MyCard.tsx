@@ -24,7 +24,7 @@ type MyNameCardProps = CardDataProps & {
   id: number;
   kakaoId: string;
   ownerId?: number;
-  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {

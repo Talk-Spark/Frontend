@@ -17,7 +17,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -40,7 +40,6 @@ type PutCardProps = CardDataProps & {
 type NameCardProps = {
   oneCard: MyNameCardProps;
   otherCard?: OtherCardProps;
-  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
   isFull?: boolean;
   isStorage?: boolean;
   isEditing?: boolean;

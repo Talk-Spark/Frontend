@@ -8,7 +8,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
