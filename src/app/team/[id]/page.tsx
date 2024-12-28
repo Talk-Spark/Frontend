@@ -1,3 +1,5 @@
+//가장 큰 문제: 애초에 방장임을 명확히 확인할 수 없음
+
 "use client";
 import { useEffect, useRef, useState } from "react";
 // import { useParams } from "next/navigation";
@@ -7,138 +9,125 @@ import FindRoom from "@/src/components/entry/FindRoom";
 import { Start } from "@mui/icons-material";
 import { AxiosResponse } from "axios";
 import { get } from "@/src/apis";
-import { io, Socket } from "socket.io-client";
 import { getUserData, UserLocalData } from "@/src/utils";
+import io from "socket.io-client";
 
 //  참가자들 정보
 interface Participant {
   name: string;
-  color: "pink" | "green" | "yellow" | "blue";
-  isOwner: boolean;
+  //todo: 이거 이따가 변환 필요 (대문자로)
+  //color: "pink" | "green" | "yellow" | "blue";
+  owner: boolean;
+  sparkUserId: number;
 }
 
 /* 방 정보 보기 요청 interface (웹소켓 : response에 맞게 수정하시면 됩니다) */
 interface GameRoomDetail {
   roomId: number;
   roomName: string;
-  hostName: string;
   difficulty: number;
   maxPeople: number;
-  participantsDetail: Participant[];
+}
+
+//roomUpdate 소켓으로 받아오는 정보
+interface RoomUpdateProps {
+  name: string;
+  owner: boolean;
+  sparkUserId: number;
 }
 
 const TeamDetail = () => {
-  const socketRef = useRef<Socket | null>(null);
+  //2.4.0 버전을 사용하기 때문에 타입 미존재(4.8.1 은 에러 발생)
+  const socketRef = useRef<any>(null);
 
   const [user, setUser] = useState<UserLocalData | null>(null);
-  const [isHost, setIsHost] = useState(false);
+  const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost"));
   const { id } = useParams(); // roomId 파라미터 가져온 후 get
   const [teamData, setTeamData] = useState<GameRoomDetail | null>(null);
+  const [userDatas, setUserDatas] = useState<Participant[] | null>(null);
   const [isLottie, setIsLottie] = useState(false);
+
+  //(only 방장) 게임 시작 버튼
+  const handleStartGame = (roomId: string) => {
+    socketRef.current?.emit("startGame", { roomId });
+  };
 
   const startGame = () => {
     setIsLottie(true);
+    handleStartGame(id as string);
   };
 
-  // const isUserHost = (roomDetail: GameRoomDetail) => {
-  //   // 방장 정보와 일치할 때 해당 유저는 시작하기 버튼 활성화
-  //   return roomDetail.participantsDetail.some(
-  //     (participant) => participant.name === user?.name && participant.isOwner,
-  //   );
-  // };
+  useEffect(() => {
+    const userData = getUserData();
+    setUser(userData);
+  }, []);
 
   useEffect(() => {
-    socketRef.current = io("https://talkspark-dev-api.p-e.kr", {
-      transports: ["websocket"],
-    });
-    const setUserAndHost = async () => {
-      const userData = getUserData();
-      if (!userData) {
-        alert("유저 데이터가 없습니다.");
-        return;
-      }
+    if (user) {
+      socketRef.current = io("https://talkspark-dev-api.p-e.kr", {
+        transports: ["websocket"],
+      });
 
-      try {
-        const response = await get(`/api/rooms/is-host?roomId=${id}`);
-        setUser(userData);
-        setIsHost(response.data as boolean);
-      } catch (err) {
-        console.error("Error fetching host data:", err);
-      }
-    };
+      socketRef.current.emit("joinRoom", {
+        roomId: id,
+        accessToken: user.accessToken,
+        isHost: isHost, //연결 되는지 테스트
+      });
 
-    setUserAndHost();
+      socketRef.current.on("roomUpdate", (arr: RoomUpdateProps[]) => {
+        if (arr.length) setUserDatas(arr);
+      });
 
-    return () => {
-      if (socketRef.current) socketRef.current?.disconnect();
-    };
-  }, [id]);
+      socketRef.current?.on("startGame", (data: any) => {
+        console.log("gameStart:", data);
 
-  useEffect(() => {
-    console.log(socketRef.current);
-  }, [socketRef.current]);
+        //startGame을 보내고, 그에 대한 응답이 왔을 시 flow로 넘어가는 로직
+        //router.push("/flow/방아이디 어쩌구");
+      });
 
-  // /* 방 정보 보기 api 요청 웹소켓 수정 필요 */
-  // useEffect(() => {
-  //   // const fetchTeamData = async () => {
-  //   //   if (id) {
-  //   //     try {
-  //   //       const response: AxiosResponse<GameRoomDetail> = await get(
-  //   //         `/api/rooms/${id}`,
-  //   //       ); // AxiosResponse<GameRoomDetail> 타입 지정
-  //   //       setTeamData(response.data);
-  //   //     } catch (err) {
-  //   //       console.error("Error fetching team data:", err);
-  //   //     }
-  //   //   }
-  //   // };
-  //   // fetchTeamData();
+      const handleBeforeUnload = () => {
+        socketRef.current.emit("leaveRoom", {
+          roomId: id,
+          accessToken: user.accessToken,
+          isHost,
+        });
+        socketRef.current.disconnect();
+      };
 
-  //   socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
-  //     transports: ["websocket"],
-  //   });
+      const setHostAndRoomData = async () => {
+        try {
+          //const response = await get(`/api/rooms/is-host?roomId=${id}`); //host 여부 받아오는 api
+          const response2 = await get(`/api/rooms/${id}`); //방에 대한 정보 받아오는 api
 
-  //   console.log(socketRef.current);
+          //setIsHost(response.data as boolean);
+          setTeamData(response2.data as GameRoomDetail);
+        } catch (err) {
+          console.error("Error fetching host data:", err);
+        }
+      };
 
-  //   //이 2가지 과정은 적절하게 위치 옮길 필요 존재.
-  //   socketRef.current.emit("joinRoom", {
-  //     roomId: id,
-  //     accessToken: user?.accessToken,
-  //     isHost: isHost,
-  //   });
-  //   socketRef.current.on("roomUpdate", (info) => {
-  //     console.log(info);
-  //     //info 객체를 가지고 적절한 동작 수행! (방을 세팅하는)
-  //     // {
-  //     //   "name": "사람이름",
-  //     //   "isOwner": false // 방장이면 true, 아니면 false
-  //     //   "userId" //아마 이것도 추가로 넘겨준다고 했음
-  //     // },
-  //   });
+      setHostAndRoomData();
 
-  //   //   //그리고 방장 여부는 받아오기
-  //   //   get("/api/rooms/host");
+      window.addEventListener("beforeunload", handleBeforeUnload);
 
-  //   //   //방 퇴장 시
-  //   //   socketRef.current.emit("leaveRoom", { roomId, accessToken, isHost });
-  //   //   socketRef.current.disconnect();
+      return () => {
+        if (socketRef.current) {
+          //방 퇴장시
+          socketRef.current.emit("leaveRoom", {
+            roomId: id,
+            accessToken: user.accessToken,
+            isHost: true,
+          });
+          socketRef.current.disconnect();
+          window.removeEventListener("beforeunload", handleBeforeUnload);
+        }
+      };
+    }
+  }, [user]);
 
-  //   //   //(only 방장) 게임 시작 버튼
-  //   // const handleStartGame = (roomId: string) => {
-  //   //   socketRef.current?.emit("startGame", { roomId });
-  //   // };
-
-  //   // socketRef.current?.on("startGame", () => {
-  //   //   //startGame을 보내고, 그에 대한 응답이 왔을 시 flow로 넘어가는 로직
-  //   //   router.push("/flow/방아이디 어쩌구")
-  //   // });
-
-  //   return () => {
-  //     if (socketRef.current) socketRef.current?.disconnect();
-  //   };
-  // }, [id]);
-
-  if (!teamData) {
+  console.log(teamData);
+  console.log(userDatas); //특이하게, 참여자 수가 넘치면 더이상 정보를 못 받아옴 (메세지를 안 넘기는거임)
+  if (!teamData || !userDatas) {
     return (
       <div>
         <FindRoom findText={"우리 팀 로딩 중이에요!"} />
@@ -164,9 +153,9 @@ const TeamDetail = () => {
                 </span>
                 <span className="text-center text-subhead-med">
                   <span className="text-subhead-bold text-main-pink">
-                    {teamData.participantsDetail.length}
+                    {userDatas.length}
                   </span>{" "}
-                  / {teamData.maxPeople}
+                  {teamData.maxPeople}
                 </span>
               </div>
             </div>
@@ -175,16 +164,13 @@ const TeamDetail = () => {
               key={teamData.roomName}
               className="flex w-full flex-1 flex-wrap gap-x-[1.6rem] gap-y-[2rem] px-[0.75rem]"
             >
-              {teamData.participantsDetail.map((participant, index) => (
+              {userDatas.map((participant, index) => (
                 <div
                   key={index}
                   className="max-w-[(100%-4.8rem)/4] flex-1"
                   style={{ maxWidth: "calc((100% - 4.8rem) / 4)" }}
                 >
-                  <ProfileImage
-                    color={participant.color}
-                    isHost={participant.isOwner}
-                  >
+                  <ProfileImage color={"pink"} isHost={participant.owner}>
                     {participant.name}
                   </ProfileImage>
                 </div>
@@ -192,7 +178,7 @@ const TeamDetail = () => {
             </div>
           </div>
           {/* 로그인한 사용자가 방장일 경우 '시작하기' 버튼 */}
-          {isUserHost(teamData) ? (
+          {isHost ? (
             <button
               onClick={startGame}
               className="w-full cursor-pointer rounded-[1.2rem] bg-main-pink py-[1.6rem] text-center text-subhead-bold text-white"

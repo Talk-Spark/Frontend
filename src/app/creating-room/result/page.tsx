@@ -12,6 +12,7 @@ const Result = () => {
   const roomId = searchParams.get("roomId");
 
   const handleHostStartGame = () => {
+    localStorage.setItem("isGameHost", "true");
     router.push(`/team/${roomId}`);
   };
   return (
@@ -30,7 +31,12 @@ const Result = () => {
         </Button>
         <p
           className="text-body-2-med text-gray-7 underline decoration-solid decoration-1 underline-offset-4"
-          onClick={() => router.push("/home")}
+          onClick={() => {
+            const real = confirm(
+              "정말 홈으로 가시겠습니까? 게임이 정상적으로 시작되지 않습니다.",
+            );
+            if (real) router.push("/home");
+          }}
         >
           홈으로 가기
         </p>

@@ -24,6 +24,7 @@
     "react-lottie-player": "^2.1.0",
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^2.4.0",
     "styled-components": "^6.1.13"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-slick": "^0.23.13",
+    "@types/socket.io-client": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^8.12.2",
     "@typescript-eslint/parser": "^8.12.2",
     "eslint": "^8.57.1",
