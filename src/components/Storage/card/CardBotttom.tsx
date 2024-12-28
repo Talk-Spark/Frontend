@@ -8,7 +8,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema: "pink" | "green" | "yellow" | "blue";
+  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -32,23 +32,34 @@ type CardDetailDataProps = {
   isEditing?: boolean;
 };
 
-const CardDataDetail = ({
-  oneCard,
+const defaultCard: MyNameCardProps = {
+  // 기본값
+  id: 0,
+  kakaoId: "",
+  ownerId: 0,
+  name: "이름",
+  age: 0,
+  major: "",
+  cardThema: "PINK",
+};
+
+const CardBottom = ({
+  oneCard = defaultCard,
   putData,
   contentTextColor = "",
   setPutData,
   isEditing = false,
 }: CardDetailDataProps) => {
   const backColorBottom: Record<string, string> = {
-    pink: "bg-gradient-to-b from-[#FFA6CA] to-[#FF80B4]",
-    green: "bg-gradient-to-b from-[#66F5DC] to-[#11EBC5]",
-    yellow: "bg-gradient-to-b from-[#FEE485] to-[#FDD853]",
-    blue: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
+    PINK: "bg-gradient-to-b from-[#FFA6CA] to-[#FF80B4]",
+    GREEN: "bg-gradient-to-b from-[#66F5DC] to-[#11EBC5]",
+    YELLOW: "bg-gradient-to-b from-[#FEE485] to-[#FDD853]",
+    BLUE: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
   };
 
   const cardColor = putData ? putData.cardThema : oneCard.cardThema;
   const categoryColor =
-    cardColor === "blue"
+    cardColor === "BLUE"
       ? "text-body-2-bold text-white"
       : " text-body-2-bold text-gray-12";
 
@@ -95,4 +106,4 @@ const CardDataDetail = ({
     </div>
   );
 };
-export default CardDataDetail;
+export default CardBottom;

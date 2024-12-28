@@ -4,9 +4,20 @@ import Button from "@/src/components/common/Button";
 import landingImage from "@/public/Image/onBoarding/landingImage.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { instance } from "@/src/apis";
 
 const Page = () => {
   const router = useRouter();
+  /* 내 명함 조회하기 API */
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await instance.get("/api/cards");
+      const cardRes = response.data.data[0];
+      if (cardRes) router.push("/home"); //만약 이미 존재한다면 해당 과정 생략
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center gap-[4.5rem]">

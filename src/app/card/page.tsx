@@ -54,7 +54,7 @@ const Card = () => {
 
           const queryParam = getQueryParam();
           const response = await get(`/api/storedCards${queryParam}`);
-
+          console.log(response);
           // 응답 데이터가 올바른 형식인지 확인
           const data = response.data as ApiResponse;
 
@@ -101,18 +101,41 @@ const Card = () => {
       setIsEdit((prev) => (prev === "edit" ? "complete" : "edit"));
     }
   };
+  const getAccessToken = (): string | null => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      try {
+        const userObj = JSON.parse(user);
+        console.log(userObj);
+        return userObj.accessToken || "";
+      } catch (e) {
+        console.log("Failed to parse user from localStorage", e);
+        return "";
+      }
+    }
+    return "";
+  };
 
   const handleCloseModal = async () => {
     if (modalAction === "logout") {
       // 로그아웃 -> 로컬스토리지 user 객체 전체 삭제
       localStorage.removeItem("user");
     } else if (modalAction === "delete") {
-      /* 회원탈퇴 API */
-      try {
-        await instance.delete("/api/member/leave");
-      } catch (e) {
-        console.log(e);
+      const user = localStorage.getItem("user");
+      if (user) {
+        try {
+          const token = getAccessToken();
+          const response = await instance.delete(
+            `/api/member/leave?accessToken=${token}`,
+          );
+          if (response.status === 200) {
+            console.log("회원 탈퇴 성공:", response.data);
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
+      /* 회원탈퇴 API */
     }
     router.push("/"); // 메인 홈으로 이동
   };

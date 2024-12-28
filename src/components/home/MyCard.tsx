@@ -1,15 +1,37 @@
 import { ArrowForwardIos } from "@mui/icons-material";
 import StorageNameCard from "../StorageNameCard";
 
+type CardDataProps = {
+  // 기본 정보
+  name: string;
+  age: number;
+  major: string;
+  mbti?: string;
+  hobby?: string;
+  lookAlike?: string;
+  slogan?: string;
+  tmi?: string;
+  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+};
+
+type MyNameCardProps = CardDataProps & {
+  // 내 명함 response 바디
+  // response body
+  id: number;
+  kakaoId: string;
+  ownerId: number;
+};
+
 const MyCard = () => {
   // 예시 데이터
-  const cardInfo = {
-    cardId: 1,
-    teamName: "톡스파크",
+  const cardInfo: MyNameCardProps = {
+    id: 1,
+    kakaoId: "exampleKakaoId",
+    ownerId: 123,
     name: "이름이름",
     age: 23,
     major: "컴퓨터공학",
-    color: "blue" as "pink" | "green" | "yellow" | "blue",
+    cardThema: "BLUE",
   };
 
   return (
@@ -25,7 +47,7 @@ const MyCard = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <StorageNameCard {...cardInfo} />
+        <StorageNameCard oneCard={cardInfo} />
       </div>
     </div>
   );

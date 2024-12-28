@@ -26,7 +26,7 @@ const crownImages: Record<string, StaticImageData> = {
 };
 
 interface ProfileImageProps {
-  color?: "pink" | "green" | "yellow" | "blue";
+  color: "pink" | "green" | "yellow" | "blue";
   alt?: string;
   isHost?: boolean;
   children?: ReactNode;

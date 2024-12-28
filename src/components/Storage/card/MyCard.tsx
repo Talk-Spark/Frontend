@@ -15,7 +15,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema: "pink" | "green" | "yellow" | "blue";
+  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -26,48 +26,55 @@ type MyNameCardProps = CardDataProps & {
   ownerId: number;
 };
 
-type PutCardProps = CardDataProps & {
-  // 내 명함 req putData
-  sparkUserId: number;
-};
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
+  const [oneCard, setOneCard] = useState<MyNameCardProps>();
+  const [selectedColor, setSelectedColor] = useState(oneCard?.cardThema);
 
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
-  const [oneCard, setOneCard] = useState<MyNameCardProps>({
-    // 현재 정보 (편집 전)
-    id: 4,
-    kakaoId: "3776885192",
-    name: "박승범",
-    age: 24,
-    major: "컴퓨터공학",
-    mbti: "ISTJ",
-    hobby: "코딩",
-    lookAlike: "너구리",
-    slogan: "코딩하는 너구리",
-    tmi: "TalkSparkIsFun!!!",
-    ownerId: 2,
-    cardThema: "green",
-  });
+  // 현재 정보 (편집 전)
+  // id: 4,
+  // kakaoId: "3776885192",
+  // name: "박승범",
+  // age: 24,
+  // major: "컴퓨터공학",
+  // mbti: "ISTJ",
+  // hobby: "코딩",
+  // lookAlike: "너구리",
+  // slogan: "코딩하는 너구리",
+  // tmi: "TalkSparkIsFun!!!",
+  // ownerId: 2,
+  // cardThema: "green",
 
   /* 내 명함 조회하기 API */
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await instance.get("/api/cards");
-  //     const cardRes = response.data[0];
-  //     setOneCard(cardRes);
-  //   };
-  //   fetchData();
-  // });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.get("/api/cards");
+        const cardRes = response.data.data[0];
+
+        if (oneCard !== cardRes) {
+          setOneCard(cardRes);
+        }
+        console.log(cardRes);
+      } catch (e) {
+        console.error(e);
+      }
+      console.log(setOneCard);
+    };
+    if (!isEditing) {
+      fetchData();
+    }
+  }, [isEditing]);
 
   const cardBackground =
-    oneCard?.cardThema === "blue"
+    selectedColor === "BLUE"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : oneCard?.cardThema === "green"
+      : selectedColor === "GREEN"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
-        : oneCard?.cardThema === "yellow"
+        : selectedColor === "YELLOW"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"
           : "bg-gradient-to-b from-[#ffffff] to-[#fdcbdf]";
 
@@ -99,6 +106,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               } w-full transition-opacity duration-700`}
               style={{
                 position: "absolute",
+                backfaceVisibility: "hidden",
                 top: 0,
                 left: 0,
                 right: 0,
@@ -111,6 +119,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
                 isStorage={true}
                 isEditing={isEditing}
                 setIsEditing={setIsEditing}
+                setSelectedColor={setSelectedColor}
               />
             </div>
             {/* 뒷면 카드 */}
@@ -127,7 +136,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               }}
             >
               <QrCard
-                color={oneCard.cardThema || "pink"}
+                color={oneCard.cardThema || "PINK"}
                 cardId={oneCard.ownerId || 1}
                 name={oneCard.name}
               />
