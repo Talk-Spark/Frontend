@@ -11,7 +11,7 @@ interface CardResponse {
   };
 }
 
-// type cardThema = "PINK" | "YELLOW" | "GREEN" | "BLUE";
+// type cardThema = "PINK" | "YELLOW" | "MINT" | "BLUE";
 
 type Step4Props = {
   formData: FormData;
@@ -60,7 +60,7 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
         <div>
           <h2 className="mb-[2rem] text-headline-5 text-black">명함 설정</h2>
           <div className="grid grid-cols-2 grid-rows-2 gap-[1.2rem]">
-            {["pink", "yellow", "mint", "blue"].map((color) => (
+            {["PINK", "YELLOW", "MINT", "BLUE"].map((color) => (
               <div
                 key={color}
                 onClick={() => onChange("cardThema", color.toUpperCase())}
