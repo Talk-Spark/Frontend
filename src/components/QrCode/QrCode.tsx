@@ -7,6 +7,7 @@ interface QrCodeProps {
 }
 const QrCode = ({ cardId, name, size }: QrCodeProps) => {
   const qrData = JSON.stringify({ cardId, name });
+  const qrLink = "https://talk-spark-frontend-nine.vercel.app/login";
 
   return (
     <div>

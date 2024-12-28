@@ -30,15 +30,32 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
   // 내 명함 response 바디
   // response body
-  id: number;
-  kakaoId: string;
-  ownerId: number;
+  id?: number;
+  kakaoId?: string;
+  ownerId?: number;
+};
+
+type PutCardProps = CardDataProps & {
+  // 내 명함 req putData
+  sparkUserId?: number;
+};
+
+type CardDetailDataProps = {
+  oneCard: MyNameCardProps;
+  putData?: PutCardProps;
+  contentTextColor?: string;
+  setPutData?: React.Dispatch<React.SetStateAction<PutCardProps>>;
+  isEditing?: boolean;
+  isStorage?: boolean;
+  isFull?: boolean;
+  setIsEditing?: (value: boolean) => void;
+  handleDownload?: () => void;
 };
 
 const defaultCard: MyNameCardProps = {
@@ -52,23 +69,6 @@ const defaultCard: MyNameCardProps = {
   cardThema: "PINK",
 };
 
-type PutCardProps = CardDataProps & {
-  // 내 명함 req putData
-  sparkUserId: number;
-};
-
-type CardDetailDataProps = {
-  oneCard: MyNameCardProps;
-  putData?: PutCardProps;
-  contentTextColor?: string;
-  setPutData?: React.Dispatch<React.SetStateAction<PutCardProps>>;
-  isEditing?: boolean;
-  isStorage?: boolean;
-  isFull?: boolean;
-  setIsEditing?: (value: boolean) => void;
-  handleDownload: () => void;
-};
-
 const CardTop = ({
   oneCard = defaultCard,
   putData,
@@ -80,7 +80,9 @@ const CardTop = ({
   setIsEditing,
   handleDownload,
 }: CardDetailDataProps) => {
-  const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
+  const selectedColor = putData?.cardThema
+    ? putData.cardThema
+    : oneCard?.cardThema;
   const graphicImageUrl = graphicColor[selectedColor] || graphicColor.PINK;
   const pencilImageUrl = selectedColor === "BLUE" ? whitePencil : blackPencil;
   const majorImageUrl =
@@ -264,7 +266,7 @@ const CardTop = ({
                     />
                   </button>
                 )}
-                <div onClick={handleDownload}>
+                <button onClick={handleDownload}>
                   <Image
                     src={downImageUrl}
                     alt="다운로드 아이콘"
@@ -272,7 +274,7 @@ const CardTop = ({
                     height={26}
                     className="mb-[1.7rem] cursor-pointer"
                   />
-                </div>
+                </button>
               </>
             ) : (
               renderColorChangeButtons()

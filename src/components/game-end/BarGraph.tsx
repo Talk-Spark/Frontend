@@ -199,7 +199,7 @@ const BarGraph = ({ players }: BarGraphProps) => {
   const aTypeTopThree =
     topThree?.length === 3 ? [topThree![1], topThree![0], topThree![2]] : [];
   return (
-    <section className="relative h-[31.7rem] w-[37.5rem] shrink-0 overflow-hidden bg-gradient-35-pink">
+    <section className="bg-gradient-35-pink relative h-[31.7rem] w-[37.5rem] shrink-0 overflow-hidden">
       <article className="mt-[3.2rem] flex flex-col items-center gap-[0.8rem] self-stretch">
         <span className="self-stretch text-center text-body-2-bold text-main-pink">
           총 NN문항

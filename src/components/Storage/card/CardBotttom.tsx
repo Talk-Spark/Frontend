@@ -8,20 +8,20 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
   // 내 명함 response 바디
   // response body
-  id: number;
-  kakaoId: string;
-  ownerId: number;
+  id?: number;
+  kakaoId?: string;
+  ownerId?: number;
 };
 
 type PutCardProps = CardDataProps & {
   // 내 명함 req putData
-  sparkUserId: number;
+  sparkUserId?: number;
 };
 
 type CardDetailDataProps = {

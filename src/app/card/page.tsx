@@ -12,8 +12,8 @@ import { get, instance } from "@/src/apis";
 import { useRouter } from "next/navigation";
 
 type CardHolderResponse = {
-  cardHolderId: number;
-  cardHolderName: string;
+  cardHolderId?: number;
+  cardHolderName?: string;
   numOfTeammates: number;
   teamNames: string[];
   bookMark: boolean;
@@ -72,7 +72,7 @@ const Card = () => {
     fetchStoredCards();
   }, [sortOption, teamData, searchValue]);
 
-  const [activeView, setActiveView] = useState<"mine" | "others">("others");
+  const [activeView, setActiveView] = useState<"mine" | "others">("mine");
   const [isVisible, setIsVisible] = useState(false);
   const [isEdit, setIsEdit] = useState<"edit" | "complete">("edit");
   const [isModalVisible, setIsModalVisible] = useState(false); // 로그아웃 | 회원탈퇴 모달

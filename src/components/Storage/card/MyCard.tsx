@@ -33,19 +33,6 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [selectedColor, setSelectedColor] = useState(oneCard?.cardThema);
 
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
-  // 현재 정보 (편집 전)
-  // id: 4,
-  // kakaoId: "3776885192",
-  // name: "박승범",
-  // age: 24,
-  // major: "컴퓨터공학",
-  // mbti: "ISTJ",
-  // hobby: "코딩",
-  // lookAlike: "너구리",
-  // slogan: "코딩하는 너구리",
-  // tmi: "TalkSparkIsFun!!!",
-  // ownerId: 2,
-  // cardThema: "green",
 
   /* 내 명함 조회하기 API */
   useEffect(() => {
@@ -59,7 +46,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
         }
         console.log(cardRes);
       } catch (e) {
-        console.error(e);
+        console.log(e);
       }
       console.log(setOneCard);
     };

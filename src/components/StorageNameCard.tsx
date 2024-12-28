@@ -3,15 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 
 import CardTop from "./Storage/card/CardTop";
 import CardBottom from "./Storage/card/CardBotttom";
-import domtoimage from "dom-to-image";
 import html2canvas from "html2canvas";
-
 import { saveAs } from "file-saver";
-/* 
-1. 뒷면 그래픽 위치 조정
-2. 명함 수정하기 PUT
-3. 애니메이션 수정(시간 되면)
-*/
 
 type CardDataProps = {
   // 기본 정보
@@ -23,24 +16,29 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
   // 내 명함 response 바디
   // response body
-  id: number;
-  kakaoId: string;
-  ownerId: number;
+  id?: number;
+  kakaoId?: string;
+  ownerId?: number;
+  // 다른 사람 명함 개별 조회
+  storedCardId?: number;
+  bookMark?: boolean;
+  cardHolderName?: string;
 };
 
 type PutCardProps = CardDataProps & {
   // 내 명함 req putData
-  sparkUserId: number;
+  sparkUserId?: number;
 };
 
 type NameCardProps = {
   oneCard: MyNameCardProps;
+  otherCard?: OtherCardProps;
   isFull?: boolean;
   isStorage?: boolean;
   isEditing?: boolean;
@@ -48,6 +46,12 @@ type NameCardProps = {
   setSelectedColor?: React.Dispatch<
     React.SetStateAction<"PINK" | "GREEN" | "YELLOW" | "BLUE" | undefined>
   >;
+};
+
+type OtherCardProps = CardDataProps & {
+  storedCardId?: number;
+  bookMark?: boolean;
+  cardHolderName?: string;
 };
 
 const defaultCard: MyNameCardProps = {
@@ -59,6 +63,7 @@ const defaultCard: MyNameCardProps = {
   age: 0,
   major: "",
   cardThema: "PINK",
+  storedCardId: 1,
 };
 
 const StorageNameCard: React.FC<NameCardProps> = ({
@@ -82,22 +87,22 @@ const StorageNameCard: React.FC<NameCardProps> = ({
     if (cardRef.current) {
       console.log("Card ref saved.");
 
-      // Use html2canvas with options to improve rendering
       html2canvas(cardRef.current, {
-        backgroundColor: "transparent", // Ensure transparency
+        backgroundColor: "transparent", // 투명 배경 설정
         useCORS: true,
         logging: true,
         scale: 2,
+        ignoreElements: (element) => element.tagName === "BUTTON", // 버튼 필터링
       })
         .then((canvas) => {
           canvas.toBlob((blob) => {
             if (blob) {
-              saveAs(blob, "StorageNameCard.png");
+              saveAs(blob, "명함.png");
             }
           });
         })
         .catch((error) => {
-          console.error("Error generating image:", error); // Error handling
+          console.error("Error generating image:", error); // 오류 처리
         });
     } else {
       console.log("Card ref is not found.");

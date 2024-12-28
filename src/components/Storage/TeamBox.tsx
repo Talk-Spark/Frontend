@@ -6,8 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface CardBox {
-  cardHolderId: number;
-  cardHolderName: string;
+  cardHolderId?: number;
+  cardHolderName?: string;
   numOfTeammates: number;
   teamNames: string[];
   bookMark: boolean;
