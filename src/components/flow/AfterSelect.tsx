@@ -103,6 +103,7 @@ const AfterSelect = ({
             <Button
               onClick={handleNextPerson}
               variant={isGameEnd ? "pink" : "black"}
+              disabled={!isGameEnd && !isHost}
             >
               {isGameEnd ? "최종 스코어 보기" : "다음 사람 맞추기"}
             </Button>
