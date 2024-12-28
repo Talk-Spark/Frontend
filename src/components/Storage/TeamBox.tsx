@@ -6,8 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface CardBox {
-  cardHolderId: number;
-  cardHolderName: string;
+  cardHolderId?: number;
+  cardHolderName?: string;
   numOfTeammates: number;
   teamNames: string[];
   bookMark: boolean;
@@ -18,8 +18,8 @@ interface RoomBox {
   roomName: string;
   roomPeopleCount: number;
   roomDateTime: string;
-  guestBookData: string[];
   guestBookFavorited: boolean;
+  preViewContent: string;
 }
 
 interface TeamBoxProps {
@@ -97,9 +97,7 @@ const TeamBox = (props: TeamBoxProps) => {
       ? `${team.teamNames.slice(0, maxVisible).join(" ")} ...`
       : team?.teamNames.join(" ");
 
-  const content = team
-    ? displayedParticipants
-    : room && room.guestBookData[room.guestBookData.length - 1];
+  const content = team ? displayedParticipants : room && room.preViewContent;
 
   const getPreviewContent = (content?: string) => {
     if (ver === "방명록" && content) {
@@ -116,7 +114,7 @@ const TeamBox = (props: TeamBoxProps) => {
 
   const dataNum = team ? team.numOfTeammates : room && room.roomPeopleCount;
 
-  const dataBookMark = team ? team.bookMark : room && room.guestBookData;
+  const dataBookMark = team ? team.bookMark : room && room.guestBookFavorited;
 
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();

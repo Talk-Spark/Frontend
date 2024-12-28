@@ -6,6 +6,7 @@ interface YourTalkProps {
   content: string;
   userName: string;
   dateTime: string;
+  color: "PINK" | "YELLOW" | "MINT" | "BLUE"; // 추후 색상 명 변경 필요
 }
 
 const YourTalk = ({
@@ -13,11 +14,15 @@ const YourTalk = ({
   content,
   userName,
   dateTime,
+  color,
 }: YourTalkProps) => {
   return (
     <div className="flex gap-[0.8rem]">
       <div>
-        <ProfileImage size={36} />
+        <ProfileImage
+          size={36}
+          color={color}
+        />
       </div>
       <div>
         <span className="text-caption-med text-gray-8">{userName}</span>
