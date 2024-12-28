@@ -9,7 +9,7 @@ type QrData = {
 };
 
 type QrcodeDownProps = {
-  selectedColor: "pink" | "green" | "yellow" | "blue";
+  selectedColor: "PINK" | "MINT" | "YELLOW" | "BLUE";
   qrData: QrData;
 };
 
@@ -20,7 +20,7 @@ const validateData = (data: QrData): boolean => {
 };
 
 const QrcodeDown: React.FC<QrcodeDownProps> = ({ selectedColor, qrData }) => {
-  const downImageUrl = selectedColor === "blue" ? whiteDown : blackDown;
+  const downImageUrl = selectedColor === "BLUE" ? whiteDown : blackDown;
 
   const handleDownloadClick = () => {
     if (!validateData(qrData)) {

@@ -4,12 +4,23 @@ import { useState } from "react";
 import CardStorage from "./card/CardStorage";
 import { ArrowForwardIos } from "@mui/icons-material";
 import BookStorage from "./guest/BookStorage";
+import { useRouter } from "next/navigation";
 
 const Storage = () => {
   // 컴포넌트 전환 관리 (명함, 방명록)
   const [activeTab, setActiveTab] = useState<"namecard" | "guestbook">(
     "namecard",
   );
+
+  const router = useRouter();
+
+  const handleViewAll = () => {
+    if (activeTab === "namecard") {
+      router.push("/card");
+    } else {
+      router.push("/guest-book");
+    }
+  };
 
   return (
     <div className="mb-[4.8rem] flex w-[33.5rem] flex-col">
@@ -38,7 +49,10 @@ const Storage = () => {
       </div>
       {activeTab === "namecard" ? <CardStorage /> : <BookStorage />}
       {/* todo: 라우팅 연결 */}
-      <div className="mt-[1.4rem] flex justify-end text-body-1-med text-gray-7">
+      <div
+        className="mt-[1.4rem] flex justify-end text-body-1-med text-gray-7"
+        onClick={handleViewAll}
+      >
         전체보기
         <span className="relative top-[-0.2rem]">
           <ArrowForwardIos></ArrowForwardIos>

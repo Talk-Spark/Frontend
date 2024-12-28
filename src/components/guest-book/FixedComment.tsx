@@ -19,12 +19,12 @@ const FixedComment = ({
   // 팀 이름에 따라 랜덤 색상
   const getColorFromString = (
     str: string,
-  ): "pink" | "green" | "yellow" | "blue" => {
-    const colors: ("pink" | "green" | "yellow" | "blue")[] = [
-      "pink",
-      "green",
-      "yellow",
-      "blue",
+  ): "PINK" | "MINT" | "YELLOW" | "BLUE" => {
+    const colors: ("PINK" | "MINT" | "YELLOW" | "BLUE")[] = [
+      "PINK",
+      "MINT",
+      "YELLOW",
+      "BLUE",
     ];
     const hash = str
       .split("")

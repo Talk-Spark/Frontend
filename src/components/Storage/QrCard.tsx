@@ -5,34 +5,33 @@ import pinkGraphic from "@/public/nameCard/pinkStoragePink.svg";
 import mintGraphic from "@/public/nameCard/mintStorageGraphic.svg";
 import QrCode from "../QrCode/QrCode";
 
-type SelectedColor = "pink" | "green" | "yellow" | "blue";
-
+type SelectedColor = "PINK" | "MINT" | "YELLOW" | "BLUE";
 type QrCardProps = {
   name: string;
   color: SelectedColor;
   cardId: number;
 };
 
-const QrCard = ({ name = "", color = "pink" }: QrCardProps) => {
+const QrCard = ({ name = "", color = "PINK" }: QrCardProps) => {
   const graphicColor: Record<string, StaticImageData> = {
-    pink: pinkGraphic,
-    green: mintGraphic,
-    yellow: yellowGraphic,
-    blue: blueGraphic,
+    PINK: pinkGraphic,
+    MINT: mintGraphic,
+    YELLOW: yellowGraphic,
+    BLUE: blueGraphic,
   };
 
   const backColorTop: Record<string, string> = {
-    pink: "bg-gradient-to-b from-[#FFCCE1] to-[#FFA6CA]",
-    green: "bg-gradient-to-b from-[#BBFFF3] to-[#66F5DC]",
-    yellow: "bg-gradient-to-b from-[#FFEFB7] to-[#FEE485]",
-    blue: "bg-gradient-to-b from-[#9CACFF] to-[#6D86F5]",
+    PINK: "bg-gradient-to-b from-[#FFCCE1] to-[#FFA6CA]",
+    MINT: "bg-gradient-to-b from-[#BBFFF3] to-[#66F5DC]",
+    YELLOW: "bg-gradient-to-b from-[#FFEFB7] to-[#FEE485]",
+    BLUE: "bg-gradient-to-b from-[#9CACFF] to-[#6D86F5]",
   };
 
   const backColorBottom: Record<string, string> = {
-    pink: "bg-gradient-to-b from-[#FFA6CA] to-[#FF80B4]",
-    green: "bg-gradient-to-b from-[#66F5DC] to-[#11EBC5]",
-    yellow: "bg-gradient-to-b from-[#FEE485] to-[#FDD853]",
-    blue: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
+    PINK: "bg-gradient-to-b from-[#FFA6CA] to-[#FF80B4]",
+    MINT: "bg-gradient-to-b from-[#66F5DC] to-[#11EBC5]",
+    YELLOW: "bg-gradient-to-b from-[#FEE485] to-[#FDD853]",
+    BLUE: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
   };
 
   return (

@@ -5,6 +5,12 @@ import { FormData } from "@/src/app/(onBoarding)/creating-card/page";
 import { useRouter } from "next/navigation";
 import { post } from "@/src/apis";
 
+interface CardResponse {
+  data: {
+    cardId: number;
+  };
+}
+
 // type cardThema = "PINK" | "YELLOW" | "GREEN" | "BLUE";
 
 type Step4Props = {
@@ -24,11 +30,13 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
     const sparkUserId = JSON.parse(userObj).sparkUserId;
 
     try {
-      const response = post("/api/cards", {
+      const response = await post("/api/cards", {
         ...formData,
         sparkUserId: sparkUserId,
       });
       console.log("response: ", response);
+      const data = (response.data as CardResponse).data;
+      localStorage.setItem("cardId", String(data.cardId));
       router.push("/creating-card/result");
     } catch (error) {
       console.error("명함을 생성하지 못했습니다: ", error);
@@ -52,14 +60,18 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
         <div>
           <h2 className="mb-[2rem] text-headline-5 text-black">명함 설정</h2>
           <div className="grid grid-cols-2 grid-rows-2 gap-[1.2rem]">
-            {["pink", "yellow", "green", "blue"].map((color) => (
+            {["pink", "yellow", "mint", "blue"].map((color) => (
               <div
                 key={color}
                 onClick={() => onChange("cardThema", color.toUpperCase())}
                 className="cursor-pointer"
               >
                 <ProfileImage
-                  color={color as "pink" | "yellow" | "green" | "blue"}
+                  color={
+                    color === "MINT"
+                      ? "GREEN"
+                      : (color as "PINK" | "YELLOW" | "BLUE")
+                  }
                   isSelected={formData.cardThema === color.toUpperCase()}
                   size={148}
                   backColor={

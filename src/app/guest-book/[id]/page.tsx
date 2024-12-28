@@ -70,6 +70,16 @@ const Page = () => {
     return `${meridiem} ${formattedHour}:${minute.toString().padStart(2, "0")}`;
   }
 
+  const guestBookData: {
+    guestBookId: string;
+    isOwnerGuestBook: boolean;
+    sparkUserName: string;
+    guestBookContent: string;
+    guestBookDateTime: string;
+  }[] = [
+    // 더미데이터
+  ];
+
   return (
     <div>
       <Header title={roomName} padding={false} showButton1={true} />

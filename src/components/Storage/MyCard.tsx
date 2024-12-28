@@ -17,7 +17,7 @@ type MyNameCardProps = {
   slogan?: string;
   tmi?: string;
   ownerId?: number;
-  cardThema?: "pink" | "green" | "yellow" | "blue";
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
@@ -31,18 +31,19 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await instance.get("/api/cards");
-      const cardRes = response.data[0];
+      const cardRes = response.data.data[0];
       setOneCard(cardRes);
+      console.log(cardRes);
     };
     fetchData();
-  });
+  }, []);
 
   const cardBackground =
-    oneCard?.cardThema === "blue"
+    oneCard?.cardThema === "BLUE"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : oneCard?.cardThema === "green"
+      : oneCard?.cardThema === "MINT"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
-        : oneCard?.cardThema === "yellow"
+        : oneCard?.cardThema === "YELLOW"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"
           : "bg-gradient-to-b from-[#ffffff] to-[#fdcbdf]";
 
@@ -74,6 +75,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               } w-full transition-opacity duration-700`}
               style={{
                 position: "absolute",
+                backfaceVisibility: "hidden",
                 top: 0,
                 left: 0,
                 right: 0,
@@ -96,7 +98,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
               }}
             >
               <QrCard
-                color={oneCard.cardThema || "pink"}
+                color={oneCard.cardThema || "PINK"}
                 cardId={oneCard.ownerId || 1}
                 name={oneCard.name}
               />
