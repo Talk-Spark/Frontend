@@ -50,7 +50,7 @@ const AllCards = () => {
       >
         <SwiperSlide>
           <StorageNameCard
-            cardId={2}
+            ownerId={2}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -58,16 +58,16 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={STORAGE_CARD.color}
+            cardThema={STORAGE_CARD.color}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
           />
         </SwiperSlide>
         <SwiperSlide>
           <StorageNameCard
-            cardId={3}
+            ownerId={3}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -75,16 +75,16 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={"green"}
+            cardThema={"green"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
           />
         </SwiperSlide>
         <SwiperSlide>
           <StorageNameCard
-            cardId={4}
+            ownerId={4}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -92,16 +92,16 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={"pink"}
+            cardThema={"pink"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
           />
         </SwiperSlide>
         <SwiperSlide>
           <StorageNameCard
-            cardId={1}
+            ownerId={1}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -109,9 +109,9 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={"blue"}
+            cardThema={"blue"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
           />

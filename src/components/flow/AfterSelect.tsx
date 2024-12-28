@@ -13,7 +13,6 @@ import Lottie from "lottie-react";
 import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
-import { Socket } from "socket.io-client";
 
 const STORAGE_CARD = {
   teamName: "팀이름없어용",
@@ -33,7 +32,7 @@ const STORAGE_CARD = {
 interface AfterSelectProps {
   cardStep: number;
   setIsBefore: Dispatch<SetStateAction<boolean>>;
-  socketRef: MutableRefObject<Socket>;
+  socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
 }
@@ -93,9 +92,9 @@ const AfterSelect = ({
               mbti={STORAGE_CARD.mbti}
               hobby={STORAGE_CARD.hobby}
               lookAlike={STORAGE_CARD.lookAlike}
-              selfDescription={STORAGE_CARD.selfDescription}
+              slogan={STORAGE_CARD.selfDescription}
               tmi={STORAGE_CARD.tmi}
-              color={STORAGE_CARD.color}
+              cardThema={STORAGE_CARD.color}
               isFull={STORAGE_CARD.isFull}
               isStorage={STORAGE_CARD.isStorage}
             />

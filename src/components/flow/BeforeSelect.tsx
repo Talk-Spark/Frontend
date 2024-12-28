@@ -17,13 +17,12 @@ import Button from "@/src/components/common/Button";
 import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
 import { CardFlowType } from "@/src/app/(flow)/flow/page";
 import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
-import { Socket } from "socket.io-client";
 
 interface BeforeSelectProps {
   cardStep: number;
   setIsBefore: (input: boolean) => void;
   setCardStep: Dispatch<SetStateAction<number>>;
-  socketRef: MutableRefObject<Socket>;
+  socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
 }

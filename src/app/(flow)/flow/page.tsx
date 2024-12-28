@@ -5,7 +5,7 @@ import AfterSelect from "@/src/components/flow/AfterSelect";
 import BeforeSelect from "@/src/components/flow/BeforeSelect";
 import { useSearchParams } from "next/navigation";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import io  from "socket.io-client";
 
 export const CARD_FLOW = [
   "엠비티아이",
@@ -83,7 +83,7 @@ const Flow = () => {
   const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
 
-  const socketRef = useRef<Socket | null>(null);
+  const socketRef = useRef<any>(null);
 
   useEffect(() => {
     socketRef.current = io("https://talkspark-dev-api.p-e.kr/socket.io/", {
@@ -129,7 +129,7 @@ const Flow = () => {
             cardStep={cardStep}
             setIsBefore={setIsBefore}
             setCardStep={setCardStep}
-            socketRef={socketRef as MutableRefObject<Socket>}
+            socketRef={socketRef as MutableRefObject<any>}
             roomId={roomId}
             isHost={isHost}
           />
@@ -137,7 +137,7 @@ const Flow = () => {
           <AfterSelect
             cardStep={cardStep}
             setIsBefore={setIsBefore}
-            socketRef={socketRef as MutableRefObject<Socket>}
+            socketRef={socketRef as MutableRefObject<any>}
             roomId={roomId}
             isHost={isHost}
           />
