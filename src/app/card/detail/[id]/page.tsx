@@ -22,9 +22,11 @@ type OthersNameCardProps = {
   slogan?: string;
   tmi?: string;
 
+
   bookMark?: boolean;
   cardHolderName?: string;
-  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
+
 };
 
 const DetailCard = () => {

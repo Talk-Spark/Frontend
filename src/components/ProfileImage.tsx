@@ -13,20 +13,20 @@ import blueCrown from "@/public/profile/blueCrown.svg";
 
 const profileImages: Record<string, StaticImageData> = {
   PINK: pinkProfile,
-  GREEN: greenProfile,
+  MINT: greenProfile,
   YELLOW: yellowProfile,
   BLUE: blueProfile,
 };
 
 const crownImages: Record<string, StaticImageData> = {
   PINK: pinkCrown,
-  GREEN: greenCrown,
+  MINT: greenCrown,
   YELLOW: yellowCrown,
   BLUE: blueCrown,
 };
 
 interface ProfileImageProps {
-  color?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  color?: "PINK" | "MINT" | "YELLOW" | "BLUE";
   alt?: string;
   isHost?: boolean;
   children?: ReactNode;
@@ -60,7 +60,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             : size === 68
               ? "top-6 right-4"
               : "top-14 right-10",
-    GREEN:
+    MINT:
       size === 36
         ? "bottom-0.5 left-2"
         : size === 52

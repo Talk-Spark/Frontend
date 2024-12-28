@@ -6,7 +6,7 @@ interface YourTalkProps {
   content: string;
   userName: string;
   dateTime: string;
-  color: "PINK" | "YELLOW" | "GREEN" | "BLUE"; // 추후 색상 명 변경 필요
+  color: "PINK" | "YELLOW" | "MINT" | "BLUE"; // 추후 색상 명 변경 필요
 }
 
 const YourTalk = ({
@@ -21,7 +21,7 @@ const YourTalk = ({
       <div>
         <ProfileImage
           size={36}
-          color={color.toLowerCase() as "pink" | "yellow" | "green" | "blue"}
+          color={color}
         />
       </div>
       <div>

@@ -5,6 +5,7 @@ import CardTop from "./Storage/card/CardTop";
 import CardBottom from "./Storage/card/CardBotttom";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
+import { StaticImageData } from "next/image";
 
 type CardDataProps = {
   // 기본 정보
@@ -16,7 +17,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -39,12 +40,13 @@ type PutCardProps = CardDataProps & {
 type NameCardProps = {
   oneCard: MyNameCardProps;
   otherCard?: OtherCardProps;
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
   isFull?: boolean;
   isStorage?: boolean;
   isEditing?: boolean;
   setIsEditing?: (value: boolean) => void;
   setSelectedColor?: React.Dispatch<
-    React.SetStateAction<"PINK" | "GREEN" | "YELLOW" | "BLUE" | undefined>
+    React.SetStateAction<"PINK" | "MINT" | "YELLOW" | "BLUE" | undefined>
   >;
 };
 
@@ -66,13 +68,6 @@ const defaultCard: MyNameCardProps = {
   storedCardId: 1,
 };
 
-// const graphicColor: Record<string, StaticImageData> = {
-//   PINK: pinkGraphic,
-//   GREEN: greenGraphic,
-//   YELLOW: yellowGraphic,
-//   BLUE: blueGraphic,
-// };
-
 const StorageNameCard: React.FC<NameCardProps> = ({
   oneCard = defaultCard,
   isFull = false,
@@ -81,7 +76,6 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   setIsEditing,
   setSelectedColor,
 }) => {
-  // const [selectedColor, setSelectedColor] = useState(oneCard.cardThema); // 색상 상태
   const [putData, setPutData] = useState<PutCardProps>({
     sparkUserId: oneCard?.ownerId,
     ...oneCard,
@@ -118,7 +112,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 
   useEffect(() => {
     if (setSelectedColor && putData) {
-      setSelectedColor(putData.cardThema);
+      setSelectedColor(putData?.cardThema);
     }
   }, [putData]);
 

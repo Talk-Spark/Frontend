@@ -8,7 +8,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -52,7 +52,7 @@ const CardBottom = ({
 }: CardDetailDataProps) => {
   const backColorBottom: Record<string, string> = {
     PINK: "bg-gradient-to-b from-[#FFA6CA] to-[#FF80B4]",
-    GREEN: "bg-gradient-to-b from-[#66F5DC] to-[#11EBC5]",
+    MINT: "bg-gradient-to-b from-[#66F5DC] to-[#11EBC5]",
     YELLOW: "bg-gradient-to-b from-[#FEE485] to-[#FDD853]",
     BLUE: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
   };

@@ -19,14 +19,14 @@ const CardStorage = () => {
       teamName: "1팀",
       members: [
         { id: 1, name: "김개발", color: "PINK" },
-        { id: 2, name: "이코딩", color: "GREEN" },
+        { id: 2, name: "이코딩", color: "MINT" },
         { id: 9, name: "정기획", color: "YELLOW" },
       ],
     },
     {
       teamName: "2팀",
       members: [
-        { id: 3, name: "이름이", color: "GREEN" },
+        { id: 3, name: "이름이", color: "MINT" },
         { id: 4, name: "이름이", color: "BLUE" },
         { id: 10, name: "이름이", color: "YELLOW" },
       ],

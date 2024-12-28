@@ -15,7 +15,7 @@ interface GuestBookDataProps {
   guestBookContent: string;
   guestBookDateTime: string;
   ownerGuestBook: boolean;
-  cardThema: "PINK" | "YELLOW" | "GREEN" | "BLUE";
+  cardThema: "PINK" | "YELLOW" | "MINT" | "BLUE";
 }
 
 interface RoomDataProps {

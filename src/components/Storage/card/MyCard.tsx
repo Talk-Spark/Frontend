@@ -15,7 +15,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -24,6 +24,7 @@ type MyNameCardProps = CardDataProps & {
   id: number;
   kakaoId: string;
   ownerId?: number;
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
@@ -57,7 +58,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const cardBackground =
     selectedColor === "BLUE"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : selectedColor === "GREEN"
+      : selectedColor === "MINT"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
         : selectedColor === "YELLOW"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"

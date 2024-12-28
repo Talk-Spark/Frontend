@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from "react";
 
 const graphicColor: Record<string, StaticImageData> = {
   PINK: pinkGraphic,
-  GREEN: greenGraphic,
+  MINT: greenGraphic,
   YELLOW: yellowGraphic,
   BLUE: blueGraphic,
 };
@@ -30,7 +30,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -107,13 +107,13 @@ const CardTop = ({
   const btnColor = {
     PINK: "bg-sub-pink",
     YELLOW: "bg-sub-yellow",
-    GREEN: "bg-sub-mint",
+    MINT: "bg-sub-mint",
     BLUE: "bg-sub-blue",
   };
 
   const backColorTop: Record<string, string> = {
     PINK: "bg-gradient-to-b from-[#FFCCE1] to-[#FFA6CA]",
-    GREEN: "bg-gradient-to-b from-[#BBFFF3] to-[#66F5DC]",
+    MINT: "bg-gradient-to-b from-[#BBFFF3] to-[#66F5DC]",
     YELLOW: "bg-gradient-to-b from-[#FFEFB7] to-[#FEE485]",
     BLUE: "bg-gradient-to-b from-[#9CACFF] to-[#6D86F5]",
   };
@@ -122,7 +122,7 @@ const CardTop = ({
     putData?.cardThema === "BLUE" ? "text-white" : "text-black";
 
   const handleColorChange = (
-    newColor: "PINK" | "GREEN" | "YELLOW" | "BLUE",
+    newColor: "PINK" | "MINT" | "YELLOW" | "BLUE",
   ) => {
     if (setPutData && putData?.cardThema) {
       setPutData({ ...putData, cardThema: newColor }); // 색상 변경만 처리
@@ -187,7 +187,7 @@ const CardTop = ({
         완료
       </button>
       <div className="z-10 flex w-full flex-col items-center justify-around gap-[1.4rem]">
-        {(["PINK", "YELLOW", "GREEN", "BLUE"] as const).map((c) => (
+        {(["PINK", "YELLOW", "MINT", "BLUE"] as const).map((c) => (
           <button
             key={c}
             onClick={() => handleColorChange(c)}

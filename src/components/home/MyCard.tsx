@@ -14,7 +14,7 @@ type CardDataProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 type MyNameCardProps = CardDataProps & {
@@ -34,7 +34,7 @@ const MyCard = () => {
     name: "이름이름",
     age: 23,
     major: "컴퓨터공학",
-    cardThema: "BLUE",
+    color: "BLUE" as "PINK" | "MINT" | "YELLOW" | "BLUE",
   };
 
   const router = useRouter();
