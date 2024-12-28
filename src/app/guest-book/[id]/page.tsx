@@ -33,27 +33,55 @@ const Page = () => {
     guestBookDateTime: string;
   }[] = [
     // 더미데이터
-    // {
-    //   guestBookId: "1",
-    //   isOwnerGuestBook: true, // 본인이 작성한 방명록만 true, 나머지는 false
-    //   sparkUserName: "작성자 이름",
-    //   guestBookContent: "내 방명록작성!!!!",
-    //   guestBookDateTime: "2024-11-03 14:30:15",
-    // },
-    // {
-    //   guestBookId: "2",
-    //   isOwnerGuestBook: false,
-    //   sparkUserName: "이름이름",
-    //   guestBookContent: "너 방명록작성!!!!",
-    //   guestBookDateTime: "2024-11-03 14:30:15",
-    // },
-    // {
-    //   guestBookId: "3",
-    //   isOwnerGuestBook: false,
-    //   sparkUserName: "이름이름",
-    //   guestBookContent: "방명록작성!!!!",
-    //   guestBookDateTime: "2024-11-03 14:30:15",
-    // },
+    {
+      guestBookId: "1",
+      isOwnerGuestBook: true, // 본인이 작성한 방명록만 true, 나머지는 false
+      sparkUserName: "작성자 이름",
+      guestBookContent: "내 방명록작성!!!!",
+      guestBookDateTime: "2024-11-03 14:30:15",
+    },
+    {
+      guestBookId: "2",
+      isOwnerGuestBook: true,
+      sparkUserName: "이름이름",
+      guestBookContent: "너 방명록작성!!!!",
+      guestBookDateTime: "2024-11-03 14:30:15",
+    },
+    {
+      guestBookId: "4",
+      isOwnerGuestBook: true,
+      sparkUserName: "이름이름",
+      guestBookContent: "방명록작성!!!!",
+      guestBookDateTime: "2024-11-03 14:30:15",
+    },
+    {
+      guestBookId: "5",
+      isOwnerGuestBook: true,
+      sparkUserName: "이름이름",
+      guestBookContent: "방명록작성!!!!",
+      guestBookDateTime: "2024-11-03 14:30:15",
+    },
+    {
+      guestBookId: "6",
+      isOwnerGuestBook: true,
+      sparkUserName: "이름이름",
+      guestBookContent: "방명록작성!!!!",
+      guestBookDateTime: "2024-11-03 14:30:15",
+    },
+    {
+      guestBookId: "67",
+      isOwnerGuestBook: true,
+      sparkUserName: "이름이름",
+      guestBookContent: "방명록작성!!!  입니당~",
+      guestBookDateTime: "2024-11-03 14:30:15",
+    },
+    {
+      guestBookId: "8",
+      isOwnerGuestBook: true,
+      sparkUserName: "이름이름",
+      guestBookContent: "너무 재밌었어요~~ 또만나요!!! 너무 재밌었어요~~ 또만나요 너무 재밌었어요 다음에 또만나요 너무 재밌었어요~~  또만나요",
+      guestBookDateTime: "2024-11-03 14:30:15",
+    },
   ];
 
   return (

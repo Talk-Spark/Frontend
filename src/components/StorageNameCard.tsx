@@ -180,11 +180,11 @@ const StorageNameCard: React.FC<NameCardProps> = ({
       <div className="">
         <div className="">
           <div
-            className={`"flex flex-col gap-[0.4rem] rounded-[2rem] px-[2.8rem] pt-[2.4rem] ${backColorTop[selectedColor.toLocaleLowerCase()]}`}
+            className={`"flex flex-col gap-[0.4rem] rounded-[2rem] px-[2.8rem] pt-[2.4rem] ${backColorTop[selectedColor]}`}
           >
             <div className="flex h-[4.1rem] justify-between gap-[7rem]">
               <div
-                className={`flex items-center gap-[1.2rem] ${nameTextColor.toLocaleLowerCase}`}
+                className={`flex items-center gap-[1.2rem] ${nameTextColor}`}
               >
                 <span className="text-headline-2">{name}</span>
                 <span className="text-subhead-med">{age}세</span>
@@ -241,7 +241,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
         {/* 두 번째 사각형 - 하단 */}
         {isFull && (
           <div
-            className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor.toLocaleLowerCase()]}`}
+            className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor]}`}
           >
             <div className="flex flex-1 flex-col gap-[1.6rem]">
               <div className="flex flex-1 flex-col gap-[0.4rem]">
