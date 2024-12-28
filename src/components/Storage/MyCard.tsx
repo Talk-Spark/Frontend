@@ -17,7 +17,7 @@ type MyNameCardProps = {
   slogan?: string;
   tmi?: string;
   ownerId?: number;
-  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  cardThema?: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
@@ -41,7 +41,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const cardBackground =
     oneCard?.cardThema === "BLUE"
       ? "bg-gradient-to-b from-white via-[#dbe1fa] to-[#afbcfc]"
-      : oneCard?.cardThema === "GREEN"
+      : oneCard?.cardThema === "MINT"
         ? "bg-gradient-to-b from-white via-[#def6f1] to-[#c2f9ef]"
         : oneCard?.cardThema === "YELLOW"
           ? "bg-gradient-to-b from-[#FFF] to-[#f9e9b3]"

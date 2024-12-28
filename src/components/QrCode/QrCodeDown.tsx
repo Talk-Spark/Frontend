@@ -9,7 +9,7 @@ type QrData = {
 };
 
 type QrcodeDownProps = {
-  selectedColor: "PINK" | "GREEN" | "YELLOW" | "BLUE";
+  selectedColor: "PINK" | "MINT" | "YELLOW" | "BLUE";
   qrData: QrData;
 };
 
