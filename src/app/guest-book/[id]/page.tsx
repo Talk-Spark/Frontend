@@ -91,64 +91,15 @@ const Page = () => {
     guestBookDateTime: string;
   }[] = [
     // 더미데이터
-    {
-      guestBookId: "1",
-      isOwnerGuestBook: true, // 본인이 작성한 방명록만 true, 나머지는 false
-      sparkUserName: "작성자 이름",
-      guestBookContent: "내 방명록작성!!!!",
-      guestBookDateTime: "2024-11-03 14:30:15",
-    },
-    {
-      guestBookId: "2",
-      isOwnerGuestBook: true,
-      sparkUserName: "이름이름",
-      guestBookContent: "너 방명록작성!!!!",
-      guestBookDateTime: "2024-11-03 14:30:15",
-    },
-    {
-      guestBookId: "4",
-      isOwnerGuestBook: true,
-      sparkUserName: "이름이름",
-      guestBookContent: "방명록작성!!!!",
-      guestBookDateTime: "2024-11-03 14:30:15",
-    },
-    {
-      guestBookId: "5",
-      isOwnerGuestBook: true,
-      sparkUserName: "이름이름",
-      guestBookContent: "방명록작성!!!!",
-      guestBookDateTime: "2024-11-03 14:30:15",
-    },
-    {
-      guestBookId: "6",
-      isOwnerGuestBook: true,
-      sparkUserName: "이름이름",
-      guestBookContent: "방명록작성!!!!",
-      guestBookDateTime: "2024-11-03 14:30:15",
-    },
-    {
-      guestBookId: "67",
-      isOwnerGuestBook: true,
-      sparkUserName: "이름이름",
-      guestBookContent: "방명록작성!!!  입니당~",
-      guestBookDateTime: "2024-11-03 14:30:15",
-    },
-    {
-      guestBookId: "8",
-      isOwnerGuestBook: true,
-      sparkUserName: "이름이름",
-      guestBookContent:
-        "너무 재밌었어요~~ 또만나요!!! 너무 재밌었어요~~ 또만나요 너무 재밌었어요 다음에 또만나요 너무 재밌었어요~~  또만나요",
-      guestBookDateTime: "2024-11-03 14:30:15",
-    },
   ];
 
   return (
-    <div className="relative h-[100vh]">
-      <div className="fixed top-0 z-10 -mx-[2rem] w-[calc(100%+4rem)]">
+    /* 방명록 없는 경우 대비 전체 bg-gray-1수정 */
+    <div className="relative -mx-[2rem] h-[100vh] w-[calc(100%+4rem)] bg-gray-1">
+      <div className="fixed top-0 z-10 w-[calc(100%+4rem)]">
         <Header title={roomName} padding={true} showButton1={true} />
       </div>
-      <div className="-mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center bg-gray-1 pb-[10.4rem]">
+      <div className="flex flex-col items-center pb-[10.4rem]">
         <div className="mb-[2rem] mt-[8rem] rounded-[1.2rem] border-[0.1rem] border-gray-7 px-[0.7rem] py-[0.3rem] text-caption-med text-gray-7">
           {formatDate(date)}
         </div>

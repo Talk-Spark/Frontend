@@ -29,7 +29,7 @@ const FixedComment = ({
 
     if (!str) {
       // str이 없을 경우 기본 색상 반환
-      return "blue";
+      return "BLUE";
     }
 
     const hash = str

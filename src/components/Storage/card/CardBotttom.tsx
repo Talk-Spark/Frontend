@@ -57,9 +57,9 @@ const CardBottom = ({
     BLUE: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
   };
 
-  const cardColor = putData ? putData.cardThema : oneCard.cardThema;
+  const selectedColor = putData?.cardThema ? putData.cardThema : oneCard.cardThema;
   const categoryColor =
-    cardColor === "BLUE"
+  selectedColor === "BLUE"
       ? "text-body-2-bold text-white"
       : " text-body-2-bold text-gray-12";
 
@@ -93,7 +93,7 @@ const CardBottom = ({
 
   return (
     <div
-      className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[cardColor]}`}
+      className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor]}`}
     >
       <div className={`flex w-[12.6rem] flex-1 flex-col gap-[1.6rem]`}>
         {renderField("취미", "hobby", oneCard.hobby, 15)}
