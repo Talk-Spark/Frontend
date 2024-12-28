@@ -68,9 +68,9 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
               >
                 <ProfileImage
                   color={
-                    color === "mint"
-                      ? "green"
-                      : (color as "pink" | "yellow" | "blue")
+                    color === "MINT"
+                      ? "GREEN"
+                      : (color as "PINK" | "YELLOW" | "BLUE")
                   }
                   isSelected={formData.cardThema === color.toUpperCase()}
                   size={148}

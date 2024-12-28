@@ -30,16 +30,16 @@ type NameCardProps = {
   lookAlike?: string;
   slogan?: string;
   tmi?: string;
-  cardThema?: "pink" | "green" | "yellow" | "blue";
+  cardThema?: "PINK" | "GREEN" | "YELLOW" | "BLUE";
   isFull?: boolean;
   isStorage?: boolean;
 };
 
 const graphicColor: Record<string, StaticImageData> = {
-  pink: pinkGraphic,
-  green: greenGraphic,
-  yellow: yellowGraphic,
-  blue: blueGraphic,
+  PINK: pinkGraphic,
+  GREEN: greenGraphic,
+  YELLOW: yellowGraphic,
+  BLUE: blueGraphic,
 };
 
 const StorageNameCard: React.FC<NameCardProps> = ({
@@ -52,7 +52,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   lookAlike = "",
   slogan = "",
   tmi = "",
-  cardThema = "pink",
+  cardThema = "PINK",
   isFull = false,
   isStorage = false,
 }) => {
@@ -90,7 +90,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   };
 
   const handleColorChange = (
-    newColor: "pink" | "green" | "yellow" | "blue",
+    newColor: "PINK" | "GREEN" | "YELLOW" | "BLUE",
   ) => {
     setSelectedColor(newColor); // 색상 변경만 처리
   };
@@ -105,7 +105,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
         완료
       </button>
       <div className="flex w-full flex-col items-center justify-around gap-[1.4rem]">
-        {(["pink", "yellow", "green", "blue"] as const).map((c) => (
+        {(["PINK", "YELLOW", "GREEN", "BLUE"] as const).map((c) => (
           <button
             key={c}
             onClick={() => handleColorChange(c)}
@@ -119,12 +119,11 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   );
 
   const backColorTop: Record<string, string> = {
-    pink: "bg-gradient-to-b from-[#FFCCE1] to-[#FFA6CA]",
-    green: "bg-gradient-to-b from-[#BBFFF3] to-[#66F5DC]",
-    yellow: "bg-gradient-to-b from-[#FFEFB7] to-[#FEE485]",
-    blue: "bg-gradient-to-b from-[#9CACFF] to-[#6D86F5]",
+    PINK: "bg-gradient-to-b from-[#FFCCE1] to-[#FFA6CA]",
+    GREEN: "bg-gradient-to-b from-[#BBFFF3] to-[#66F5DC]",
+    YELLOW: "bg-gradient-to-b from-[#FFEFB7] to-[#FEE485]",
+    BLUE: "bg-gradient-to-b from-[#9CACFF] to-[#6D86F5]",
   };
-
   const backColorBottom: Record<string, string> = {
     pink: "bg-gradient-to-b from-[#FFA6CA] to-[#FF80B4]",
     green: "bg-gradient-to-b from-[#66F5DC] to-[#11EBC5]",
@@ -134,34 +133,34 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 
   // blue, pink, yellow, green 별 다른 text, graphic 적용
   const graphicImageUrl = graphicColor[selectedColor] || graphicColor.pink;
-  const pencilImageUrl = selectedColor === "blue" ? whitePencil : blackPencil;
+  const pencilImageUrl = selectedColor === "BLUE" ? whitePencil : blackPencil;
   const majorImageUrl =
-    selectedColor === "blue"
+    selectedColor === "BLUE"
       ? whiteMajorIcon
-      : selectedColor === "pink"
+      : selectedColor === "PINK"
         ? pinkMajorIcon
         : blackMajorIcon;
   const mbtiColor =
-    selectedColor === "blue"
+    selectedColor === "BLUE"
       ? "text-sub-blue"
-      : selectedColor === "pink"
+      : selectedColor === "PINK"
         ? "text-main-pink"
         : "text-gray-12";
   const contentTextColor =
-    selectedColor === "blue"
+    selectedColor === "BLUE"
       ? "text-gray-3 text-body-2-med "
       : " text-body-2-med text-gray-10";
 
   const categoryColor =
-    selectedColor === "blue"
+    selectedColor === "BLUE"
       ? "text-body-2-bold text-white"
       : " text-body-2-bold text-gray-12";
   const completeBtn =
-    selectedColor === "blue"
+    selectedColor === "BLUE"
       ? "text-body-1-bold text-gray-1"
       : "text-body-1-bold text-gray-11";
 
-  const nameTextColor = selectedColor === "blue" ? "text-white" : "text-black";
+  const nameTextColor = selectedColor === "BLUE" ? "text-white" : "text-black";
 
   const btnColor = (c: string) =>
     c === "pink"
@@ -181,11 +180,11 @@ const StorageNameCard: React.FC<NameCardProps> = ({
       <div className="">
         <div className="">
           <div
-            className={`"flex flex-col gap-[0.4rem] rounded-[2rem] px-[2.8rem] pt-[2.4rem] ${backColorTop[selectedColor.toLocaleLowerCase()]}`}
+            className={`"flex flex-col gap-[0.4rem] rounded-[2rem] px-[2.8rem] pt-[2.4rem] ${backColorTop[selectedColor]}`}
           >
             <div className="flex h-[4.1rem] justify-between gap-[7rem]">
               <div
-                className={`flex items-center gap-[1.2rem] ${nameTextColor.toLocaleLowerCase}`}
+                className={`flex items-center gap-[1.2rem] ${nameTextColor}`}
               >
                 <span className="text-headline-2">{name}</span>
                 <span className="text-subhead-med">{age}세</span>
@@ -242,7 +241,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
         {/* 두 번째 사각형 - 하단 */}
         {isFull && (
           <div
-            className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor.toLocaleLowerCase()]}`}
+            className={`flex h-[19.2rem] gap-[2.7rem] rounded-[20px] px-[2.8rem] py-[2.4rem] ${backColorBottom[selectedColor]}`}
           >
             <div className="flex flex-1 flex-col gap-[1.6rem]">
               <div className="flex flex-1 flex-col gap-[0.4rem]">
