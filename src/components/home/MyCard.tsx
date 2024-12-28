@@ -33,7 +33,6 @@ const MyCard = () => {
       const response = await instance(`/api/cards/${cardId}`);
       const data = response.data.data;
       setCardInfo(data);
-      console.log("data: ", data);
     } catch (error) {
       console.error("명함 정보를 불러오는데 실패했습니다: ", error);
     }

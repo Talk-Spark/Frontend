@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import whiteMajorIcon from "@/public/storageNameCard/blueMajorIcon.svg";
 import pinkMajorIcon from "@/public/storageNameCard/pinkMajorIcon.svg";
 import blackMajorIcon from "@/public/storageNameCard/blackMajorIcon.svg";
@@ -56,6 +56,11 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   isFull = false,
   isStorage = false,
 }) => {
+  // 초기 색상 설정 (이 코드 없으면 selectedColor PINK로 고정됨)
+  useEffect(() => {
+    setSelectedColor(cardThema);
+  }, [cardThema]);
+
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
   const [selectedColor, setSelectedColor] = useState(cardThema); // 색상 상태
   const putData = {
