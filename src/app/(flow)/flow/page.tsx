@@ -3,6 +3,7 @@
 import { get } from "@/src/apis";
 import AfterSelect from "@/src/components/flow/AfterSelect";
 import BeforeSelect from "@/src/components/flow/BeforeSelect";
+import { getUserData } from "@/src/utils";
 import { useSearchParams } from "next/navigation";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import io  from "socket.io-client";
@@ -34,6 +35,7 @@ const Flow = () => {
   */
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
+  const user = getUserData();
 
   const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost")); //방장 여부
   const [isReady, setIsReady] = useState(false);
@@ -50,7 +52,7 @@ const Flow = () => {
     });
 
     //방에 잘 접속했다는 메세지 전송
-    socketRef.current.emit("joinGame", { roomId });
+    socketRef.current.emit("joinGame", { roomId, accessToken:  user?.accessToken});
     socketRef.current.on("gameJoined", (data) => { //현재 이거 안됨(메세지가 안옴)
       console.log(data); //데이터 없다고 하긴 함
       if (socketRef.current && isHost)

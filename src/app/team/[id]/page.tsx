@@ -15,12 +15,9 @@ import io from "socket.io-client";
 //  참가자들 정보
 interface Participant {
   name: string;
-  //todo: 이거 이따가 변환 필요 (대문자로)
-  //color: "pink" | "green" | "yellow" | "blue";
-  //color: "PINK" | "MINT" | "YELLOW" | "BLUE";
-
   owner: boolean;
   sparkUserId: number;
+  color: "PINK" | "MINT" | "YELLOW" | "BLUE";
 }
 
 /* 방 정보 보기 요청 interface (웹소켓 : response에 맞게 수정하시면 됩니다) */
@@ -36,6 +33,7 @@ interface RoomUpdateProps {
   name: string;
   owner: boolean;
   sparkUserId: number;
+  color: "PINK" | "MINT" | "YELLOW" | "BLUE";
 }
 
 const TeamDetail = () => {
@@ -49,6 +47,9 @@ const TeamDetail = () => {
   const [teamData, setTeamData] = useState<GameRoomDetail | null>(null);
   const [userDatas, setUserDatas] = useState<Participant[] | null>(null);
   const [isLottie, setIsLottie] = useState(false);
+
+  const gameStartRef = useRef(false);
+  const [gameStart, setGameStart] = useState(false);
 
 
   //(only 방장) 게임 시작 버튼
@@ -73,7 +74,6 @@ const TeamDetail = () => {
       });
       
       console.log(socketRef.current);
-      socketRef.current.emit("message",{});
 
       socketRef.current.emit("joinRoom", {
         roomId: id,
@@ -82,14 +82,12 @@ const TeamDetail = () => {
       });
 
       socketRef.current.on("roomUpdate", (arr: RoomUpdateProps[]) => {
-        console.log(arr);
         if (arr.length) setUserDatas(arr);
       });
 
       //게임이 시작되었을 떄
       socketRef.current?.on("startGame", (data: any) => {
-        console.log("gameStart:", data);
-        router.push(`/flow?roomId=${id}`);
+        setGameStart(true);
       });
 
       const handleBeforeUnload = () => {
@@ -105,7 +103,6 @@ const TeamDetail = () => {
         try {
           //const response = await get(`/api/rooms/is-host?roomId=${id}`); //host 여부 받아오는 api
           const response2 = await get(`/api/rooms/${id}`); //방에 대한 정보 받아오는 api
-          console.log("hi:", response2);
           //setIsHost(response.data as boolean);
           setTeamData(response2.data as GameRoomDetail);
         } catch (err) {
@@ -115,33 +112,33 @@ const TeamDetail = () => {
 
       setHostAndRoomData();
 
-      window.addEventListener("beforeunload", handleBeforeUnload);
+      // window.addEventListener("beforeunload", handleBeforeUnload);
 
       return () => {
         if (socketRef.current) {
           //방 퇴장시
-          socketRef.current.emit("leaveRoom", {
-            roomId: id,
-            accessToken: user.accessToken,
-            isHost: true,
-          });
+          console.log(gameStart);
+          if(!gameStartRef){
+            socketRef.current.emit("leaveRoom", {
+              roomId: id,
+              accessToken: user.accessToken,
+              isHost: isHost,
+            });
+          }
           socketRef.current.disconnect();
-          window.removeEventListener("beforeunload", handleBeforeUnload);
+          // window.removeEventListener("beforeunload", handleBeforeUnload);
         }
       };
     }
   }, [user]);
 
   useEffect(()=>{
-    console.log(teamData);
-  },[teamData])
+    gameStartRef.current = gameStart;
+    if(gameStart) router.push(`/flow?roomId=${id}`);
+  },[gameStart])
 
-  useEffect(()=>{
-    console.log(socketRef.current);
-  },[socketRef.current])
-
-  console.log(teamData);
-  console.log(userDatas); //특이하게, 참여자 수가 넘치면 더이상 정보를 못 받아옴 (메세지를 안 넘기는거임)
+  // console.log(teamData);
+  //console.log(userDatas); //특이하게, 참여자 수가 넘치면 더이상 정보를 못 받아옴 (메세지를 안 넘기는거임)
   if (!teamData || !userDatas) {
     return (
       <div>
@@ -185,7 +182,7 @@ const TeamDetail = () => {
                   className="max-w-[(100%-4.8rem)/4] flex-1"
                   style={{ maxWidth: "calc((100% - 4.8rem) / 4)" }}
                 >
-                  <ProfileImage color={"PINK"} isHost={participant.owner}>
+                  <ProfileImage color={participant.color} isHost={participant.owner}>
                     {participant.name}
                   </ProfileImage>
                 </div>
