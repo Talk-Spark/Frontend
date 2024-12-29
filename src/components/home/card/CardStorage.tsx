@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import NameCardComponent from "./NameCardComponent";
 import { instance } from "@/src/apis";
+import { AxiosError } from "axios";
 
 // 팀 내 명함 정보
 export interface StoredCard {
@@ -79,8 +80,8 @@ const CardStorage = () => {
       setTeams(formattedTeams);
       console.log("formattedTeams: ", formattedTeams);
       setError(null);
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+    } catch (error: Error | unknown) {
+      if ((error as AxiosError).response?.status === 404) {
         setError("명함 데이터가 없습니다.");
       } else {
         setError("명함 데이터를 가져오는 중 오류가 발생했습니다.");
