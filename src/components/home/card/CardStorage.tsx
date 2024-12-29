@@ -77,8 +77,12 @@ const CardStorage = () => {
       }));
       setTeams(formattedTeams);
       setError(null);
-    } catch (error) {
-      setError("명함 데이터를 가져오는 중 오류가 발생했습니다.");
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        setError("명함 데이터가 없습니다.");
+      } else {
+        setError("명함 데이터를 가져오는 중 오류가 발생했습니다.");
+      }
     } finally {
       setLoading(false);
     }
