@@ -166,7 +166,7 @@ const TeamDetail = () => {
                 <span className="text-center text-subhead-med">
                   <span className="text-subhead-bold text-main-pink">
                     {userDatas.length}
-                  </span>{" "}
+                  </span>{" / "}
                   {teamData.maxPeople}
                 </span>
               </div>

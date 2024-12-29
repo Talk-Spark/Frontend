@@ -42,6 +42,9 @@ const NameCard: React.FC<NameCardProps> = ({
 
   // 각 카테고리 항목에 대해 상태 가져오기 (active와 hole을 주로 사용)
   const getCategoryStatus = (category: string) => {
+    console.log(category);
+    console.log(selectedCategory);
+
     const isHole = fieldHoles.includes(selectedCategory as FieldType);
 
     if (selectedCategory === category) {
@@ -97,7 +100,7 @@ const NameCard: React.FC<NameCardProps> = ({
           {/* 전공 항목 */}
           <div
             className={`flex w-auto flex-1 items-center gap-[0.4rem] rounded-[0.4rem] py-[0.4rem] ${
-              getCategoryStatus(major) === "active"
+              getCategoryStatus("major") === "active"
                 ? "bg-sub-palePink"
                 : ""
             }`}
@@ -112,7 +115,7 @@ const NameCard: React.FC<NameCardProps> = ({
           {/* MBTI 항목 */}
           <div
             className={`flex flex-1 items-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-              getCategoryStatus(mbti) === "active"
+              getCategoryStatus("mbti") === "active"
                 ? "bg-sub-palePink"
                 : ""
             }`}

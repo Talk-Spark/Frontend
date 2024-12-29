@@ -13,6 +13,7 @@ import Lottie from "lottie-react";
 import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
+import { singleQuestionObjProps } from "@/src/app/(flow)/flow/page";
 
 const STORAGE_CARD = {
   teamName: "팀이름없어용",
@@ -35,7 +36,10 @@ interface AfterSelectProps {
   socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
-  isGameEnd :boolean
+  isGameEnd :boolean;
+  correctedPeople : singleQuestionObjProps[];
+  answer : string;
+  answerCount : number;
 }
 const AfterSelect = ({
   cardStep,
@@ -43,7 +47,10 @@ const AfterSelect = ({
   socketRef,
   roomId,
   isHost,
-  isGameEnd
+  isGameEnd,
+  correctedPeople,
+  answer,
+  answerCount 
 }: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
   const [isAllCorrect, setIsAllCorrect] = useState(true);
@@ -118,33 +125,17 @@ const AfterSelect = ({
                   정답은?
                 </span>
                 <span className="self-stretch text-center text-headline-5 text-black">
-                  D.어쩌구저쩌구가 정답입니다
+                  {answer}
                 </span>
               </div>
 
               <div className="flex w-[32rem] flex-col items-center gap-[2.4rem]">
                 <span className="self-stretch text-center text-headline-5 text-black">
-                  n명이 정답을 맞췄어요!
+                  {`${answerCount}명이 정답을 맞췄어요!`}
                 </span>
                 <div className="grid-row-3 grid w-full grid-cols-4 gap-x-[1.6rem] gap-y-[2rem]">
                   {/*todo: 소켓으로 참여자리스트 가져와서 렌더링하기*/}
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={true}>
-                    안녕하세요dddddddd
-                  </ProfileImage>
-                  <ProfileImage color="yellow" isSelected={true}>
-                    안녕하세요
-                  </ProfileImage>
-                  <ProfileImage isSelected={true}>안녕하세요</ProfileImage>
-                  <ProfileImage color="green" isSelected={false}>
-                    안녕하세요
-                  </ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
+                  {correctedPeople.map((person)=><ProfileImage isSelected={person.correct} color={person.color}>{person.name}</ProfileImage>)}
                 </div>
               </div>
             </article>

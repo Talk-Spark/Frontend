@@ -27,6 +27,11 @@ interface BeforeSelectProps {
   socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
+
+  //socket으로 받아오는 정보들
+  NameCardInfo : NameCardObjProps;
+  quizInfo : QuizDataProps;
+  fieldHoles : FieldType[]
 }
 
 export type FieldType = "mbti" | "hobby" | "lookAlike" | "selfDescription" | "tmi";
@@ -77,48 +82,19 @@ const BeforeSelect = ({
   socketRef,
   roomId,
   isHost,
+  NameCardInfo,
+  quizInfo,
+  fieldHoles
 }: BeforeSelectProps) => {
   const user = getUserData();
  
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
   const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
-  const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
-    //더미데이터
-    teamName: "팀 이름 없음",
-    name: "JunHyuk Kong",
-    age: 18,
-    major: "컴퓨터공학과",
-    mbti: "INTJ",
-    hobby: "축구",
-    lookAlike: "강동원",
-    selfDescription: "안녕하세요 저는 공준혁이라고 합니다",
-    tmi: "카페인이 너무 잘 들어요",
-  });
-  const [quizInfo, setQuizInfo] = useState<QuizDataProps | null>(null);
-  const [fieldHoles, setFieldHoles] = useState<FieldType[] | null>(null);
+  
   const popUpRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    //만약 순서 꼬이면 emit과 on의 순서 바꿔보기
-    //todo: 근데 생각해보니까, 이것도 상위에서 받아서 넘겨야할 듯(그래야 자식 요소에서 컨트롤 가능)
-    socketRef.current.on("question", (profileData : UserProfile, blankData : UserBlanks, QuizData: QuizDataProps, teamName: string) => {
-      
-      setNameCardInfo({
-        teamName: teamName, 
-        name: profileData.name,
-        age: profileData.age,
-        major: profileData.major,
-        mbti: profileData.mbti,
-        hobby: profileData.hobby,
-        lookAlike: profileData.lookAlike,
-        selfDescription: profileData.selfDescription, 
-        tmi: profileData.tmi,
-      });
-      setQuizInfo(QuizData);
-      setFieldHoles(blankData.blanks);
-    });
-
     socketRef.current.emit("getQuestion", { roomId });
 
     const handleClickOutSide = (e: MouseEvent) => {
