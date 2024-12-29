@@ -13,13 +13,13 @@ const Result = () => {
 
   return (
     <div className="mt-[4rem] flex flex-col items-center justify-center gap-[9.2rem]">
-      <div className="flex flex-col items-center justify-center gap-[2rem]">
+      <div className="flex flex-col items-center justify-center gap-[3.6rem]">
         <h2 className="text-headline-2 text-gray-11">방 만들기 성공!</h2>
-        <div className="h-[33.5rem] w-[33.5rem]">
+        <div className="h-[30.3rem] w-[30.3rem]">
           <QrCode
-            cardId={roomId as string}
+            cardId={Number(roomId)}
             name={roomName as string}
-            size={335}
+            size={303}
           />
         </div>
         <button className="flex h-[5.6rem] w-[33.5rem] items-center justify-center gap-[1rem] rounded-[1.2rem] border-[1.5px] border-gray-3 bg-white">
@@ -28,6 +28,7 @@ const Result = () => {
         </button>
       </div>
       <div className="flex flex-col items-center justify-center gap-[1.2rem]">
+        {/* todo: 입장하기 1_방장으로 이동 */}
         <Button variant="pink">시작하기</Button>
         <p
           className="text-body-2-med text-gray-7 underline decoration-solid decoration-1 underline-offset-4"
