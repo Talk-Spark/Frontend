@@ -5,7 +5,7 @@ import AfterSelect from "@/src/components/flow/AfterSelect";
 import BeforeSelect from "@/src/components/flow/BeforeSelect";
 import Header from "@/src/components/Headers/Header";
 import { getUserData } from "@/src/utils";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import io  from "socket.io-client";
 
@@ -79,6 +79,7 @@ const Flow = () => {
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
   const user = getUserData();
+  const router = useRouter();
 
   const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost")); //방장 여부
   const [isReady, setIsReady] = useState(false);
@@ -86,6 +87,9 @@ const Flow = () => {
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
   const [isGameEnd, setIsGameEnd] = useState(false);
   const [correctedPeople, setCorrectedPeople] = useState<singleQuestionObjProps[] | null>(null);
+  const [isAllCorrect, setIsAllCorrect] = useState(false);
+  const [isQuizEnd, setIsQuizEnd] = useState(false);
+  
 
   //소켓에서 받아오는 정보들
   const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
@@ -124,12 +128,17 @@ const Flow = () => {
 
     });
 
-    //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기
+    //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기 - 맞출 사람이 더 남은 경우
     socketRef.current.on("singleResult", (data : any) => {
       console.log(data);
+
+      setIsQuizEnd(true);
+      setIsAllCorrect(false);
     });
     socketRef.current.on("lastResult", (data : any) => {
       console.log(data);
+
+      setIsGameEnd(true);
     });
 
     //todo: 근데 생각해보니까, 이것도 상위에서 받아서 넘겨야할 듯(그래야 자식 요소에서 컨트롤 가능)
@@ -148,10 +157,10 @@ const Flow = () => {
       });
       setQuizInfo(QuizData);
       setFieldHoles(blankData.blanks);
+      setIsBefore(true);
     });
 
-    //todo: 형식 변환될 가능성 있음. (요청해봄)
-    //todo2: 이거 데이터 오면, 해당 데이터를 가지고 AfterSelect로 넘어가는 로직 필요 (아마 부모요소에서 배열을 세팅한다음, isBefore세팅해서 넘어가면 될 듯)
+    //todo: 현재 이 메세지 안옴(서버 문제)
     socketRef.current.on(
       "singleQuestionScoreBoard",
       (data: singleQuestionObjProps[]) => {
@@ -164,8 +173,8 @@ const Flow = () => {
     socketRef.current.on("scores", (data : any) => {
       console.log(data);
       //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
-      //그리고 참고로 초기화도 잘 해줘야함 (로컬 스토리지) -> 아 아닌가? 그냥 그때마다 set할거니까 상관 없을수도?
-      setIsGameEnd(true);
+      router.push("/game-end"); //최종스코어 창으로 이동!
+      localStorage.setItem("finalScores", JSON.stringify(data)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기
     }); 
 
     return () => {
@@ -173,6 +182,14 @@ const Flow = () => {
       socketRef.current = null; //메모리 누수 방지
     };
   }, []);
+
+  useEffect(()=>{
+    if(correctedPeople){
+      const isAllCorrect = correctedPeople.every(person => person.correct === true);
+      setIsAllCorrect(isAllCorrect);
+    }
+    
+  },[correctedPeople])
 
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
@@ -201,10 +218,12 @@ const Flow = () => {
             socketRef={socketRef as MutableRefObject<any>}
             roomId={roomId}
             isHost={isHost}
+            isQuizEnd={isQuizEnd}
             isGameEnd={isGameEnd}
             correctedPeople = {correctedPeople as singleQuestionObjProps[]}
             answer = {quizInfo?.correctAnswer as string}
             answerCount = {correctedPeople?.length as number}
+            isAllCorrect ={isAllCorrect}
           />
         )
       ) : (

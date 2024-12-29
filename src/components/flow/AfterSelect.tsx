@@ -36,10 +36,12 @@ interface AfterSelectProps {
   socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
+  isQuizEnd : boolean;
   isGameEnd :boolean;
   correctedPeople : singleQuestionObjProps[];
   answer : string;
   answerCount : number;
+  isAllCorrect : boolean;
 }
 const AfterSelect = ({
   cardStep,
@@ -47,14 +49,15 @@ const AfterSelect = ({
   socketRef,
   roomId,
   isHost,
+  isQuizEnd,
   isGameEnd,
   correctedPeople,
   answer,
-  answerCount 
+  answerCount,
+  isAllCorrect
 }: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
-  const [isAllCorrect, setIsAllCorrect] = useState(true);
-  const [isQuizEnd, setIsQuizEnd] = useState(false);
+  const [isAllCorrected, setIsAllCorrected] = useState(isAllCorrect);
 
   const router = useRouter();
 
@@ -64,21 +67,16 @@ const AfterSelect = ({
   };
 
   const handleNextQuestion = () => {
-    if (cardStep <= 4) setIsBefore(true);
-    else setIsQuizEnd(true); //개인 카드 공개
+    socketRef.current.emit("next", { roomId });
   };
 
   const handleNextPerson = () => {
     socketRef.current.emit("next", { roomId });
    
-    if (isGameEnd) { //게임 종료 여부는 부모 요소로부터 받아옴(on으로)
-      router.push("/game-end"); //최종스코어 창으로 이동!
-    } else {
-      //맞출 사람이 더 남았을 경우 - 초기화 작업
-      setIsBefore(true);
-      setIsAllCorrect(false);
-      setIsQuizEnd(false);
-    }
+    //최종 스코어 보기
+    if (isGameEnd) { 
+      socketRef.current.emit("getEnd", { roomId });
+    } 
   };
 
   //전부 다 맞췄을 때 로띠 뜨는 것도 구현 필요 + 방장만 클릭 가능한 거 많음.
