@@ -63,6 +63,8 @@ const MyCard = () => {
     fetchCardInfo();
   }, []);
 
+  console.log("cardInfo: ", cardInfo);
+
   return (
     <div className="my-[3.2rem] flex flex-col gap-[1.6rem]">
       <div className="flex justify-between">
@@ -83,7 +85,13 @@ const MyCard = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        {cardInfo && <StorageNameCard {...cardInfo} />}
+        {cardInfo ? (
+          <StorageNameCard oneCard={cardInfo} />
+        ) : (
+          <div className="text-body-2-med text-gray-6">
+            명함 정보를 불러오고 있습니다...
+          </div>
+        )}
       </div>
     </div>
   );
