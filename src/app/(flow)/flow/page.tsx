@@ -3,6 +3,7 @@
 import { get } from "@/src/apis";
 import AfterSelect from "@/src/components/flow/AfterSelect";
 import BeforeSelect from "@/src/components/flow/BeforeSelect";
+import Header from "@/src/components/Headers/Header";
 import { getUserData } from "@/src/utils";
 import { useSearchParams } from "next/navigation";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
@@ -176,7 +177,9 @@ const Flow = () => {
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
-    <main className="flex flex-col items-center bg-gray-1 w-[cal(100% + 4rem)] -mx-[2rem] h-[71.2rem]">
+    <>
+    <Header title="명함 맞추기"/>
+      <main className="flex flex-col items-center bg-gray-1 w-[cal(100% + 4rem)] -mx-[2rem] h-[71.2rem]">
       {isReady ? (
         socketRef && isBefore ? (
           <BeforeSelect
@@ -208,6 +211,8 @@ const Flow = () => {
         <div>로딩중.. 3초만 기다려주세요</div>
       )}
     </main>
+    </>
+
   );
 };
 
