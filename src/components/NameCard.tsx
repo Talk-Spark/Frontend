@@ -1,5 +1,6 @@
 import majorIcon from "@/public/nameCard/major.svg";
 import Image from "next/image";
+import { FieldType } from "./flow/BeforeSelect";
 
 type NameCardProps = {
   teamName: string;
@@ -12,7 +13,8 @@ type NameCardProps = {
   selfDescription: string;
   tmi: string;
   selectedCategory: string | null; // 부모에서 전달받은 상태
-  onCategorySelect: (category: string) => void; // 부모에서 전달받은 상태 변경 함수
+  onCategorySelect?: (category: string) => void; // 부모에서 전달받은 상태 변경 함수
+  fieldHoles : FieldType[];
 };
 
 const NameCard: React.FC<NameCardProps> = ({
@@ -26,7 +28,8 @@ const NameCard: React.FC<NameCardProps> = ({
   selfDescription,
   tmi,
   selectedCategory,
-  onCategorySelect,
+  onCategorySelect = ()=>{},
+  fieldHoles
 }) => {
   // 각 항목의 순서 정의
   const categories = [
@@ -37,63 +40,46 @@ const NameCard: React.FC<NameCardProps> = ({
     { key: "TMI", value: tmi },
   ];
 
-  /////* 여기 부분 부모 컴포넌트로 *////
+  // 각 카테고리 항목에 대해 상태 가져오기 (active와 hole을 주로 사용)
+  const getCategoryStatus = (category: string) => {
+    const isHole = fieldHoles.includes(selectedCategory as FieldType);
 
-  // 컴포넌트 내부에서 상태 관리
-  // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  // // 카테고리 클릭 시 선택 상태 변경
-  // const handleCategorySelect = (category: string) => {
-  //   setSelectedCategory((prevCategory) =>
-  //     prevCategory === category ? null : category,
-  //   );
-  // };
-
-  ///*여기까지 부모 컴포넌트로 *///
-
-  // 각 카테고리 항목에 대해 상태 가져오기
-  const getCategoryStatus = (category: string, value: string | null) => {
     if (selectedCategory === category) {
       return "active";
+    }else if(isHole){
+      return "hole";
+    }else{
+      return "filled";
     }
-    return value ? "filled" : "default";
   };
 
   const getTextColor = (
     category: string,
-    value: string | null,
-    index: number,
   ) => {
-    const selectedIndex = categories.findIndex(
-      (cat) => cat.key === selectedCategory,
-    );
-    if (getCategoryStatus(category, value) === "active") {
+    const categoryStatus = getCategoryStatus(category);
+    if (categoryStatus=== "active") {
       return "text-main-pink";
+    } else if(categoryStatus === "hole"){
+      return "text-gray-7"; //아직 순서가 아니에요 텍스트 색깔
+    } else{
+      return "text-gray-12"; //공개된 내용에 대한 텍스트 색
     }
-
-    if (selectedIndex === -1 || index < selectedIndex) {
-      return "text-gray-12";
-    }
-    return "text-gray-7";
   };
 
+  //todo: 이거 아직 완전하지 않음 (내용 잘 뜨는지 확인 필요)
   const getCategoryValue = (
-    category: string,
-    value: string | null,
-    index: number,
+    category: string, //문자열로 실제 카테고리명을 넘겨야 함
+    value: string | null, //실제 value (근데 상황에 따라서 value를 렌더링 안하기도 함)
   ) => {
-    const selectedIndex = categories.findIndex(
-      (cat) => cat.key === selectedCategory,
-    );
-    if (selectedIndex === -1 || index < selectedIndex) {
-      // 이전 항목은 실제 값 출력
-      return value || <span className="text-gray-5"></span>;
+    const categoryStatus = getCategoryStatus(category);
+
+    if (categoryStatus=== "active") {
+      return <span className="text-gray-5"></span>;
+    } else if(categoryStatus === "hole"){
+      return <span className="text-gray-5">아직 순서가 아니에요!</span>; //아직 순서가 아니에요 텍스트 색
+    } else{
+      return value || <span className="text-gray-5"></span>; //공개된 내용에 대한 텍스트 내용
     }
-    if (index > selectedIndex) {
-      // 이후 항목은 "아직 순서가 아니에요!" 출력
-      return <span className="text-gray-5">아직 순서가 아니에요!</span>;
-    }
-    return <span className="text-gray-5"></span>;
   };
 
   return (
@@ -111,7 +97,7 @@ const NameCard: React.FC<NameCardProps> = ({
           {/* 전공 항목 */}
           <div
             className={`flex w-auto flex-1 items-center gap-[0.4rem] rounded-[0.4rem] py-[0.4rem] ${
-              getCategoryStatus("전공", major) === "active"
+              getCategoryStatus(major) === "active"
                 ? "bg-sub-palePink"
                 : ""
             }`}
@@ -119,26 +105,26 @@ const NameCard: React.FC<NameCardProps> = ({
           >
             <Image src={majorIcon} alt="전공 아이콘" width={24} height={24} />
             <div className="flex-1 gap-[0.4rem] px-[0.5rem] text-right text-body-2-med text-black">
-              {getCategoryStatus("전공", major) === "active" ? "" : major || ""}
+              {getCategoryStatus(major) === "active" ? "" : major || ""}
             </div>
           </div>
 
           {/* MBTI 항목 */}
           <div
             className={`flex flex-1 items-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-              getCategoryStatus("엠비티아이", mbti) === "active"
+              getCategoryStatus(mbti) === "active"
                 ? "bg-sub-palePink"
                 : ""
             }`}
             onClick={() => onCategorySelect("엠비티아이")}
           >
             <div
-              className={`text-body-1-bold ${getTextColor("엠비티아이", mbti, 0)}`}
+              className={`text-body-1-bold ${getTextColor("mbti")}`}
             >
               MBTI
             </div>
             <div className="text-body-1-med text-gray-10">
-              {getCategoryValue("엠비티아이", mbti, 0)}
+              {getCategoryValue("mbti", mbti)}
             </div>
           </div>
         </div>
@@ -150,36 +136,36 @@ const NameCard: React.FC<NameCardProps> = ({
         {/* 취미 항목 */}
         <div
           className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-            getCategoryStatus("취미", hobby) === "active"
+            getCategoryStatus("hobby") === "active"
               ? "bg-sub-palePink"
               : ""
           }`}
           onClick={() => onCategorySelect("취미")}
         >
-          <div className={`text-body-1-bold ${getTextColor("취미", hobby, 1)}`}>
+          <div className={`text-body-1-bold ${getTextColor("hobby")}`}>
             취미
           </div>
           <div className="flex-1 text-right text-body-1-med text-gray-10">
-            {getCategoryValue("취미", hobby, 1)}
+            {getCategoryValue("hobby", hobby)}
           </div>
         </div>
 
         {/* 닮은꼴 항목 */}
         <div
           className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-            getCategoryStatus("닮은꼴", lookAlike) === "active"
+            getCategoryStatus("lookAlike") === "active"
               ? "bg-sub-palePink"
               : ""
           }`}
           onClick={() => onCategorySelect("닮은꼴")}
         >
           <div
-            className={`text-body-1-bold ${getTextColor("닮은꼴", lookAlike, 2)}`}
+            className={`text-body-1-bold ${getTextColor("lookAlike")}`}
           >
             닮은꼴
           </div>
           <div className="flex-1 text-right text-body-1-med text-gray-10">
-            {getCategoryValue("닮은꼴", lookAlike, 2)}
+            {getCategoryValue("lookAlike", lookAlike)}
           </div>
         </div>
 
@@ -188,7 +174,7 @@ const NameCard: React.FC<NameCardProps> = ({
             {/* 나는 이런 사람이야 항목 */}
             <div
               className={`flex flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-                getCategoryStatus("나는 이런 사람이야", selfDescription) ===
+                getCategoryStatus("selfDescription") ===
                 "active"
                   ? "bg-sub-palePink"
                   : ""
@@ -196,33 +182,33 @@ const NameCard: React.FC<NameCardProps> = ({
               onClick={() => onCategorySelect("나는 이런 사람이야")}
             >
               <div
-                className={`text-body-1-bold ${getTextColor("나는 이런 사람이야", selfDescription, 3)}`}
+                className={`text-body-1-bold ${getTextColor("selfDescription")}`}
               >
                 나는 이런 사람이야
               </div>
 
               <div className="flex-1 text-body-1-med tracking-tight">
-                {getCategoryValue("나는 이런 사람이야", selfDescription, 3)}
+                {getCategoryValue("selfDescription", selfDescription)}
               </div>
             </div>
 
             {/* TMI 항목 */}
             <div
               className={`flex flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-                getCategoryStatus("TMI", tmi) === "active"
+                getCategoryStatus("tmi") === "active"
                   ? "bg-sub-palePink"
                   : ""
               }`}
-              onClick={() => onCategorySelect("TMI")}
+              onClick={() => onCategorySelect("tmi")}
             >
               <div
-                className={`text-body-1-bold ${getTextColor("TMI", tmi, 4)}`}
+                className={`text-body-1-bold ${getTextColor("tmi")}`}
               >
                 TMI
               </div>
 
               <div className="flex-1 text-body-1-med tracking-tight">
-                {getCategoryValue("TMI", tmi, 4)}
+                {getCategoryValue("tmi", tmi)}
               </div>
             </div>
           </div>

@@ -29,25 +29,35 @@ interface BeforeSelectProps {
   isHost: boolean;
 }
 
-interface CardDataProps {
-  id: number;
-  kakaoId: string;
-  ownerId: number;
+export type FieldType = "mbti" | "hobby" | "lookAlike" | "selfDescription" | "tmi";
 
-  name: string;
-  age: number;
-  major: string;
-  mbti: string;
-  hobby: string;
-  lookAlike: string;
-  slogan: string;
-  tmi: string;
+//question으로 받아오는 1번째 데이터 타입
+interface UserProfile {
+  id: number; // 사용자 카드의 고유 ID
+  ownerId: number; // 소유자 ID (sparkUserId)
+  name: string; // 이름
+  age: number; // 나이
+  kakaoId: string; // 카카오톡 ID
+  major: string; // 전공
+  mbti: string; // MBTI
+  hobby: string; // 취미
+  lookAlike: string; // 닮은 꼴
+  selfDescription: string; // 자기소개
+  tmi: string; // TMI
+  cardThema: string; // 카드 테마 색상
 }
 
+//question으로 받아오는 2번째 데이터 타입
+interface UserBlanks {
+  sparkUserId: number; // 사용자 ID
+  blanks: FieldType[]; // 빈 필드 목록 - 남아있는 문제들이 올거임
+}
+
+//question으로 받아오는 3번째 데이터 타입
 interface QuizDataProps {
   cardId: number; // 명함 아이디
   cardOwnerId: number; // 명함 주인 회원아이디
-  fieldName: "mbti" | "hobby" | "lookAlike" | "selfDescription" | "tmi"; // 빈칸으로 뚫릴 필드의 이름 (ex: "name", "age") -> mbti, hobby, lookAlike, selfDescription ,tmi
+  fieldName: FieldType; // 빈칸으로 뚫릴 필드의 이름 (ex: "name", "age") -> mbti, hobby, lookAlike, selfDescription ,tmi
   correctAnswer: string; // 정답(보기 번호가 아니고 정답 내용이 들어갑니다. 문제 종류 관계없이 string입니다.)
   options: string[]; //정답 보기들(아마 4개)
 }
@@ -85,34 +95,31 @@ const BeforeSelect = ({
     selfDescription: "안녕하세요 저는 공준혁이라고 합니다",
     tmi: "카페인이 너무 잘 들어요",
   });
-  const [quizInfo, setQuizInfo] = useState<QuizDataProps | null>();
+  const [quizInfo, setQuizInfo] = useState<QuizDataProps | null>(null);
+  const [fieldHoles, setFieldHoles] = useState<FieldType[] | null>(null);
   const popUpRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     //만약 순서 꼬이면 emit과 on의 순서 바꿔보기
-    socketRef.current.on("question", (data) => {
-      console.log(data); //실제로 데이터 형식 보고 데이터 연결하기
-      //그래도 일단 노션에 있는거 믿고 작성
-      const cardData: CardDataProps = data[1];
-      const quizData: QuizDataProps = data[2];
-
+    //todo: 근데 생각해보니까, 이것도 상위에서 받아서 넘겨야할 듯(그래야 자식 요소에서 컨트롤 가능)
+    socketRef.current.on("question", (profileData : UserProfile, blankData : UserBlanks, QuizData: QuizDataProps, teamName: string) => {
+      
       setNameCardInfo({
-        teamName: cardData.slogan, //todo: 수정 필요
-        name: cardData.name,
-        age: cardData.age,
-        major: cardData.major,
-        mbti: cardData.mbti,
-        hobby: cardData.hobby,
-        lookAlike: cardData.lookAlike,
-        selfDescription: cardData.slogan, // todo: 수정 필요
-        tmi: cardData.tmi,
+        teamName: teamName, 
+        name: profileData.name,
+        age: profileData.age,
+        major: profileData.major,
+        mbti: profileData.mbti,
+        hobby: profileData.hobby,
+        lookAlike: profileData.lookAlike,
+        selfDescription: profileData.selfDescription, 
+        tmi: profileData.tmi,
       });
-      setQuizInfo(quizData);
-      setCardStep(CARD_FIELD_NUMBER[quizData.fieldName]);
+      setQuizInfo(QuizData);
+      setFieldHoles(blankData.blanks);
     });
-    socketRef.current.emit("getQuestion", { roomId });
 
-    
+    socketRef.current.emit("getQuestion", { roomId });
 
     const handleClickOutSide = (e: MouseEvent) => {
       if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
@@ -146,12 +153,12 @@ const BeforeSelect = ({
     }
   };
 
-  if (cardStep > 4) {
+  if (cardStep > 4) { //todo: 이제 cardStep 사용안할거임
     //퀴즈 다 맞춘 상태 -> 알맞은 단계로 이어져야 함
     return;
   }
 
-  if (!NameCardInfo || !quizInfo || !popUpRef) return;
+  if (!NameCardInfo || !quizInfo || !popUpRef || !fieldHoles) return;
 
   return (
     <section className="flex h-auto w-[37.5rem] flex-col items-center gap-[2.4rem]">
@@ -167,8 +174,8 @@ const BeforeSelect = ({
             lookAlike={NameCardInfo.lookAlike}
             selfDescription={NameCardInfo.selfDescription}
             tmi={NameCardInfo.tmi}
-            selectedCategory={CARD_FLOW[cardStep]}
-            onCategorySelect={() => alert("hi")}
+            selectedCategory={quizInfo.fieldName}
+            fieldHoles = {fieldHoles}
           />
           <div className="flex gap-[0.5rem]" ref={popUpRef}>
             <div className="relative w-[20px]">

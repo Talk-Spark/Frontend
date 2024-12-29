@@ -53,15 +53,14 @@ const Flow = () => {
 
     //방에 잘 접속했다는 메세지 전송
     socketRef.current.emit("joinGame", { roomId, accessToken:  user?.accessToken});
-    socketRef.current.on("gameJoined", (data) => { //현재 이거 안됨(메세지가 안옴)
-      console.log(data); //데이터 없다고 하긴 함
+    socketRef.current.on("gameJoined", () => { 
       if (socketRef.current && isHost)
         socketRef.current.emit("prepareQuizzes", { roomId });
 
       setTimeout(() => {
-        //3초 대기 후 진행
         setIsReady(true);
-      }, 3000);
+      }, 3000); //3초 대기 후 진행
+
     });
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기
