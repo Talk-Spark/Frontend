@@ -31,15 +31,6 @@ const NameCard: React.FC<NameCardProps> = ({
   onCategorySelect = ()=>{},
   fieldHoles
 }) => {
-  // 각 항목의 순서 정의
-  const categories = [
-    { key: "엠비티아이", value: mbti },
-    { key: "취미", value: hobby },
-    { key: "닮은꼴", value: lookAlike },
-    { key: "나는 이런 사람이야", value: selfDescription },
-    { key: "TMI", value: tmi },
-  ];
-
   // 각 카테고리 항목에 대해 상태 가져오기 (active와 hole을 주로 사용)
   const getCategoryStatus = (category: string) => {
     console.log(category);
@@ -107,7 +98,7 @@ const NameCard: React.FC<NameCardProps> = ({
             onClick={() => onCategorySelect("전공")}
           >
             <Image src={majorIcon} alt="전공 아이콘" width={24} height={24} />
-            <div className="flex-1 gap-[0.4rem] px-[0.5rem] text-right text-body-2-med text-black">
+            <div className="flex-1 gap-[0.4rem] px-[0.5rem] text-left text-body-2-med text-black">
               {getCategoryStatus(major) === "active" ? "" : major || ""}
             </div>
           </div>
@@ -126,7 +117,7 @@ const NameCard: React.FC<NameCardProps> = ({
             >
               MBTI
             </div>
-            <div className="text-body-1-med text-gray-10">
+            <div className="text-body-1-med text-gray-10 text-left">
               {getCategoryValue("mbti", mbti)}
             </div>
           </div>
