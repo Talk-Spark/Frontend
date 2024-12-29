@@ -17,7 +17,7 @@ const Result = () => {
         <h2 className="text-headline-2 text-gray-11">방 만들기 성공!</h2>
         <div className="h-[30.3rem] w-[30.3rem]">
           <QrCode
-            cardId={roomId as string}
+            cardId={Number(roomId)}
             name={roomName as string}
             size={303}
           />

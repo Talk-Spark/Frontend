@@ -21,6 +21,27 @@ interface CardInfo {
   cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 }
 
+type CardDataProps = {
+  // 기본 정보
+  name: string;
+  age: number;
+  major: string;
+  mbti?: string;
+  hobby?: string;
+  lookAlike?: string;
+  slogan?: string;
+  tmi?: string;
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
+};
+
+type MyNameCardProps = CardDataProps & {
+  // 내 명함 response 바디
+  // response body
+  id: number;
+  kakaoId: string;
+  ownerId: number;
+};
+
 const MyCard = () => {
   const [cardInfo, setCardInfo] = useState<CardInfo>();
 
