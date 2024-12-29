@@ -31,7 +31,9 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
   // const [isLoading, setIsLoading] = useState(false);
   const [oneCard, setOneCard] = useState<MyNameCardProps>();
-  const [selectedColor, setSelectedColor] = useState(oneCard?.cardThema);
+  const [selectedColor, setSelectedColor] = useState(
+    oneCard?.cardThema || "PINK",
+  );
 
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
 
