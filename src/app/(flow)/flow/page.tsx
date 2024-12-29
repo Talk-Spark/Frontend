@@ -8,14 +8,14 @@ import { useSearchParams } from "next/navigation";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import io  from "socket.io-client";
 
-export const CARD_FLOW = [
-  "엠비티아이",
-  "취미",
-  "닮은꼴",
-  "나는 이런 사람이야",
-  "TMI",
-] as const;
-export type CardFlowType = (typeof CARD_FLOW)[number];
+// export const CARD_FLOW = [
+//   "엠비티아이",
+//   "취미",
+//   "닮은꼴",
+//   "나는 이런 사람이야",
+//   "TMI",
+// ] as const;
+// export type CardFlowType = (typeof CARD_FLOW)[number];
 
 export interface NameCardObjProps {
   teamName: string;
@@ -124,10 +124,10 @@ const Flow = () => {
     });
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기
-    socketRef.current.on("singleResult", (data) => {
+    socketRef.current.on("singleResult", (data : any) => {
       console.log(data);
     });
-    socketRef.current.on("lastResult", (data) => {
+    socketRef.current.on("lastResult", (data : any) => {
       console.log(data);
     });
 
@@ -160,7 +160,7 @@ const Flow = () => {
     );
 
     // 최종 스코어 가져오기
-    socketRef.current.on("scores", (data) => {
+    socketRef.current.on("scores", (data : any) => {
       console.log(data);
       //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
       //그리고 참고로 초기화도 잘 해줘야함 (로컬 스토리지) -> 아 아닌가? 그냥 그때마다 set할거니까 상관 없을수도?

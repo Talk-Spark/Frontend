@@ -15,8 +15,8 @@ import Image from "next/image";
 import NameCard from "@/src/components/NameCard";
 import Button from "@/src/components/common/Button";
 import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
-import { CardFlowType } from "@/src/app/(flow)/flow/page";
-import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
+// import { CardFlowType } from "@/src/app/(flow)/flow/page";
+// import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
 import { getUserData } from "@/src/utils";
 import { useSearchParams } from "next/navigation";
 

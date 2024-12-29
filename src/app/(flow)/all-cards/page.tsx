@@ -49,7 +49,7 @@ const AllCards = () => {
         style={{ width: "100%", height: "590px" }}
       >
         <SwiperSlide>
-          <StorageNameCard
+          {/* <StorageNameCard
             ownerId={2}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
@@ -63,10 +63,10 @@ const AllCards = () => {
             cardThema={STORAGE_CARD.color}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
         <SwiperSlide>
-          <StorageNameCard
+          {/* <StorageNameCard
             ownerId={3}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
@@ -80,10 +80,10 @@ const AllCards = () => {
             cardThema={"green"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
         <SwiperSlide>
-          <StorageNameCard
+          {/* <StorageNameCard
             ownerId={4}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
@@ -97,10 +97,10 @@ const AllCards = () => {
             cardThema={"pink"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
         <SwiperSlide>
-          <StorageNameCard
+          {/* <StorageNameCard
             ownerId={1}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
@@ -114,7 +114,7 @@ const AllCards = () => {
             cardThema={"blue"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
       </Swiper>
     </section>
