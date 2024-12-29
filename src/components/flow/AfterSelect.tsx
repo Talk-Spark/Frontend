@@ -13,7 +13,7 @@ import Lottie from "lottie-react";
 import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
-import { Socket } from "socket.io-client";
+import { singleQuestionObjProps } from "@/src/app/(flow)/flow/page";
 
 const STORAGE_CARD = {
   teamName: "팀이름없어용",
@@ -33,9 +33,13 @@ const STORAGE_CARD = {
 interface AfterSelectProps {
   cardStep: number;
   setIsBefore: Dispatch<SetStateAction<boolean>>;
-  socketRef: MutableRefObject<Socket>;
+  socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
+  isGameEnd :boolean;
+  correctedPeople : singleQuestionObjProps[];
+  answer : string;
+  answerCount : number;
 }
 const AfterSelect = ({
   cardStep,
@@ -43,11 +47,14 @@ const AfterSelect = ({
   socketRef,
   roomId,
   isHost,
+  isGameEnd,
+  correctedPeople,
+  answer,
+  answerCount 
 }: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
   const [isAllCorrect, setIsAllCorrect] = useState(true);
   const [isQuizEnd, setIsQuizEnd] = useState(false);
-  const [isGameEnd, setIsGameEnd] = useState(true);
 
   const router = useRouter();
 
@@ -63,11 +70,9 @@ const AfterSelect = ({
 
   const handleNextPerson = () => {
     socketRef.current.emit("next", { roomId });
-    //todo: 그냥 다음으로 넘어가는게 아니라, on을 기준으로 판단해야 해서..
-    //매우 중요 todo : 그냥 부모 요소에서 전부 on 해야할 듯!
-    if (isGameEnd) {
-      socketRef.current.on("scores", () => {}); //todo: 아마 부모 요소에서 처리해야할 수도 있음 (최종 스코어 가져오기)
-      router.push("/game-end"); //최종스코어 창으로 이동!;
+   
+    if (isGameEnd) { //게임 종료 여부는 부모 요소로부터 받아옴(on으로)
+      router.push("/game-end"); //최종스코어 창으로 이동!
     } else {
       //맞출 사람이 더 남았을 경우 - 초기화 작업
       setIsBefore(true);
@@ -93,9 +98,9 @@ const AfterSelect = ({
               mbti={STORAGE_CARD.mbti}
               hobby={STORAGE_CARD.hobby}
               lookAlike={STORAGE_CARD.lookAlike}
-              selfDescription={STORAGE_CARD.selfDescription}
+              slogan={STORAGE_CARD.selfDescription}
               tmi={STORAGE_CARD.tmi}
-              color={STORAGE_CARD.color}
+              cardThema={STORAGE_CARD.color}
               isFull={STORAGE_CARD.isFull}
               isStorage={STORAGE_CARD.isStorage}
             />
@@ -105,6 +110,7 @@ const AfterSelect = ({
             <Button
               onClick={handleNextPerson}
               variant={isGameEnd ? "pink" : "black"}
+              disabled={!isGameEnd && !isHost}
             >
               {isGameEnd ? "최종 스코어 보기" : "다음 사람 맞추기"}
             </Button>
@@ -119,33 +125,17 @@ const AfterSelect = ({
                   정답은?
                 </span>
                 <span className="self-stretch text-center text-headline-5 text-black">
-                  D.어쩌구저쩌구가 정답입니다
+                  {answer}
                 </span>
               </div>
 
               <div className="flex w-[32rem] flex-col items-center gap-[2.4rem]">
                 <span className="self-stretch text-center text-headline-5 text-black">
-                  n명이 정답을 맞췄어요!
+                  {`${answerCount}명이 정답을 맞췄어요!`}
                 </span>
                 <div className="grid-row-3 grid w-full grid-cols-4 gap-x-[1.6rem] gap-y-[2rem]">
                   {/*todo: 소켓으로 참여자리스트 가져와서 렌더링하기*/}
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={true}>
-                    안녕하세요dddddddd
-                  </ProfileImage>
-                  <ProfileImage color="yellow" isSelected={true}>
-                    안녕하세요
-                  </ProfileImage>
-                  <ProfileImage isSelected={true}>안녕하세요</ProfileImage>
-                  <ProfileImage color="green" isSelected={false}>
-                    안녕하세요
-                  </ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
-                  <ProfileImage isSelected={false}>안녕하세요</ProfileImage>
+                  {correctedPeople.map((person)=><ProfileImage isSelected={person.correct} color={person.color}>{person.name}</ProfileImage>)}
                 </div>
               </div>
             </article>

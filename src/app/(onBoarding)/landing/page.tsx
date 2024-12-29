@@ -10,14 +10,18 @@ import { instance } from "@/src/apis";
 const Page = () => {
   const router = useRouter();
   /* 내 명함 조회하기 API */
-  // useEffect(() => { // 404 오류남
-  //   const fetchData = async () => {
-  //     const response = await instance.get("/api/cards");
-  //     const cardRes = response.data.data[0];
-  //     if (cardRes) router.push("/home"); //만약 이미 존재한다면 해당 과정 생략
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await instance.get("/api/cards");
+        const cardRes = response.data.data[0];
+        if (cardRes) router.push("/home"); //만약 이미 존재한다면 해당 과정 생략
+      } catch (e) {
+        //console.error(e);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center gap-[4.5rem]">
