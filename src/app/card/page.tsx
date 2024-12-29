@@ -84,6 +84,7 @@ const Card = () => {
           }
         } catch (error) {
           console.log("Error fetching stored cards:", error);
+          setTeamData([]);
         } finally {
           setIsLoading(false);
         }
