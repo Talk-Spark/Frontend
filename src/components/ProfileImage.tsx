@@ -34,6 +34,7 @@ interface ProfileImageProps {
   size?: 36 | 52 | 64 | 68 | 148; // Added size 36px
   backColor?: "gray" | "blue";
   isSecond?: boolean; //명함 맞추기 flow에서 2순위에 사용할 prop
+  hasTransparency?: boolean; // 투명도 적용 여부
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -45,6 +46,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   size = 68,
   backColor = "blue",
   isSecond = false,
+  hasTransparency = true,
 }) => {
   const profileImageUrl = profileImages[color] || profileImages.PINK;
   const crownImageUrl = crownImages[color] || crownImages.PINK;
@@ -130,7 +132,12 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             ? "h-[68px] w-[68px]"
             : "h-[148px] w-[148px]";
 
-  const bgStyle = backColor === "blue" ? "bg-sub-blue-40" : "bg-gray-1";
+  const bgStyle =
+    backColor === "blue"
+      ? hasTransparency
+        ? "bg-sub-blue-40" // 투명도 적용
+        : "bg-[#9CAEF9]" // 투명도 없는 색상
+      : "bg-gray-1";
 
   return (
     <div className="flex flex-col items-center justify-center">
