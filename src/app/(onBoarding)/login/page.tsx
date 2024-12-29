@@ -14,7 +14,7 @@ const page = () => {
   console.log(process.env.NEXT_PUBLIC_REST_API_KEY);
 
   return (
-    <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center gap-[4.5rem]">
+    <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center gap-[1.3rem]">
       <div className="flex flex-col items-center gap-[3.2rem] text-center text-black">
         <div className="text-headline-3">
           어색한 첫 만남,

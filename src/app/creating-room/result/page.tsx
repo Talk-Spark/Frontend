@@ -12,7 +12,7 @@ const Result = () => {
   const roomName = localStorage.getItem("roomName");
 
   return (
-    <div className="mt-[4rem] flex flex-col items-center justify-center gap-[9.2rem]">
+    <div className="mt-[4rem] flex h-[58.4rem] flex-col items-center justify-between">
       <div className="flex flex-col items-center justify-center gap-[3.6rem]">
         <h2 className="text-headline-2 text-gray-11">방 만들기 성공!</h2>
         <div className="h-[30.3rem] w-[30.3rem]">

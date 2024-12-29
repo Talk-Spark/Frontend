@@ -49,7 +49,7 @@ const Step2 = ({ onNext, formData, onChange }: Step2Props) => {
   };
 
   return (
-    <div className="flex h-[61.6rem] flex-col justify-between">
+    <div className="flex h-[58.4rem] flex-col justify-between">
       <div>
         <h2 className="relative mb-[8rem] text-headline-3 text-black">
           총 몇 명인가요?

@@ -49,7 +49,7 @@ const Step1 = ({ onNext, formData, onChange }: Step1Props) => {
   }, []);
 
   return (
-    <div className="flex h-[61.6rem] flex-col justify-between">
+    <div className="flex h-[58.4rem] flex-col justify-between">
       <div>
         <h2 className="relative mb-[8rem] text-headline-3 text-black">
           팀 방 이름은 무엇인가요?
