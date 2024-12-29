@@ -33,9 +33,6 @@ const NameCard: React.FC<NameCardProps> = ({
 }) => {
   // 각 카테고리 항목에 대해 상태 가져오기 (active와 hole을 주로 사용)
   const getCategoryStatus = (category: string) => {
-    console.log(category);
-    console.log(selectedCategory);
-
     const isHole = fieldHoles.includes(selectedCategory as FieldType);
 
     if (selectedCategory === category) {
