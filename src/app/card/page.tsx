@@ -10,11 +10,10 @@ import Modal from "@/src/components/common/Modal";
 import ReadCode from "@/src/components/QrCode/ReadCode";
 import { get, instance } from "@/src/apis";
 import { useRouter } from "next/navigation";
-import router from "next/router";
 
 type CardHolderResponse = {
-  cardHolderId?: number;
-  cardHolderName?: string;
+  cardHolderId: number;
+  cardHolderName: string;
   numOfTeammates: number;
   teamNames: string[];
   bookMark: boolean;
@@ -31,6 +30,18 @@ const Card = () => {
   } | null>(null);
 
   const [teamData, setTeamData] = useState<CardHolderResponse[]>([]);
+  const [activeView, setActiveView] = useState<"mine" | "others">("mine");
+  const [isVisible, setIsVisible] = useState(false); //
+  const [isEdit, setIsEdit] = useState<"edit" | "complete">("edit");
+  const [isModalVisible, setIsModalVisible] = useState(false); // 로그아웃 | 회원탈퇴 모달
+  const [modalAction, setModalAction] = useState<"logout" | "delete" | null>(
+    null,
+  );
+  const [confirmModal, setConfirmModal] = useState(false); // 확정 모달
+  const [isCamera, setIsCamera] = useState(false);
+  const [isNewData, setIsNewData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]); // 선택 박스
 
   /* 정렬 조건에 따른 명함 보관함 속 명함 조회 */
   useEffect(() => {
@@ -55,35 +66,31 @@ const Card = () => {
 
           const queryParam = getQueryParam();
           const response = await get(`/api/storedCards${queryParam}`);
-          console.log(response);
+          // 데이터 잘 들어옴
           // 응답 데이터가 올바른 형식인지 확인
-          const data = response.data as ApiResponse;
 
-          if (data && data.cardHolders) {
-            // 응답 데이터를 TeamData 형식으로 변환
+          const data = response.data.data as ApiResponse;
+          if (data?.cardHolders) {
             setTeamData(data.cardHolders);
+            console.log("teamData:", data.cardHolders);
+          } else {
+            console.log("cardHolders 속성을 찾을 수 없습니다.");
+          }
+
+          if (isNewData) {
+            setIsNewData(true);
+            setIsCamera(false);
           }
         } catch (error) {
-          console.error("Error fetching stored cards:", error);
+          console.log("Error fetching stored cards:", error);
+          setTeamData([]);
         } finally {
           setIsLoading(false);
         }
       }
     };
     fetchStoredCards();
-  }, [sortOption, teamData, searchValue]);
-
-  const [activeView, setActiveView] = useState<"mine" | "others">("mine");
-  const [isVisible, setIsVisible] = useState(false);
-  const [isEdit, setIsEdit] = useState<"edit" | "complete">("edit");
-  const [isModalVisible, setIsModalVisible] = useState(false); // 로그아웃 | 회원탈퇴 모달
-  const [modalAction, setModalAction] = useState<"logout" | "delete" | null>(
-    null,
-  );
-  const [confirmModal, setConfirmModal] = useState(false); // 확정 모달
-  const [isCamera, setIsCamera] = useState(false);
-  const [isNewData, setIsNewData] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  }, [sortOption, searchValue, isNewData, selectedTeamBoxes]);
 
   const handleToggle = (view: "mine" | "others") => {
     setActiveView(view);
@@ -130,6 +137,7 @@ const Card = () => {
     } else if (modalAction === "delete") {
       const user = localStorage.getItem("user");
       if (user) {
+        /* 회원탈퇴 API */
         try {
           const token = getAccessToken();
           const response = await instance.delete(
@@ -142,7 +150,6 @@ const Card = () => {
           console.log(e);
         }
       }
-      /* 회원탈퇴 API */
     }
     router.push("/"); // 메인 홈으로 이동
   };
@@ -156,7 +163,7 @@ const Card = () => {
     if (isCamera) {
       setIsCamera(false);
     } else {
-      window.history.back();
+      router.push("/home");
     }
   };
 
@@ -224,6 +231,8 @@ const Card = () => {
               setSortOption={setSortOption}
               setSearchValue={setSearchValue}
               searchValue={searchValue}
+              selectedTeamBoxes={selectedTeamBoxes}
+              setSelectedTeamBoxes={setSelectedTeamBoxes}
             />
           ) : (
             <MyCard isVisible={isVisible} />

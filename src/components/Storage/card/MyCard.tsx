@@ -24,14 +24,16 @@ type MyNameCardProps = CardDataProps & {
   id: number;
   kakaoId: string;
   ownerId?: number;
-  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
+  // const [isLoading, setIsLoading] = useState(false);
   const [oneCard, setOneCard] = useState<MyNameCardProps>();
-  const [selectedColor, setSelectedColor] = useState(oneCard?.cardThema);
+  const [selectedColor, setSelectedColor] = useState(
+    oneCard?.cardThema || "PINK",
+  );
 
   const btnText = isFlipped ? "내 명함 확인하기" : "내 명함 공유하기";
 
@@ -40,7 +42,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
     const fetchData = async () => {
       try {
         const response = await instance.get("/api/cards");
-        const cardRes = response.data.data[0];
+        const cardRes = response.data.data[response.data.data.length - 1];
 
         if (oneCard !== cardRes) {
           setOneCard(cardRes);
@@ -123,7 +125,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
             >
               <QrCard
                 color={oneCard.cardThema || "PINK"}
-                cardId={oneCard.ownerId || 1}
+                cardId={oneCard.id || 1}
                 name={oneCard.name}
               />
             </div>

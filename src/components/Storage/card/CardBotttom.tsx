@@ -57,9 +57,11 @@ const CardBottom = ({
     BLUE: "bg-gradient-to-b from-[#6D86F5] to-[#3D5BF5]",
   };
 
-  const selectedColor = putData?.cardThema ? putData.cardThema : oneCard.cardThema;
+  const selectedColor = putData?.cardThema
+    ? putData.cardThema
+    : oneCard.cardThema;
   const categoryColor =
-  selectedColor === "BLUE"
+    selectedColor === "BLUE"
       ? "text-body-2-bold text-white"
       : " text-body-2-bold text-gray-12";
 

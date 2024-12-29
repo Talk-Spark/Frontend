@@ -121,9 +121,7 @@ const CardTop = ({
   const nameTextColor =
     putData?.cardThema === "BLUE" ? "text-white" : "text-black";
 
-  const handleColorChange = (
-    newColor: "PINK" | "MINT" | "YELLOW" | "BLUE",
-  ) => {
+  const handleColorChange = (newColor: "PINK" | "MINT" | "YELLOW" | "BLUE") => {
     if (setPutData && putData?.cardThema) {
       setPutData({ ...putData, cardThema: newColor }); // 색상 변경만 처리
     }
@@ -165,12 +163,14 @@ const CardTop = ({
     if (setIsEditing) {
       if (isEditing) {
         try {
-          await instance.put(`/api/cards/${oneCard.ownerId}`, {
+          console.log(putData);
+          const res = await instance.put(`/api/cards/${oneCard.id}`, {
             ...putData,
             cardThema: putData?.cardThema,
           });
+          console.log(res);
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
       }
       setIsEditing(!isEditing); // 편집 상태 토글

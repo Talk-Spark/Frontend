@@ -55,7 +55,7 @@ const Page = () => {
         setGuestDetailData(resData);
         console.log(guestDetailData);
       } catch (error) {
-        console.error("Error fetching guest book data:", error);
+        console.log("Error fetching guest book data:", error);
       }
     }
   };
