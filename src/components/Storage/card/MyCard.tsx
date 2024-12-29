@@ -24,12 +24,12 @@ type MyNameCardProps = CardDataProps & {
   id: number;
   kakaoId: string;
   ownerId?: number;
-  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
 const MyCard = ({ isVisible }: { isVisible: boolean }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
+  // const [isLoading, setIsLoading] = useState(false);
   const [oneCard, setOneCard] = useState<MyNameCardProps>();
   const [selectedColor, setSelectedColor] = useState(oneCard?.cardThema);
 

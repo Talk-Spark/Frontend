@@ -6,8 +6,8 @@ import Modal from "../common/Modal";
 import { instance, put } from "@/src/apis";
 
 interface Team {
-  cardHolderId?: number;
-  cardHolderName?: string;
+  cardHolderId: number;
+  cardHolderName: string;
   numOfTeammates: number;
   teamNames: string[];
   bookMark: boolean;
@@ -41,6 +41,9 @@ type NameCardProps = GuestBookProps & {
   isNewData?: boolean;
   setIsNewData?: (value: boolean) => void;
   setIsCamera?: (value: boolean) => void;
+  searchValue: string;
+  selectedTeamBoxes?: number[];
+  setSelectedTeamBoxes?: (value: number[]) => void;
 };
 
 // type SearchAndGetCardProps = GuestBookProps | NameCardProps;
@@ -56,14 +59,13 @@ const SearchAndGetCard = (props: NameCardProps) => {
     isLoading,
     setIsLoading,
     setSortOption,
-    isNewData,
-    setIsNewData,
     setIsCamera,
     setSearchValue,
     searchValue,
+    selectedTeamBoxes,
+    setSelectedTeamBoxes,
   } = props;
 
-  const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]);
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
   const [toggleFav, setToggleFav] = useState<number | null>(null);
@@ -76,7 +78,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
   };
 
   useEffect(() => {
-    if (isEdit === "edit") {
+    if (isEdit === "edit" && setSelectedTeamBoxes) {
       setSelectedTeamBoxes([]);
     }
   }, [isEdit]);
@@ -86,24 +88,29 @@ const SearchAndGetCard = (props: NameCardProps) => {
     if (isEdit === "edit") {
       return;
     }
-
-    if (selectedTeamBoxes.includes(index)) {
-      // 기존 팀 박스 선택/해제 처리
-      setSelectedTeamBoxes(selectedTeamBoxes.filter((item) => item !== index));
-    } else {
-      setSelectedTeamBoxes([...selectedTeamBoxes, index]);
+    if (selectedTeamBoxes && setSelectedTeamBoxes) {
+      if (selectedTeamBoxes.includes(index)) {
+        // 기존 팀 박스 선택/해제 처리
+        setSelectedTeamBoxes(
+          selectedTeamBoxes.filter((item) => item !== index),
+        );
+      } else {
+        setSelectedTeamBoxes([...selectedTeamBoxes, index]);
+      }
     }
   };
 
   const handleDeleteSelected = async () => {
-    if (teamData && setTeamData && setIsLoading) {
-      setIsLoading(true);
+    console.log(isLoading);
+    if (teamData && setTeamData && selectedTeamBoxes && setSelectedTeamBoxes) {
+      console.log("아이디");
       /* 보관된 명함 삭제 (선택)) API */
       try {
         // 선택된 팀 Id
-        const selectedTeamIds = selectedTeamBoxes.map(
+        const selectedTeamIds = selectedTeamBoxes?.map(
           (index) => teamData[index].cardHolderId,
         );
+        console.log(selectedTeamIds);
 
         // 각 선택된 cardId에 대해 DELETE 요청 보내기
         const deleteRequests = selectedTeamIds.map((cardHolderId) =>
@@ -115,15 +122,20 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
         // 요청이 모두 완료되면 선택된 팀 박스를 초기화하고 모달을 닫기
         setSelectedTeamBoxes([]);
-        setTeamData([]);
         setIsModal(false);
       } catch (error) {
         console.error("삭제 중 오류 발생:", error);
       }
-      setIsLoading(false);
-    } else if (roomData && setIsLoading && setRoomData) {
+    } else if (
+      roomData &&
+      setIsLoading &&
+      setRoomData &&
+      !isLoading &&
+      selectedTeamBoxes &&
+      setSelectedTeamBoxes
+    ) {
       setIsLoading(true);
-      /* 보관된 명함 삭제 (선택)) API */
+      /* 보관된 방명록 삭제 (선택)) API */
       try {
         // 선택된 방명록 Id
         const selectedRoomIds = selectedTeamBoxes.map(
@@ -190,24 +202,25 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   const handleDeleteAll = async () => {
     try {
-      /* 보관된 명함 삭제하기 (전체)  API */
-      if (ver === "명함" && teamData && setTeamData) {
-        const deleteRequests = teamData.map((data) =>
-          instance.delete(`/api/storedCard/${data.cardHolderId}`),
-        );
-        await Promise.all(deleteRequests);
+      if (setSelectedTeamBoxes) {
+        /* 보관된 명함 삭제하기 (전체)  API */
+        if (ver === "명함" && teamData && setTeamData) {
+          // const deleteRequests = teamData.map((data) =>
+          //   instance.delete(`/api/storedCard/${data.cardHolderId}`),
+          // );
+          // await Promise.all(deleteRequests);
+          setTeamData([]);
+        } else if (ver === "방명록" && roomData && setRoomData) {
+          /* 방명록 삭제하기  API */
+          const deleteRequests = roomData.map((data) =>
+            instance.delete(`/api/guest-books/${data.roomId}`),
+          );
+          await Promise.all(deleteRequests);
+          setRoomData([]);
+        }
 
-        setTeamData([]);
-      } else if (ver === "방명록" && roomData && setRoomData) {
-        /* 방명록 삭제하기  API */
-        const deleteRequests = roomData.map((data) =>
-          instance.delete(`/api/guest-books/${data.roomId}`),
-        );
-        await Promise.all(deleteRequests);
-        setRoomData([]);
+        setSelectedTeamBoxes([]);
       }
-
-      setSelectedTeamBoxes([]);
       setIsModal(false);
     } catch (e) {
       console.error(e);
@@ -230,7 +243,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   return (
     <div className="w-full">
-      <div className="w-[calc(100% - 4rem)] mx-[2rem]">
+      <div className="w-[calc(100% - 4rem)] mx-[2rem] pb-[15rem]">
         <SearchInput
           setSearchValue={setSearchValue}
           searchValue={searchValue}

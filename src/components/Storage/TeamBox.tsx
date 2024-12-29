@@ -54,14 +54,17 @@ const TeamBox = (props: TeamBoxProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isNewData && index === 0 && !isLoading && setIsNewData) {
+    if (isNewData && setIsNewData) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
-      setIsNewData(false);
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setBgColor("bg-gray-1");
+        setIsNewData(false);
       }, 3000);
+
+      // 타이머 정리
+      return () => clearTimeout(timer);
     }
-  }, [isNewData]);
+  }, [isNewData, index]);
 
   // 선택되었을때 메인 컬러
   const boxBgColor = isSelected

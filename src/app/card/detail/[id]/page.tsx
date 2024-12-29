@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import { instance, put } from "@/src/apis";
 
 type OthersNameCardProps = {
-  storedCardId?: number;
+  storedCardId: number;
   name: string;
   age: number;
   major: string;
@@ -22,19 +22,47 @@ type OthersNameCardProps = {
   slogan?: string;
   tmi?: string;
 
-
-  bookMark?: boolean;
+  bookMark: boolean;
   cardHolderName?: string;
   cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
-
 };
 
+// const defaultCard
 const DetailCard = () => {
   const [isFav, setIsFav] = useState(false); // 여기 즐겨찾기 put api 구현 필요
   const [currentIndex, setCurrentIndex] = useState(0);
   const slickRef = useRef<Slider | null>(null);
   const { id } = useParams();
-  const [otherCards, setOtherCards] = useState<OthersNameCardProps[]>([]);
+  const [otherCards, setOtherCards] = useState<OthersNameCardProps[]>([
+    // {
+    //   storedCardId: 2,
+    //   name: "박승범",
+    //   age: 24,
+    //   major: "컴퓨터공학과",
+    //   mbti: "ISTJ",
+    //   hobby: "코딩",
+    //   lookAlike: "너구리",
+    //   slogan: "개발자가 되",
+    //   tmi: "TalkSpark!!!",
+    //   cardThema: "PINK",
+    //   bookMark: false,
+    //   cardHolderName: "멋사우주최강",
+    // },
+    // {
+    //   storedCardId: 3,
+    //   name: "박승범",
+    //   age: 24,
+    //   major: "컴퓨터공학과",
+    //   mbti: "ISTJ",
+    //   hobby: "코딩",
+    //   lookAlike: "너구리",
+    //   slogan: "개발자가 되",
+    //   tmi: "TalkSpark!!!",
+    //   cardThema: "MINT",
+    //   bookMark: false,
+    //   cardHolderName: "멋사우주최강",
+    // },
+  ]);
 
   useEffect(() => {
     if (id) {
@@ -42,24 +70,23 @@ const DetailCard = () => {
       const getOthers = async () => {
         try {
           const res = await instance.get(`/api/storedCard/${id}`);
-          if (res.data) {
-            setOtherCards(res.data);
+          if (res.data.data) {
+            setOtherCards(res.data.data);
+            console.log(res.data.data);
           }
         } catch (e) {
-          console.error(e);
+          console.log(e);
         }
       };
       getOthers();
     }
-  }, []);
-
-  useEffect(() => {
-    /* 보관된 명함에 대한 즐겨찾기 PUT */
-    const putFav = async () => {
-      await put(`/api/storedCard/${id}`);
-    };
-    putFav();
+    console.log(otherCards);
   }, [isFav]);
+
+  const putFav = async () => {
+    await put(`/api/storedCard/${id}`);
+    setIsFav(!isFav);
+  };
 
   const previous = useCallback(() => {
     slickRef.current?.slickPrev();
@@ -88,17 +115,17 @@ const DetailCard = () => {
       {/* 즐겨찾기 */}
       <div className="mb-[2rem] mt-[1.6rem] flex w-[37.5rem] flex-col items-center justify-center gap-[0.8rem]">
         <Image
-          src={isFav ? favPinkStar : favStar}
-          onClick={() => setIsFav(!isFav)}
+          src={otherCards[0]?.bookMark ? favPinkStar : favStar}
+          onClick={() => putFav()}
           alt="즐겨찾기"
         />
         <span className="text-headline-5">{otherCards[0]?.cardHolderName}</span>
       </div>
       {/* 슬라이더 */}
       <div className="h-[60.3rem] w-[50rem]">
-        <Slider {...sliderSettings} ref={slickRef}>
-          {otherCards &&
-            otherCards.map((card, index) => (
+        {otherCards && otherCards.length > 1 ? (
+          <Slider {...sliderSettings} ref={slickRef}>
+            {otherCards.map((card, index) => (
               <div key={card.storedCardId} className="flex justify-center">
                 <div
                   className={`${
@@ -115,7 +142,16 @@ const DetailCard = () => {
                 </div>
               </div>
             ))}
-        </Slider>
+          </Slider>
+        ) : (
+          <div className="flex justify-center">
+            <StorageNameCard
+              oneCard={otherCards[0]}
+              isFull={true}
+              isStorage={false}
+            />
+          </div>
+        )}
         <Arrow
           otherCards={otherCards}
           previous={previous}

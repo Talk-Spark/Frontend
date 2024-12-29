@@ -12,7 +12,6 @@ const Page = () => {
 
   const handleCompleteClick = () => {
     setIsEdit((prev) => (prev === "edit" ? "complete" : "edit"));
-    setIsLoading(false); // api 연결 시 삭제
   };
 
   type RoomData = {
