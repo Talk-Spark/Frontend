@@ -253,8 +253,8 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   const deleteModal = (type: "selected" | "all") => {
     setDeleteType(type);
+    setIsModal(true);
     // if (type === "selected") {
-      setIsModal(true);
     // }
     // else if (type === "all") {
     //   handleDeleteAll();

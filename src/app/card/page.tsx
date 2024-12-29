@@ -66,8 +66,7 @@ const Card = () => {
 
           const queryParam = getQueryParam();
           const response = await get(`/api/storedCards${queryParam}`);
-
-          console.log(response.data.data); // 데이터 잘 들어옴
+          // 데이터 잘 들어옴
           // 응답 데이터가 올바른 형식인지 확인
 
           const data = response.data.data as ApiResponse;
@@ -80,7 +79,6 @@ const Card = () => {
 
           if (isNewData) {
             setIsNewData(true);
-            console.log("새 데이터드러옴");
             setIsCamera(false);
           }
         } catch (error) {
@@ -165,7 +163,7 @@ const Card = () => {
     if (isCamera) {
       setIsCamera(false);
     } else {
-      window.history.back();
+      router.push("/home");
     }
   };
 
