@@ -19,6 +19,7 @@ import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
 // import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
 import { getUserData } from "@/src/utils";
 import { useSearchParams } from "next/navigation";
+import { get } from "@/src/apis";
 
 interface BeforeSelectProps {
   cardStep: number;
@@ -75,6 +76,10 @@ export const CARD_FIELD_NUMBER = {
   tmi: 4,
 } as const;
 
+function splitByNewline(input : string) {
+  return input.split('\n');
+}
+
 const BeforeSelect = ({
   cardStep,
   setIsBefore,
@@ -91,6 +96,7 @@ const BeforeSelect = ({
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
   const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
+  const [questionTips, setQuestionTips] = useState<string[]>([]);
   
   const popUpRef = useRef<HTMLDivElement | null>(null);
 
@@ -134,6 +140,21 @@ const BeforeSelect = ({
     return;
   }
 
+  useEffect(()=>{
+    if(quizInfo){
+      const getQuestionTip = async() => {
+        try{
+          const response = await get(`/api/rooms/question-tip?field=${(quizInfo.fieldName).toUpperCase()}`)
+          const questionTips = splitByNewline(response.data as string);
+          setQuestionTips(questionTips);
+        }catch(e){
+          console.log(e);
+        }
+      }
+      getQuestionTip();
+    }
+  },[quizInfo])
+
   if (!NameCardInfo || !quizInfo || !popUpRef || !fieldHoles) return;
 
   return (
@@ -164,8 +185,8 @@ const BeforeSelect = ({
                     backgroundSize: "cover",
                   }}
                 >
-                  <span>{`1. 질문예시입니다질문예시입니다질문예시입니다질문예시입니\n`}</span>
-                  <span>{`2. 질문예시입니다질문예시입니다질문예시입니다질문예시입니\n`}</span>
+                  <span>{`1. ${questionTips[0]}\n`}</span>
+                  {questionTips[1] && <span>{`2. ${questionTips[1]}\n`}</span>}
                 </div>
               )}
             </div>
