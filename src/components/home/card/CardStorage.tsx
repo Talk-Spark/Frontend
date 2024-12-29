@@ -56,11 +56,12 @@ const CardStorage = () => {
 
       const data = response.data;
       console.log("data: ", data);
+      console.log("data.data: ", data.data);
       // 팀 별로 맵핑
-      const formattedTeams = data.map((team: TeamResponse) => ({
+      const formattedTeams = data.data.map((team: TeamResponse) => ({
         teamName: team.teamName,
         // 팀 내 명함 맵핑
-        storageCard: team.cards.map((card) => ({
+        storageCards: team.cards.map((card) => ({
           storedCardId: card.storedCardId,
           name: card.name,
           age: card.age,
@@ -76,6 +77,7 @@ const CardStorage = () => {
         })),
       }));
       setTeams(formattedTeams);
+      console.log("formattedTeams: ", formattedTeams);
       setError(null);
     } catch (error: any) {
       if (error.response?.status === 404) {
@@ -92,6 +94,8 @@ const CardStorage = () => {
     fetchStoredCards();
   }, []);
 
+  console.log("teams: ", teams);
+
   if (loading) {
     return <div className="text-body-1-med text-gray-7">로딩 중...</div>;
   }
@@ -107,7 +111,7 @@ const CardStorage = () => {
         <div key={team.teamName}>
           <NameCardComponent
             name={team.teamName}
-            storedCards={team.storedCards}
+            storedCards={team.storageCards || []}
           />
         </div>
       ))}

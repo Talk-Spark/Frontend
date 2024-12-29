@@ -23,6 +23,8 @@ const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
     backgroundPosition: "center",
   };
 
+  console.log("storedCards: ", storedCards);
+
   return (
     <div
       className="flex h-[177px] w-[180px] flex-col gap-[1.2rem] bg-cover pt-[1.6rem]"
