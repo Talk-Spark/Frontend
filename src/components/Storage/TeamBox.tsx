@@ -34,6 +34,8 @@ interface TeamBoxProps {
   setIsNewData?: (value: boolean) => void;
   isLoading?: boolean;
   ver: "명함" | "방명록";
+  toggleFav: number;
+  setIsToggle: (value: boolean) => void;
 }
 
 const TeamBox = (props: TeamBoxProps) => {
@@ -48,12 +50,13 @@ const TeamBox = (props: TeamBoxProps) => {
     setToggleFav,
     setIsNewData,
     ver,
+    toggleFav,
+    setIsToggle,
   } = props;
   const [bgColor, setBgColor] = useState("bg-gray-1");
   const router = useRouter();
 
   useEffect(() => {
-    console.log(isNewData);
     if (isNewData && setIsNewData && index === 0) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
       const timer = setTimeout(() => {
@@ -121,7 +124,13 @@ const TeamBox = (props: TeamBoxProps) => {
 
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setToggleFav(index);
+
+    const favIndex = team?.cardHolderId || room?.roomId || 0;
+    if (toggleFav === favIndex) {
+      setIsToggle(true);
+    }
+    setToggleFav(favIndex);
+    // const favIndex = team?.cardHolderId ?? room?.roomId ?? 0;
   };
 
   return (

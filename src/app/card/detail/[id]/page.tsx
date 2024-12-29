@@ -33,54 +33,30 @@ const DetailCard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const slickRef = useRef<Slider | null>(null);
   const { id } = useParams();
-  const [otherCards, setOtherCards] = useState<OthersNameCardProps[]>([
-    // {
-    //   storedCardId: 2,
-    //   name: "박승범",
-    //   age: 24,
-    //   major: "컴퓨터공학과",
-    //   mbti: "ISTJ",
-    //   hobby: "코딩",
-    //   lookAlike: "너구리",
-    //   slogan: "개발자가 되",
-    //   tmi: "TalkSpark!!!",
-    //   cardThema: "PINK",
-    //   bookMark: false,
-    //   cardHolderName: "멋사우주최강",
-    // },
-    // {
-    //   storedCardId: 3,
-    //   name: "박승범",
-    //   age: 24,
-    //   major: "컴퓨터공학과",
-    //   mbti: "ISTJ",
-    //   hobby: "코딩",
-    //   lookAlike: "너구리",
-    //   slogan: "개발자가 되",
-    //   tmi: "TalkSpark!!!",
-    //   cardThema: "MINT",
-    //   bookMark: false,
-    //   cardHolderName: "멋사우주최강",
-    // },
-  ]);
+  const [otherCards, setOtherCards] = useState<OthersNameCardProps[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      /* 팀 명함 조회하기 */
-      const getOthers = async () => {
-        try {
-          const res = await instance.get(`/api/storedCard/${id}`);
-          if (res.data.data) {
-            setOtherCards(res.data.data);
-            console.log(res.data.data);
+    if (!isLoading) {
+      setIsLoading(true);
+      if (id) {
+        console.log(id);
+        /* 팀 명함 조회하기 */
+        const getOthers = async () => {
+          try {
+            const res = await instance.get(`/api/storedCard/${id}`);
+            if (res.data.data) {
+              setOtherCards(res.data.data);
+              console.log(res.data.data);
+            }
+          } catch (e) {
+            console.log(e);
           }
-        } catch (e) {
-          console.log(e);
-        }
-      };
-      getOthers();
+        };
+        getOthers();
+      }
+      setIsLoading(false);
     }
-    console.log(otherCards);
   }, [isFav]);
 
   const putFav = async () => {
@@ -109,6 +85,10 @@ const DetailCard = () => {
     initialSlide: 0,
     afterChange: (index: number) => setCurrentIndex(index),
   };
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center justify-center overflow-hidden pb-[4rem]">

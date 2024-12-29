@@ -5,7 +5,6 @@ import CardTop from "./Storage/card/CardTop";
 import CardBottom from "./Storage/card/CardBotttom";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
-import { StaticImageData } from "next/image";
 
 type CardDataProps = {
   // 기본 정보
@@ -33,7 +32,7 @@ type MyNameCardProps = CardDataProps & {
 };
 
 type PutCardProps = CardDataProps & {
-  // 내 명함 req putDataputData
+  // 내 명함 req putData
   sparkUserId?: number;
 };
 
@@ -55,20 +54,8 @@ type OtherCardProps = CardDataProps & {
   cardHolderName?: string;
 };
 
-const defaultCard: MyNameCardProps = {
-  // 기본값
-  id: 0,
-  kakaoId: "",
-  ownerId: 0,
-  name: "이름",
-  age: 0,
-  major: "",
-  cardThema: "PINK",
-  storedCardId: 1,
-};
-
 const StorageNameCard: React.FC<NameCardProps> = ({
-  oneCard = defaultCard,
+  oneCard,
   isFull = false,
   isStorage = false,
   isEditing,
@@ -77,17 +64,10 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 }) => {
   const [putData, setPutData] = useState<PutCardProps>({
     sparkUserId: oneCard?.ownerId,
-    name: oneCard.name,
-    age: oneCard.age,
-    major: oneCard.major,
-    hobby: oneCard.hobby,
-    lookAlike: oneCard.lookAlike,
-    mbti: oneCard.mbti,
-    tmi: oneCard.tmi,
-    slogan: oneCard.slogan,
-    cardThema: oneCard.cardThema,
+    ...oneCard,
   });
   const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
+  console.log(oneCard);
 
   const cardRef = useRef<HTMLDivElement>(null); // Ref to capture the entire card
 
@@ -118,10 +98,14 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   };
 
   useEffect(() => {
-    if (setSelectedColor && putData) {
-      setSelectedColor(putData?.cardThema);
+    if (setSelectedColor) {
+      if (putData) {
+        setSelectedColor(putData?.cardThema);
+      } else if (oneCard) {
+        setSelectedColor(oneCard.cardThema);
+      }
     }
-  }, [putData]);
+  }, [putData, oneCard]);
 
   const contentTextColor =
     selectedColor === "BLUE"

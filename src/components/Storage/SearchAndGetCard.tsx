@@ -70,9 +70,9 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
-  const [toggleFav, setToggleFav] = useState<number | null>(null);
+  const [toggleFav, setToggleFav] = useState<number>(0);
   const dataLength = teamData ? teamData?.length : roomData?.length;
-
+  const [isToggle, setIsToggle] = useState(false); // 같은 박스 연속 선택을 고려
   const addCardBtn = () => {
     if (ver === "명함" && setIsCamera) {
       setIsCamera(true); // setIsCamera가 정의되어 있을 때만 호출
@@ -165,22 +165,30 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   useEffect(() => {
     if (toggleFav !== null) {
+      console.log(isToggle);
       if (teamData && setTeamData) {
         /* 보관된 명함에 대한 즐겨찾기 PUT */
-        const selectedTeam = teamData[toggleFav];
-        if (!selectedTeam) return;
-
+        // const selectedTeam = teamData[toggleFav];
+        // if (!selectedTeam) return;
         setTeamData((prevData) =>
           prevData.map((team) =>
-            team.cardHolderName === selectedTeam.cardHolderName
+            team.cardHolderId === toggleFav
               ? { ...team, bookMark: !team.bookMark }
               : team,
           ),
         );
-        const putFav = async () => {
-          await put(`/api/storedCard/${selectedTeam.cardHolderId}`);
+        if (isToggle) {
+          setIsToggle(false);
+        }
+
+        const putFav = async (favId: number) => {
+          await put(`/api/storedCard/${favId}`);
         };
-        putFav();
+
+        if (toggleFav) {
+          putFav(toggleFav);
+        }
+        setToggleFav(0);
       } else if (roomData && setRoomData) {
         /* 보관된 방명록에 대한 즐겨찾기 PUT (배열) */
         const selectedTeam = roomData[toggleFav];
@@ -200,25 +208,39 @@ const SearchAndGetCard = (props: NameCardProps) => {
         putFav();
       }
     }
-  }, [toggleFav]);
+  }, [toggleFav, isToggle]);
 
   const handleDeleteAll = async () => {
     try {
       if (setSelectedTeamBoxes) {
         /* 보관된 명함 삭제하기 (전체)  API */
         if (ver === "명함" && teamData && setTeamData) {
-          // const deleteRequests = teamData.map((data) =>
-          //   instance.delete(`/api/storedCard/${data.cardHolderId}`),
-          // );
-          // await Promise.all(deleteRequests);
-          setTeamData([]);
-        } else if (ver === "방명록" && roomData && setRoomData) {
-          /* 방명록 삭제하기  API */
-          const deleteRequests = roomData.map((data) =>
-            instance.delete(`/api/guest-books/${data.roomId}`),
+          const deleteRequests = teamData.map((data) =>
+            instance.delete(`/api/storedCard/${data.cardHolderId}`),
           );
           await Promise.all(deleteRequests);
-          setRoomData([]);
+          // 모든 박스가 이미 선택된 상태인지 확인
+          // if (selectedTeamBoxes?.length === teamData.length) {
+          //   setSelectedTeamBoxes([]); // 선택 해제
+          // } else {
+          //   console.log(teamData)
+          //   const allIndexes = teamData.map((_, index) => index); // 모든 박스의 인덱스 생성
+          //   setSelectedTeamBoxes(allIndexes); // 모든 박스를 선택
+          //   console.log(selectedTeamBoxes);
+          // }
+        } else if (ver === "방명록" && roomData && setRoomData) {
+          /* 방명록 삭제하기  API */
+          // const deleteRequests = roomData.map((data) =>
+          //   instance.delete(`/api/guest-books/${data.roomId}`),
+          // );
+          // await Promise.all(deleteRequests);
+          // setRoomData([]);
+          if (selectedTeamBoxes?.length === roomData.length) {
+            setSelectedTeamBoxes([]); // 선택 해제
+          } else {
+            const allIndexes = roomData.map((_, index) => index); // 모든 박스의 인덱스 생성
+            setSelectedTeamBoxes(allIndexes); // 모든 박스를 선택
+          }
         }
 
         setSelectedTeamBoxes([]);
@@ -231,7 +253,12 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   const deleteModal = (type: "selected" | "all") => {
     setDeleteType(type);
-    setIsModal(true);
+    // if (type === "selected") {
+      setIsModal(true);
+    // }
+    // else if (type === "all") {
+    //   handleDeleteAll();
+    // }
   };
 
   const handleConfirmDelete = () => {
@@ -276,12 +303,14 @@ const SearchAndGetCard = (props: NameCardProps) => {
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
                   index={index}
-                  setToggleFav={() => setToggleFav(index)}
+                  setToggleFav={setToggleFav}
                   team={team}
                   isLoading={isLoading}
                   ver={ver}
                   isNewData={isNewData}
                   setIsNewData={setIsNewData}
+                  toggleFav={toggleFav}
+                  setIsToggle={setIsToggle}
                 />
               ))
             : roomData?.map((room, index) => (
@@ -291,10 +320,12 @@ const SearchAndGetCard = (props: NameCardProps) => {
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
                   index={index}
-                  setToggleFav={() => setToggleFav(index)}
+                  setToggleFav={setToggleFav}
                   isLoading={isLoading}
                   {...(ver === "방명록" ? { room } : {})}
                   ver={ver}
+                  toggleFav={toggleFav}
+                  setIsToggle={setIsToggle}
                 />
               ))}
         </div>
@@ -320,7 +351,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
       )}
       {ver === "명함" && (
         <div
-          className="fixed bottom-0 flex h-[13rem] w-full max-w-[76.8rem] justify-center"
+          className="fixed bottom-0 flex h-[16.2rem] w-full max-w-[76.8rem] justify-center"
           style={{
             background:
               "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
