@@ -37,19 +37,6 @@ const HeaderWrapper = () => {
         button2Type: "next",
         button2Action: () => {},
       };
-      // } else if (pathname === "/card") {
-      //   return {
-      //     showButton1: true,
-      //     title: "명함 보관함",
-      //     button2Type: isEditing ? "complete" : "edit", // 편집 상태에 따라 버튼 타입 변경
-      //     button2Action: isEditing ? handleCompleteClick : handleEditClick,
-      //   };
-      // } else if (pathname.startsWith("/card/camera")) {
-      return {
-        showButton1: true,
-        title: "명함 추가하기",
-        button2Action: () => {},
-      };
     } else if (pathname.startsWith("/card/detail")) {
       return {
         showButton1: true,

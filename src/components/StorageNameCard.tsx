@@ -5,7 +5,6 @@ import CardTop from "./Storage/card/CardTop";
 import CardBottom from "./Storage/card/CardBotttom";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
-import { StaticImageData } from "next/image";
 
 type CardDataProps = {
   // 기본 정보
@@ -45,7 +44,7 @@ type NameCardProps = {
   isEditing?: boolean;
   setIsEditing?: (value: boolean) => void;
   setSelectedColor?: React.Dispatch<
-    React.SetStateAction<"PINK" | "MINT" | "YELLOW" | "BLUE" | undefined>
+    React.SetStateAction<"PINK" | "MINT" | "YELLOW" | "BLUE">
   >;
 };
 
@@ -55,20 +54,8 @@ type OtherCardProps = CardDataProps & {
   cardHolderName?: string;
 };
 
-const defaultCard: MyNameCardProps = {
-  // 기본값
-  id: 0,
-  kakaoId: "",
-  ownerId: 0,
-  name: "이름",
-  age: 0,
-  major: "",
-  cardThema: "PINK",
-  storedCardId: 1,
-};
-
 const StorageNameCard: React.FC<NameCardProps> = ({
-  oneCard = defaultCard,
+  oneCard,
   isFull = false,
   isStorage = false,
   isEditing,
@@ -80,6 +67,7 @@ const StorageNameCard: React.FC<NameCardProps> = ({
     ...oneCard,
   });
   const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
+  console.log(oneCard);
 
   const cardRef = useRef<HTMLDivElement>(null); // Ref to capture the entire card
 
@@ -110,37 +98,14 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   };
 
   useEffect(() => {
-    if (setSelectedColor && putData) {
-      setSelectedColor(putData?.cardThema);
+    if (setSelectedColor) {
+      if (putData) {
+        setSelectedColor(putData?.cardThema);
+      } else if (oneCard) {
+        setSelectedColor(oneCard.cardThema);
+      }
     }
-  }, [putData]);
-
-  // blue, pink, yellow, green 별 다른 text, graphic 적용
-
-  // 편집 모드일 때 렌더링되는 색상 변경 UI
-  // const renderColorChangeButtons = () => (
-  //   <div className="absolute right-[2.8rem] top-[3.2rem] flex flex-col gap-[1.6rem]">
-  //     <button
-  //       onClick={handleEditToggle}
-  //       className={`rounded-lg ${completeBtn}`}
-  //     >
-  //       완료
-  //     </button>
-  //     <div className="flex w-full flex-col items-center justify-around gap-[1.4rem]">
-  //       {(["PINK", "YELLOW", "GREEN", "BLUE"] as const).map((c) => (
-  //         <button
-  //           key={c}
-  //           onClick={() => handleColorChange(c)}
-  //           className={`h-[2.8rem] w-[2.8rem] rounded-full border-2 ${btnColor(c)} ${
-  //             selectedColor === c ? "border-white" : "border-transparent"
-  //           }`}
-  //         ></button>
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
-
-  // blue, pink, yellow, green 별 다른 text, graphic 적용
+  }, [putData, oneCard]);
 
   const contentTextColor =
     selectedColor === "BLUE"

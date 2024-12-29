@@ -34,6 +34,8 @@ interface TeamBoxProps {
   setIsNewData?: (value: boolean) => void;
   isLoading?: boolean;
   ver: "명함" | "방명록";
+  toggleFav: number;
+  setIsToggle: (value: boolean) => void;
 }
 
 const TeamBox = (props: TeamBoxProps) => {
@@ -43,23 +45,27 @@ const TeamBox = (props: TeamBoxProps) => {
     index,
     isSelected,
     isEdit,
-    isLoading,
     isNewData,
     onSelect,
     setToggleFav,
     setIsNewData,
     ver,
+    toggleFav,
+    setIsToggle,
   } = props;
   const [bgColor, setBgColor] = useState("bg-gray-1");
   const router = useRouter();
 
   useEffect(() => {
-    if (isNewData && index === 0 && !isLoading && setIsNewData) {
+    if (isNewData && setIsNewData && index === 0) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
-      setIsNewData(false);
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setBgColor("bg-gray-1");
+        setIsNewData(false);
       }, 3000);
+
+      // 타이머 정리
+      return () => clearTimeout(timer);
     }
   }, [isNewData]);
 
@@ -118,7 +124,13 @@ const TeamBox = (props: TeamBoxProps) => {
 
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setToggleFav(index);
+
+    const favIndex = team?.cardHolderId || room?.roomId || 0;
+    if (toggleFav === favIndex) {
+      setIsToggle(true);
+    }
+    setToggleFav(favIndex);
+    // const favIndex = team?.cardHolderId ?? room?.roomId ?? 0;
   };
 
   return (

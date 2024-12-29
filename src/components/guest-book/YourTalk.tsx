@@ -19,10 +19,7 @@ const YourTalk = ({
   return (
     <div className="flex gap-[0.8rem]">
       <div>
-        <ProfileImage
-          size={36}
-          color={color}
-        />
+        <ProfileImage size={36} color={color} />
       </div>
       <div>
         <span className="text-caption-med text-gray-8">{userName}</span>
