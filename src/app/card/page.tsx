@@ -78,8 +78,9 @@ const Card = () => {
             console.log("cardHolders 속성을 찾을 수 없습니다.");
           }
 
-          if (isNewData && isCamera) {
+          if (isNewData) {
             setIsNewData(true);
+            console.log("새 데이터드러옴");
             setIsCamera(false);
           }
         } catch (error) {

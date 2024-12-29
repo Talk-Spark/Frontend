@@ -43,7 +43,6 @@ const TeamBox = (props: TeamBoxProps) => {
     index,
     isSelected,
     isEdit,
-    isLoading,
     isNewData,
     onSelect,
     setToggleFav,
@@ -54,7 +53,8 @@ const TeamBox = (props: TeamBoxProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isNewData && setIsNewData) {
+    console.log(isNewData);
+    if (isNewData && setIsNewData && index === 0) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
       const timer = setTimeout(() => {
         setBgColor("bg-gray-1");
@@ -64,7 +64,7 @@ const TeamBox = (props: TeamBoxProps) => {
       // 타이머 정리
       return () => clearTimeout(timer);
     }
-  }, [isNewData, index]);
+  }, [isNewData]);
 
   // 선택되었을때 메인 컬러
   const boxBgColor = isSelected

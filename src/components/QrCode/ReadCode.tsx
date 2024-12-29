@@ -11,7 +11,7 @@ interface MyRun {
   name: string; // 입장하기 : 방 이름, 명함보관함: 개인 이름
 }
 
-const ReadCode = ({ 
+const ReadCode = ({
   myRun,
   setMyRun,
   setIsNewData,
@@ -47,7 +47,7 @@ const ReadCode = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const handleScan = (result: QrScanner.ScanResult) => {
-    // 큐알이 인식 되어도 없는 명함, 방일시에는?
+    // 큐알이 인식 되어도 없는 명함, 방 일시에는?
     try {
       const url = new URL(result.data);
       const cardId = url.searchParams.get("cardId");
@@ -90,7 +90,6 @@ const ReadCode = ({
       // 큐알 스캔이 되고 값이 입력되었을때
       if (qrVer === "card") {
         if (!isLoading) {
-          
           console.log(myRun);
           const getResponse = async () => {
             // if (!myRun || myRun.cardId) return;

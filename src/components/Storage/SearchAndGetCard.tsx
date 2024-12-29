@@ -64,6 +64,8 @@ const SearchAndGetCard = (props: NameCardProps) => {
     searchValue,
     selectedTeamBoxes,
     setSelectedTeamBoxes,
+    isNewData,
+    setIsNewData,
   } = props;
 
   const [isModal, setIsModal] = useState(false);
@@ -270,7 +272,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
             ? teamData?.map((team, index) => (
                 <TeamBox
                   key={index}
-                  isSelected={selectedTeamBoxes.includes(index)}
+                  isSelected={selectedTeamBoxes?.includes(index) || false}
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
                   index={index}
@@ -278,12 +280,14 @@ const SearchAndGetCard = (props: NameCardProps) => {
                   team={team}
                   isLoading={isLoading}
                   ver={ver}
+                  isNewData={isNewData}
+                  setIsNewData={setIsNewData}
                 />
               ))
             : roomData?.map((room, index) => (
                 <TeamBox
                   key={index}
-                  isSelected={selectedTeamBoxes.includes(index)}
+                  isSelected={selectedTeamBoxes?.includes(index) || false}
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
                   index={index}
