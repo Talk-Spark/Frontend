@@ -11,6 +11,7 @@ const Result = () => {
 
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
+  const roomName = localStorage.getItem("roomName");
 
   const handleHostStartGame = () => {
     localStorage.setItem("isGameHost", "true");

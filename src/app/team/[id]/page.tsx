@@ -50,6 +50,7 @@ const TeamDetail = () => {
   const [userDatas, setUserDatas] = useState<Participant[] | null>(null);
   const [isLottie, setIsLottie] = useState(false);
 
+
   //(only 방장) 게임 시작 버튼
   const handleStartGame = (roomId: string) => {
     socketRef.current?.emit("startGame", { roomId });
@@ -67,9 +68,12 @@ const TeamDetail = () => {
 
   useEffect(() => {
     if (user) {
-      socketRef.current = io("https://talkspark-dev-api.p-e.kr", {
+      socketRef.current = io("https://talkspark-dev-api.p-e.kr/", {
         transports: ["websocket"],
       });
+      
+      console.log(socketRef.current);
+      socketRef.current.emit("message",{});
 
       socketRef.current.emit("joinRoom", {
         roomId: id,
@@ -78,6 +82,7 @@ const TeamDetail = () => {
       });
 
       socketRef.current.on("roomUpdate", (arr: RoomUpdateProps[]) => {
+        console.log(arr);
         if (arr.length) setUserDatas(arr);
       });
 
@@ -100,7 +105,7 @@ const TeamDetail = () => {
         try {
           //const response = await get(`/api/rooms/is-host?roomId=${id}`); //host 여부 받아오는 api
           const response2 = await get(`/api/rooms/${id}`); //방에 대한 정보 받아오는 api
-
+          console.log("hi:", response2);
           //setIsHost(response.data as boolean);
           setTeamData(response2.data as GameRoomDetail);
         } catch (err) {
@@ -126,6 +131,14 @@ const TeamDetail = () => {
       };
     }
   }, [user]);
+
+  useEffect(()=>{
+    console.log(teamData);
+  },[teamData])
+
+  useEffect(()=>{
+    console.log(socketRef.current);
+  },[socketRef.current])
 
   console.log(teamData);
   console.log(userDatas); //특이하게, 참여자 수가 넘치면 더이상 정보를 못 받아옴 (메세지를 안 넘기는거임)
