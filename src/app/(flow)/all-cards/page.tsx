@@ -49,8 +49,8 @@ const AllCards = () => {
         style={{ width: "100%", height: "590px" }}
       >
         <SwiperSlide>
-          <StorageNameCard
-            cardId={2}
+          {/* <StorageNameCard
+            ownerId={2}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -58,16 +58,16 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={STORAGE_CARD.color}
+            cardThema={STORAGE_CARD.color}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
         <SwiperSlide>
-          <StorageNameCard
-            cardId={3}
+          {/* <StorageNameCard
+            ownerId={3}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -75,16 +75,16 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={"green"}
+            cardThema={"green"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
         <SwiperSlide>
-          <StorageNameCard
-            cardId={4}
+          {/* <StorageNameCard
+            ownerId={4}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -92,16 +92,16 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={"pink"}
+            cardThema={"pink"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
         <SwiperSlide>
-          <StorageNameCard
-            cardId={1}
+          {/* <StorageNameCard
+            ownerId={1}
             teamName={STORAGE_CARD.teamName}
             name={STORAGE_CARD.name}
             age={STORAGE_CARD.age}
@@ -109,12 +109,12 @@ const AllCards = () => {
             mbti={STORAGE_CARD.mbti}
             hobby={STORAGE_CARD.hobby}
             lookAlike={STORAGE_CARD.lookAlike}
-            selfDescription={STORAGE_CARD.selfDescription}
+            slogan={STORAGE_CARD.selfDescription}
             tmi={STORAGE_CARD.tmi}
-            color={"blue"}
+            cardThema={"blue"}
             isFull={STORAGE_CARD.isFull}
             isStorage={STORAGE_CARD.isStorage}
-          />
+          /> */}
         </SwiperSlide>
       </Swiper>
     </section>

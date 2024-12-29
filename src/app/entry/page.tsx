@@ -18,6 +18,8 @@ interface GameRoom {
 }
 
 const Entry = () => {
+  localStorage.removeItem("isGameHost"); //entry를 통해 접근하는 사람은 방장이 아닌 것으로 치부.
+
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
   const [isCamera, setIsCamera] = useState(false);

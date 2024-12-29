@@ -13,6 +13,7 @@ import Button from "../common/Button";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRouter } from "next/navigation";
 import { post } from "@/src/apis";
+import { AxiosResponse } from "axios";
 
 interface Step3Props {
   onNext: () => void;
@@ -22,7 +23,7 @@ interface Step3Props {
 
 interface RoomResponse {
   roomId: number;
-  roomName: string;
+  roomName: string; // response.data의 구조에 맞게 정의
 }
 
 const Step3 = ({ formData, onChange }: Step3Props) => {
@@ -72,21 +73,16 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
     // const sparkUserId = JSON.parse(userObj).sparkUserId;
 
     try {
-      const response = await post("/api/rooms", {
+      const response: AxiosResponse<RoomResponse> = await post("/api/rooms", {
         roomName: formData.name,
         maxPeople: formData.participants,
         difficulty: formData.difficulty,
         // hostId: sparkUserId,
       });
 
-      console.log(response.data);
-
-      const data = response.data as RoomResponse;
-      const roomId = data.roomId;
-      const roomName = data.roomName;
-      localStorage.setItem("roomId", roomId.toString());
-      localStorage.setItem("roomName", roomName);
-      router.push("/creating-room/result");
+      //roomId를 사용할 일이 있으면 사용
+      const roomId = response.data.roomId;
+      router.push(`/creating-room/result?roomId=${roomId}`);
     } catch (e) {
       console.error(e);
     }

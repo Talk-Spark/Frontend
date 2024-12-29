@@ -3,6 +3,23 @@
 import { ArrowForwardIos } from "@mui/icons-material";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
+import { instance } from "@/src/apis";
+import { useEffect, useState } from "react";
+
+interface CardInfo {
+  id: number;
+  kakaoId: string;
+  name: string;
+  age: number;
+  major: string;
+  mbti: string;
+  hobby: string;
+  lookAlike: string;
+  slogan: string;
+  tmi: string;
+  ownerId: number;
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
+}
 
 type CardDataProps = {
   // 기본 정보
@@ -26,31 +43,38 @@ type MyNameCardProps = CardDataProps & {
 };
 
 const MyCard = () => {
-  // 예시 데이터
-  const cardInfo: MyNameCardProps = {
-    id: 1,
-    kakaoId: "exampleKakaoId",
-    ownerId: 123,
-    name: "이름이름",
-    age: 23,
-    major: "컴퓨터공학",
-    cardThema: "BLUE" as "PINK" | "MINT" | "YELLOW" | "BLUE",
-  };
+  const [cardInfo, setCardInfo] = useState<CardInfo>();
 
   const router = useRouter();
 
-  const cardId = localStorage.getItem("cardId");
+  const fetchCardInfo = async () => {
+    const cardId = localStorage.getItem("cardId");
 
-  // todo: cardId로 내 명함 정보 가져오기
+    try {
+      const response = await instance(`/api/cards/${cardId}`);
+      const data = response.data.data;
+      setCardInfo(data);
+    } catch (error) {
+      console.error("명함 정보를 불러오는데 실패했습니다: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCardInfo();
+  }, []);
+
+  console.log("cardInfo: ", cardInfo);
 
   return (
     <div className="my-[3.2rem] flex flex-col gap-[1.6rem]">
       <div className="flex justify-between">
-        <div className="text-headline-3 text-black">이름이름 님의 명함</div>
+        <div className="text-headline-3 text-black">
+          {cardInfo?.name} 님의 명함
+        </div>
         <div
           className="flex items-center text-body-1-med text-gray-7"
           onClick={() => {
-            router.push("/card");
+            router.push("/card?view=mine");
           }}
         >
           내 명함
@@ -61,7 +85,13 @@ const MyCard = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <StorageNameCard oneCard={cardInfo} />
+        {cardInfo ? (
+          <StorageNameCard oneCard={cardInfo} />
+        ) : (
+          <div className="text-body-2-med text-gray-6">
+            명함 정보를 불러오고 있습니다...
+          </div>
+        )}
       </div>
     </div>
   );
