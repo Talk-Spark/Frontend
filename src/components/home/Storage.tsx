@@ -48,7 +48,6 @@ const Storage = () => {
         />
       </div>
       {activeTab === "namecard" ? <CardStorage /> : <BookStorage />}
-      {/* todo: 라우팅 연결 */}
       <div
         className="mt-[1.4rem] flex justify-end text-body-1-med text-gray-7"
         onClick={handleViewAll}
