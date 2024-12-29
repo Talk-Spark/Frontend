@@ -207,33 +207,26 @@ const BeforeSelect = ({
         <span className="self-stretch text-center text-headline-5 text-black">
           빈칸을 채워주세요!
         </span>
-        <div className="flex items-center justify-center gap-[1.2rem] self-stretch">
-          {["A", "B"].map((item) => (
-            <button
-              key={item}
-              onClick={() =>
-                handleClickButton(
-                  `${item === "A" ? quizInfo.options[0] : quizInfo.options[1]}`,
-                )
-              }
-              className={`br-[0.8rem] flex h-[5.6rem] w-[16.2rem] items-center justify-center gap-[1rem] rounded-[8px] border-gray-4 pb-[0.8rem] pl-[1.2rem] pr-[0.8rem] pt-[0.8rem] text-body-2-med shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)] ${selectedButton === item ? "bg-main-pink text-white" : "bg-white text-gray-12"}`}
-            >{`${item}. ${item === "A" ? quizInfo.options[0] : quizInfo.options[1]}`}</button>
-          ))}
+        <div className="flex justify-center w-[100%]">
+        <div className="grid grid-cols-2 gap-[1.2rem] self-stretch w-[33.5rem]">
+          {quizInfo.options.map((option, index) => {
+          const itemLabel = String.fromCharCode(65 + index); // A, B, C, D 등
+          return (
+              <button
+                key={itemLabel}
+                onClick={() => handleClickButton(option)}
+                className={`br-[0.8rem] flex h-[5.6rem] w-[16.2rem] items-center justify-center gap-[1rem] rounded-[8px] border-gray-4 pb-[0.8rem] pl-[1.2rem] pr-[0.8rem] pt-[0.8rem] text-body-2-med shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)] ${
+                  selectedButton === option ? "bg-main-pink text-white" : "bg-white text-gray-12"
+                }`}
+              >
+                {`${itemLabel}. ${option}`}
+              </button>
+          );
+          })}
         </div>
+        </div>
+        
 
-        <div className="flex items-center justify-center gap-[1.2rem] self-stretch">
-          {["C", "D"].map((item) => (
-            <button
-              key={item}
-              onClick={() =>
-                handleClickButton(
-                  `${item === "C" ? quizInfo.options[2] : quizInfo.options[3]}`,
-                )
-              }
-              className={`br-[0.8rem] flex h-[5.6rem] w-[16.2rem] items-center justify-center gap-[1rem] rounded-[8px] border-gray-4 pb-[0.8rem] pl-[1.2rem] pr-[0.8rem] pt-[0.8rem] text-body-2-med shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)] ${selectedButton === item ? "bg-main-pink text-white" : "bg-white text-gray-12"}`}
-            >{`${item}. ${item === "C" ? quizInfo.options[2] : quizInfo.options[3]}`}</button>
-          ))}
-        </div>
       </article>
 
       <div className="flex w-[33.6rem] flex-col items-start gap-[0.8rem]">

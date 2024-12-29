@@ -104,7 +104,7 @@ const Flow = () => {
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
-    <main className="flex flex-col items-center bg-gray-1">
+    <main className="flex flex-col items-center bg-gray-1 w-[100%]">
       {isReady ? (
         socketRef && isBefore ? (
           <BeforeSelect
