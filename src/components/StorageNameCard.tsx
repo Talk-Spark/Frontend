@@ -33,7 +33,7 @@ type MyNameCardProps = CardDataProps & {
 };
 
 type PutCardProps = CardDataProps & {
-  // 내 명함 req putData
+  // 내 명함 req putDataputData
   sparkUserId?: number;
 };
 
@@ -77,7 +77,15 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 }) => {
   const [putData, setPutData] = useState<PutCardProps>({
     sparkUserId: oneCard?.ownerId,
-    ...oneCard,
+    name: oneCard.name,
+    age: oneCard.age,
+    major: oneCard.major,
+    hobby: oneCard.hobby,
+    lookAlike: oneCard.lookAlike,
+    mbti: oneCard.mbti,
+    tmi: oneCard.tmi,
+    slogan: oneCard.slogan,
+    cardThema: oneCard.cardThema,
   });
   const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
 

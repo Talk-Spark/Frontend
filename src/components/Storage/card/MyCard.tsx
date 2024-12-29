@@ -40,7 +40,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
     const fetchData = async () => {
       try {
         const response = await instance.get("/api/cards");
-        const cardRes = response.data.data[response.data.data.length - 1];
+        const cardRes = response.data.data[0];
 
         if (oneCard !== cardRes) {
           setOneCard(cardRes);
@@ -123,7 +123,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
             >
               <QrCard
                 color={oneCard.cardThema || "PINK"}
-                cardId={oneCard.ownerId || 1}
+                cardId={oneCard.id || 1}
                 name={oneCard.name}
               />
             </div>
