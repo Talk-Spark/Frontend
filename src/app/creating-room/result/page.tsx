@@ -19,7 +19,7 @@ const Result = () => {
           <QrCode
             cardId={Number(roomId)}
             name={roomName as string}
-            size={303}
+            size={287}
           />
         </div>
         <button className="flex h-[5.6rem] w-[33.5rem] items-center justify-center gap-[1rem] rounded-[1.2rem] border-[1.5px] border-gray-3 bg-white">

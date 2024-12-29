@@ -78,7 +78,7 @@ const TeamDetail = () => {
       {isLottie ? (
         <Start />
       ) : (
-        <div className="flex h-full flex-col justify-between gap-[21.2rem] pb-[6rem] pt-[2.4rem]">
+        <div className="flex h-[62.8rem] flex-col justify-between pb-[6rem] pt-[2.4rem]">
           <div className="flex flex-col gap-[5.2rem]">
             <div className="flex justify-center">
               <div className="flex flex-col">
