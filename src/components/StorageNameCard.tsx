@@ -80,9 +80,9 @@ const StorageNameCard: React.FC<NameCardProps> = ({
         useCORS: true,
         logging: true,
         scale: 2,
-        onclone: (element) => {
-          element.clonedDocument = "lightgray";
-        },
+        // onclone: (element) => {
+        //   element.clonedDocument = "lightgray";
+        // },
         ignoreElements: (element) => element.tagName === "BUTTON", // 버튼 필터링
       })
         .then((canvas) => {

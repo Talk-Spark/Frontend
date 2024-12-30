@@ -75,11 +75,11 @@ const Card = () => {
           // 데이터 잘 들어옴
           // 응답 데이터가 올바른 형식인지 확인
 
-          const res = response.data as ApiResponse;
-          const resData = res.data;
-          if (resData?.cardHolders) {
-            setTeamData(resData.cardHolders);
-            console.log("teamData:", resData.cardHolders);
+          const resData = response.data as ApiResponse;
+          const data = resData.data;
+          if (data?.cardHolders) {
+            setTeamData(data.cardHolders);
+            console.log("teamData:", data.cardHolders);
           } else {
             console.log("cardHolders 속성을 찾을 수 없습니다.");
           }

@@ -51,7 +51,6 @@ const TeamDetail = () => {
   const gameStartRef = useRef(false);
   const [gameStart, setGameStart] = useState(false);
 
-
   //(only 방장) 게임 시작 버튼
   const handleStartGame = (roomId: string) => {
     socketRef.current?.emit("startGame", { roomId });
@@ -72,7 +71,7 @@ const TeamDetail = () => {
       socketRef.current = io("https://talkspark-dev-api.p-e.kr/", {
         transports: ["websocket"],
       });
-      
+
       console.log(socketRef.current);
 
       socketRef.current.emit("joinRoom", {
@@ -118,7 +117,7 @@ const TeamDetail = () => {
         if (socketRef.current) {
           //방 퇴장시
           console.log(gameStart);
-          if(!gameStartRef){
+          if (!gameStartRef) {
             socketRef.current.emit("leaveRoom", {
               roomId: id,
               accessToken: user.accessToken,
@@ -132,10 +131,10 @@ const TeamDetail = () => {
     }
   }, [user]);
 
-  useEffect(()=>{
+  useEffect(() => {
     gameStartRef.current = gameStart;
-    if(gameStart) router.push(`/flow?roomId=${id}`);
-  },[gameStart])
+    if (gameStart) router.push(`/flow?roomId=${id}`);
+  }, [gameStart]);
 
   // console.log(teamData);
   //console.log(userDatas); //특이하게, 참여자 수가 넘치면 더이상 정보를 못 받아옴 (메세지를 안 넘기는거임)
@@ -166,14 +165,15 @@ const TeamDetail = () => {
                 <span className="text-center text-subhead-med">
                   <span className="text-subhead-bold text-main-pink">
                     {userDatas.length}
-                  </span>{" / "}
+                  </span>
+                  {" / "}
                   {teamData.maxPeople}
                 </span>
               </div>
             </div>
 
             <div
-              key={teamData.roomName}
+              key={teamData.roomId}
               className="flex w-full flex-1 flex-wrap gap-x-[1.6rem] gap-y-[2rem] px-[0.75rem]"
             >
               {userDatas.map((participant, index) => (
@@ -182,7 +182,10 @@ const TeamDetail = () => {
                   className="max-w-[(100%-4.8rem)/4] flex-1"
                   style={{ maxWidth: "calc((100% - 4.8rem) / 4)" }}
                 >
-                  <ProfileImage color={participant.color} isHost={participant.owner}>
+                  <ProfileImage
+                    color={participant.color}
+                    isHost={participant.owner}
+                  >
                     {participant.name}
                   </ProfileImage>
                 </div>
