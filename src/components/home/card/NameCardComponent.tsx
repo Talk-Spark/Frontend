@@ -45,6 +45,7 @@ const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
               <ProfileImage
                 color={member.cardThema as "PINK" | "MINT" | "YELLOW" | "BLUE"}
                 alt={member.name}
+                hasTransparency={false}
               />
               <div className="flex items-center text-caption-med text-gray-7">
                 {index > 1 ? `${member.name} •••` : member.name}
