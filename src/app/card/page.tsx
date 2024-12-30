@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/card/MyCard";
@@ -112,7 +112,7 @@ const Card = () => {
     if (activeView === "mine") {
       handleToggle("mine");
     }
-  }, []);
+  }, [searchParams]);
 
   const handleCompleteClick = () => {
     if (activeView === "mine") {
@@ -121,6 +121,21 @@ const Card = () => {
       setIsEdit((prev) => (prev === "edit" ? "complete" : "edit"));
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = localStorage.getItem("user");
+      if (user) {
+        try {
+          const userObj = JSON.parse(user);
+          console.log(userObj);
+        } catch (e) {
+          console.log("Failed to parse user from localStorage", e);
+        }
+      }
+    }
+  }, []);
+
   const getAccessToken = (): string | null => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -174,7 +189,7 @@ const Card = () => {
   };
 
   return (
-    <>
+    <Suspense>
       <div className="-mx-[2rem] w-[calc(100%+4rem)]">
         <Header
           title={headerTitle}
@@ -245,7 +260,7 @@ const Card = () => {
           )}
         </div>
       )}
-    </>
+    </Suspense>
   );
 };
 

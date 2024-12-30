@@ -14,7 +14,7 @@ type CardDataProps = {
   mbti?: string;
   hobby?: string;
   lookAlike?: string;
-  slogan?: string;
+  selfDescription?: string;
   tmi?: string;
   cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
