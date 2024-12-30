@@ -1,8 +1,17 @@
 "use client";
 
-import AfterSelect from "@/src/components/flow/AfterSelect";
-import BeforeSelect from "@/src/components/flow/BeforeSelect";
+const AfterSelect = dynamic(
+  () => import('@/src/components/flow/AfterSelect'),
+  { ssr: false }
+)
+const BeforeSelect = dynamic(
+  () => import('@/src/components/flow/BeforeSelect'),
+  { ssr: false }
+)
+// import AfterSelect from "@/src/components/flow/AfterSelect";
+// import BeforeSelect from "@/src/components/flow/BeforeSelect";
 import { getUserData } from "@/src/utils";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { MutableRefObject, Suspense, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
@@ -82,6 +91,7 @@ const Flow = () => {
   const user = getUserData();
 
   const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost")); //방장 여부
+
   const [isReady, setIsReady] = useState(false);
   const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정 -> todo: 아마 현재 문제가 뭔지에 대해서...
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
