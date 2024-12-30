@@ -189,7 +189,7 @@ const Card = () => {
   };
 
   return (
-    <Suspense>
+    <>
       <div className="-mx-[2rem] w-[calc(100%+4rem)]">
         <Header
           title={headerTitle}
@@ -260,8 +260,15 @@ const Card = () => {
           )}
         </div>
       )}
-    </Suspense>
+    </>
   );
 };
 
-export default Card;
+
+export default function PageWithSuspense() {
+  return (
+    <Suspense>
+      <Card />
+    </Suspense>
+  );
+}

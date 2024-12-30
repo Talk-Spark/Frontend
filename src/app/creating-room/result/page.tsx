@@ -58,4 +58,11 @@ const Result = () => {
   );
 };
 
-export default Result;
+
+export default function PageWithSuspense() {
+  return (
+    <Suspense>
+      <Result />
+    </Suspense>
+  );
+}

@@ -5,6 +5,7 @@ import React, {
   MutableRefObject,
   SetStateAction,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -113,6 +114,20 @@ const BeforeSelect = ({
       document.removeEventListener("click", handleClickOutSide);
     };
   }, []);
+
+  useLayoutEffect(()=>{
+    const handleClickOutSide = (e: MouseEvent) => {
+      if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
+        setIsPopupOpen(false);
+      }
+    };
+  
+    document.addEventListener("click", handleClickOutSide);
+  
+    return () => {
+      document.removeEventListener("click", handleClickOutSide);
+    };
+  },[])
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
