@@ -1,6 +1,7 @@
 "use client";
 import creatingRoomImage from "@/public/Image/home/creatingRoomImage.svg";
 import enteringRoomImage from "@/public/Image/home/enteringRoomImage.svg";
+import talkSparkImage from "@/public/Image/home/TalkSpark.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +16,7 @@ const CardMatching = () => {
     <div className="w-screen bg-[url('/Image/home/backgroundImage.svg')] bg-cover">
       <div className="mx-[20px] flex flex-col gap-[0.8rem] pb-[1.2rem] pt-[1.6rem]">
         <div className="text-[2.6875rem] font-black leading-[4.3rem] tracking-[-0.0806rem] text-white">
-          TalkSpark
+          <Image src={talkSparkImage} alt="로고" />
         </div>
         <div className="text-body-1-med text-gray-2">
           톡스파크를 통해
@@ -31,14 +32,24 @@ const CardMatching = () => {
             onClick={() => handleRouting("/creating-room")}
           >
             {/* 방 만들기 */}
-            <Image src={creatingRoomImage} alt="방 만들기" />
+            <Image
+              src={creatingRoomImage}
+              width={162}
+              height={132}
+              alt="방 만들기"
+            />
           </div>
           <div
             className="h-[13.2rem] w-[16.2rem] text-subhead-bold shadow-DEFAULT"
             onClick={() => handleRouting("/entry")}
           >
             {/* 입장하기 */}
-            <Image src={enteringRoomImage} alt="입장하기" />
+            <Image
+              src={enteringRoomImage}
+              width={162}
+              height={132}
+              alt="입장하기"
+            />
           </div>
         </div>
       </div>
