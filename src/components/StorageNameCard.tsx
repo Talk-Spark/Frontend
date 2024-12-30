@@ -14,7 +14,7 @@ type CardDataProps = {
   mbti?: string;
   hobby?: string;
   lookAlike?: string;
-  slogan?: string;
+  selfDescription?: string;
   tmi?: string;
   cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
@@ -80,6 +80,9 @@ const StorageNameCard: React.FC<NameCardProps> = ({
         useCORS: true,
         logging: true,
         scale: 2,
+        // onclone: (element) => {
+        //   element.clonedDocument = "lightgray";
+        // },
         ignoreElements: (element) => element.tagName === "BUTTON", // 버튼 필터링
       })
         .then((canvas) => {

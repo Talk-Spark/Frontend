@@ -37,18 +37,6 @@ const HeaderWrapper = () => {
         button2Type: "next",
         button2Action: () => {},
       };
-    } else if (pathname.startsWith("/card/detail")) {
-      return {
-        showButton1: true,
-        title: "명함 보관함",
-        button2Action: () => {},
-      };
-    } else if (pathname.startsWith("/card/camera")) {
-      return {
-        showButton1: true,
-        title: "명함 추가하기",
-        button2Action: () => {},
-      };
     } else if (pathname.startsWith("/team/")) {
       return {
         showButton1: true,

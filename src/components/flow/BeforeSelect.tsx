@@ -5,6 +5,7 @@ import React, {
   MutableRefObject,
   SetStateAction,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -18,7 +19,7 @@ import { NameCardObjProps } from "@/src/app/(flow)/flow/page";
 // import { CardFlowType } from "@/src/app/(flow)/flow/page";
 // import { CARD_FLOW } from "@/src/app/(flow)/flow/page";
 import { getUserData } from "@/src/utils";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 
 interface BeforeSelectProps {
   cardStep: number;
@@ -29,12 +30,17 @@ interface BeforeSelectProps {
   isHost: boolean;
 
   //socket으로 받아오는 정보들
-  NameCardInfo : NameCardObjProps;
-  quizInfo : QuizDataProps;
-  fieldHoles : FieldType[]
+  NameCardInfo: NameCardObjProps;
+  quizInfo: QuizDataProps;
+  fieldHoles: FieldType[];
 }
 
-export type FieldType = "mbti" | "hobby" | "lookAlike" | "selfDescription" | "tmi";
+export type FieldType =
+  | "mbti"
+  | "hobby"
+  | "lookAlike"
+  | "selfDescription"
+  | "tmi";
 
 //question으로 받아오는 1번째 데이터 타입
 interface UserProfile {
@@ -84,14 +90,14 @@ const BeforeSelect = ({
   isHost,
   NameCardInfo,
   quizInfo,
-  fieldHoles
+  fieldHoles,
 }: BeforeSelectProps) => {
   const user = getUserData();
- 
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
   const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
-  
+
   const popUpRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -109,6 +115,20 @@ const BeforeSelect = ({
     };
   }, []);
 
+  useLayoutEffect(()=>{
+    const handleClickOutSide = (e: MouseEvent) => {
+      if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
+        setIsPopupOpen(false);
+      }
+    };
+  
+    document.addEventListener("click", handleClickOutSide);
+  
+    return () => {
+      document.removeEventListener("click", handleClickOutSide);
+    };
+  },[])
+
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
   };
@@ -122,14 +142,15 @@ const BeforeSelect = ({
       setIsAnswerSeleted(true);
       //todo: userId 식별할 수 있는 방법 상의한 후, 그 userId를 잘 실어서 보내야함.
       socketRef.current.emit("submitSelection", {
-        roomId : roomId,
+        roomId: roomId,
         sparkUserId: user?.sparkUserId,
         answer: selectedButton,
       });
     }
   };
 
-  if (cardStep > 4) { //todo: 이제 cardStep 사용안할거임
+  if (cardStep > 4) {
+    //todo: 이제 cardStep 사용안할거임
     //퀴즈 다 맞춘 상태 -> 알맞은 단계로 이어져야 함
     return;
   }
@@ -151,7 +172,7 @@ const BeforeSelect = ({
             selfDescription={NameCardInfo.selfDescription}
             tmi={NameCardInfo.tmi}
             selectedCategory={quizInfo.fieldName}
-            fieldHoles = {fieldHoles}
+            fieldHoles={fieldHoles}
           />
           <div className="flex gap-[0.5rem]" ref={popUpRef}>
             <div className="relative w-[20px]">
@@ -183,26 +204,26 @@ const BeforeSelect = ({
         <span className="self-stretch text-center text-headline-5 text-black">
           빈칸을 채워주세요!
         </span>
-        <div className="flex justify-center w-[100%]">
-        <div className="grid grid-cols-2 gap-[1.2rem] self-stretch w-[33.5rem]">
-          {quizInfo.options.map((option, index) => {
-          const itemLabel = String.fromCharCode(65 + index); // A, B, C, D 등
-          return (
-              <button
-                key={itemLabel}
-                onClick={() => handleClickButton(option)}
-                className={`br-[0.8rem] flex h-[5.6rem] w-[16.2rem] items-center justify-center gap-[1rem] rounded-[8px] border-gray-4 pb-[0.8rem] pl-[1.2rem] pr-[0.8rem] pt-[0.8rem] text-body-2-med shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)] ${
-                  selectedButton === option ? "bg-main-pink text-white" : "bg-white text-gray-12"
-                }`}
-              >
-                {`${itemLabel}. ${option}`}
-              </button>
-          );
-          })}
+        <div className="flex w-[100%] justify-center">
+          <div className="grid w-[33.5rem] grid-cols-2 gap-[1.2rem] self-stretch">
+            {quizInfo.options.map((option, index) => {
+              const itemLabel = String.fromCharCode(65 + index); // A, B, C, D 등
+              return (
+                <button
+                  key={itemLabel}
+                  onClick={() => handleClickButton(option)}
+                  className={`br-[0.8rem] flex h-[5.6rem] w-[16.2rem] items-center justify-center gap-[1rem] rounded-[8px] border-gray-4 pb-[0.8rem] pl-[1.2rem] pr-[0.8rem] pt-[0.8rem] text-body-2-med shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)] ${
+                    selectedButton === option
+                      ? "bg-main-pink text-white"
+                      : "bg-white text-gray-12"
+                  }`}
+                >
+                  {`${itemLabel}. ${option}`}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        </div>
-        
-
       </article>
 
       <div className="flex w-[33.6rem] flex-col items-start gap-[0.8rem]">

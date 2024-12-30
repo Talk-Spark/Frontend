@@ -2,7 +2,7 @@
 
 import SearchInput from "@/src/components/SearchInput";
 import TeamRoomList from "@/src/components/entry/TeamRoomList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FindRoom from "@/src/components/entry/FindRoom";
 import { instance } from "@/src/apis";
 import ReadCode from "@/src/components/QrCode/ReadCode";
@@ -18,8 +18,6 @@ interface GameRoom {
 }
 
 const Entry = () => {
-  localStorage.removeItem("isGameHost"); //entry를 통해 접근하는 사람은 방장이 아닌 것으로 치부.
-
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
   const [isCamera, setIsCamera] = useState(false);
@@ -27,6 +25,11 @@ const Entry = () => {
     cardId: number;
     name: string;
   } | null>(null);
+
+  useEffect(()=>{
+    localStorage.removeItem("isGameHost"); //entry를 통해 접근하는 사람은 방장이 아닌 것으로 치부.
+
+  },[])
 
   const setIsNewData = () => {};
 
