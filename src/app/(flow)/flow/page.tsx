@@ -188,7 +188,7 @@ const Flow = () => {
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
-    <Suspense fallback={<div>Loading</div>}>
+    <>
       <main className="w-[cal(100% + 4rem)] -mx-[2rem] flex h-[71.2rem] flex-col items-center bg-gray-1">
         {isReady ? (
           socketRef && isBefore ? (
@@ -220,8 +220,14 @@ const Flow = () => {
           <div>로딩중.. 3초만 기다려주세요</div>
         )}
       </main>
-    </Suspense>
+    </>
   );
 };
 
-export default Flow;
+export default function SuspenseFlow() {
+  return (
+    <Suspense>
+      <Flow />
+    </Suspense>
+  );
+}
