@@ -17,8 +17,8 @@ const geistMono = localFont({
 
 // SEO를 위한 메타데이터 (레이아웃 전체에 적용)
 export const metadata: Metadata = {
-  title: "My Next.js App",
-  description: "A sample Next.js application",
+  title: "Talk Spark",
+  description: "실시간 아이스브레이킹 서비스",
 };
 
 export default function RootLayout({
