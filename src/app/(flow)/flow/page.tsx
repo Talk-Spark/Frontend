@@ -12,10 +12,10 @@ const BeforeSelect = dynamic(
 // import BeforeSelect from "@/src/components/flow/BeforeSelect";
 import { getUserData } from "@/src/utils";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
 import { MutableRefObject, Suspense, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-
+import { useRouter, useSearchParams } from "next/navigation";
+import Header from "@/src/components/Headers/Header";
 // export const CARD_FLOW = [
 //   "엠비티아이",
 //   "취미",
@@ -89,6 +89,7 @@ const Flow = () => {
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
   const user = getUserData();
+  const router = useRouter();
 
   const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost")); //방장 여부
 
@@ -96,9 +97,10 @@ const Flow = () => {
   const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정 -> todo: 아마 현재 문제가 뭔지에 대해서...
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
   const [isGameEnd, setIsGameEnd] = useState(false);
-  const [correctedPeople, setCorrectedPeople] = useState<
-    singleQuestionObjProps[] | null
-  >(null);
+  const [correctedPeople, setCorrectedPeople] = useState<singleQuestionObjProps[] | null>(null);
+  const [isAllCorrect, setIsAllCorrect] = useState(false);
+  const [isQuizEnd, setIsQuizEnd] = useState(false);
+  
 
   //소켓에서 받아오는 정보들
   const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
@@ -138,41 +140,39 @@ const Flow = () => {
       }, 3000); //3초 대기 후 진행
     });
 
-    //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기
-    socketRef.current.on("singleResult", (data: any) => {
+    //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기 - 맞출 사람이 더 남은 경우
+    socketRef.current.on("singleResult", (data : any) => {
       console.log(data);
+
+      setIsQuizEnd(true);
+      setIsAllCorrect(false);
     });
     socketRef.current.on("lastResult", (data: any) => {
       console.log(data);
+
+      setIsGameEnd(true);
     });
 
     //todo: 근데 생각해보니까, 이것도 상위에서 받아서 넘겨야할 듯(그래야 자식 요소에서 컨트롤 가능)
-    socketRef.current.on(
-      "question",
-      (
-        profileData: UserProfile,
-        blankData: UserBlanks,
-        QuizData: QuizDataProps,
-        teamName: string,
-      ) => {
-        setNameCardInfo({
-          teamName: teamName,
-          name: profileData.name,
-          age: profileData.age,
-          major: profileData.major,
-          mbti: profileData.mbti,
-          hobby: profileData.hobby,
-          lookAlike: profileData.lookAlike,
-          selfDescription: profileData.selfDescription,
-          tmi: profileData.tmi,
-        });
-        setQuizInfo(QuizData);
-        setFieldHoles(blankData.blanks);
-      },
-    );
+    socketRef.current.on("question", (profileData : UserProfile, blankData : UserBlanks, QuizData: QuizDataProps, teamName: string) => {
+      
+      setNameCardInfo({
+        teamName: teamName, 
+        name: profileData.name,
+        age: profileData.age,
+        major: profileData.major,
+        mbti: profileData.mbti,
+        hobby: profileData.hobby,
+        lookAlike: profileData.lookAlike,
+        selfDescription: profileData.selfDescription, 
+        tmi: profileData.tmi,
+      });
+      setQuizInfo(QuizData);
+      setFieldHoles(blankData.blanks);
+      setIsBefore(true);
+    });
 
-    //todo: 형식 변환될 가능성 있음. (요청해봄)
-    //todo2: 이거 데이터 오면, 해당 데이터를 가지고 AfterSelect로 넘어가는 로직 필요 (아마 부모요소에서 배열을 세팅한다음, isBefore세팅해서 넘어가면 될 듯)
+    //todo: 현재 이 메세지 안옴(서버 문제)
     socketRef.current.on(
       "singleQuestionScoreBoard",
       (data: singleQuestionObjProps[]) => {
@@ -185,52 +185,65 @@ const Flow = () => {
     socketRef.current.on("scores", (data: any) => {
       console.log(data);
       //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
-      //그리고 참고로 초기화도 잘 해줘야함 (로컬 스토리지) -> 아 아닌가? 그냥 그때마다 set할거니까 상관 없을수도?
-      setIsGameEnd(true);
-    });
+      router.push("/game-end"); //최종스코어 창으로 이동!
+      localStorage.setItem("finalScores", JSON.stringify(data)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기
+    }); 
 
     return () => {
       socketRef.current?.disconnect();
       socketRef.current = null; //메모리 누수 방지
     };
-  }, [searchParams]);
+  }, []);
+
+  useEffect(()=>{
+    if(correctedPeople){
+      const isAllCorrect = correctedPeople.every(person => person.correct === true);
+      setIsAllCorrect(isAllCorrect);
+    }
+    
+  },[correctedPeople])
 
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
     <>
-      <main className="w-[cal(100% + 4rem)] -mx-[2rem] flex h-[71.2rem] flex-col items-center bg-gray-1">
-        {isReady ? (
-          socketRef && isBefore ? (
-            <BeforeSelect
-              cardStep={cardStep}
-              setIsBefore={setIsBefore}
-              setCardStep={setCardStep}
-              socketRef={socketRef as MutableRefObject<any>}
-              roomId={roomId}
-              isHost={isHost}
-              NameCardInfo={NameCardInfo}
-              quizInfo={quizInfo as QuizDataProps}
-              fieldHoles={fieldHoles as FieldType[]}
-            />
-          ) : (
-            <AfterSelect
-              cardStep={cardStep}
-              setIsBefore={setIsBefore}
-              socketRef={socketRef as MutableRefObject<any>}
-              roomId={roomId}
-              isHost={isHost}
-              isGameEnd={isGameEnd}
-              correctedPeople={correctedPeople as singleQuestionObjProps[]}
-              answer={quizInfo?.correctAnswer as string}
-              answerCount={correctedPeople?.length as number}
-            />
-          )
+    <Header title="명함 맞추기"/>
+      <main className="flex flex-col items-center bg-gray-1 w-[cal(100% + 4rem)] -mx-[2rem] h-[71.2rem]">
+      {isReady ? (
+        socketRef && isBefore ? (
+          <BeforeSelect
+            cardStep={cardStep}
+            setIsBefore={setIsBefore}
+            setCardStep={setCardStep}
+            socketRef={socketRef as MutableRefObject<any>}
+            roomId={roomId}
+            isHost={isHost}
+            NameCardInfo ={NameCardInfo}
+            quizInfo ={quizInfo as QuizDataProps}
+            fieldHoles ={fieldHoles as FieldType[]}
+
+          />
         ) : (
-          <div>로딩중.. 3초만 기다려주세요</div>
-        )}
-      </main>
+          <AfterSelect
+            cardStep={cardStep}
+            setIsBefore={setIsBefore}
+            socketRef={socketRef as MutableRefObject<any>}
+            roomId={roomId}
+            isHost={isHost}
+            isQuizEnd={isQuizEnd}
+            isGameEnd={isGameEnd}
+            correctedPeople = {correctedPeople as singleQuestionObjProps[]}
+            answer = {quizInfo?.correctAnswer as string}
+            answerCount = {correctedPeople?.length as number}
+            isAllCorrect ={isAllCorrect}
+          />
+        )
+      ) : (
+        <div>로딩중.. 3초만 기다려주세요</div>
+      )}
+    </main>
     </>
+
   );
 };
 

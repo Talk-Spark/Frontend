@@ -36,7 +36,7 @@ const Result = () => {
       </div>
       <div className="flex flex-col items-center justify-center gap-[1.2rem]">
         {/* todo: 입장하기 1_방장으로 이동 */}
-        <Button variant="pink">시작하기</Button>
+        <Button variant="pink" onClick={handleHostStartGame}>시작하기</Button>
         <p
           className="text-body-2-med text-gray-7 underline decoration-solid decoration-1 underline-offset-4"
           onClick={() => router.push("/home")}
@@ -56,3 +56,4 @@ export default function PageWithSuspense() {
     </Suspense>
   );
 }
+
