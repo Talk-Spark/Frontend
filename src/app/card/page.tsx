@@ -55,7 +55,9 @@ const Card = () => {
           setIsLoading(true);
           // API 응답 타입 정의
           type ApiResponse = {
-            cardHolders: CardHolderResponse[];
+            data: {
+              cardHolders: CardHolderResponse[];
+            };
           };
 
           // API 호출
@@ -73,10 +75,11 @@ const Card = () => {
           // 데이터 잘 들어옴
           // 응답 데이터가 올바른 형식인지 확인
 
-          const data = response.data.data as ApiResponse;
-          if (data?.cardHolders) {
-            setTeamData(data.cardHolders);
-            console.log("teamData:", data.cardHolders);
+          const res = response.data as ApiResponse;
+          const resData = res.data;
+          if (resData?.cardHolders) {
+            setTeamData(resData.cardHolders);
+            console.log("teamData:", resData.cardHolders);
           } else {
             console.log("cardHolders 속성을 찾을 수 없습니다.");
           }
