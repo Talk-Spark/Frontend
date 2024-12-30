@@ -4,7 +4,7 @@ import NameCardComponent from "./NameCardComponent";
 import { instance } from "@/src/apis";
 
 // 팀 내 명함 정보
-export interface StoredCard {
+export interface cards {
   storedCardId: number;
   name: string;
   age: number;
@@ -21,7 +21,7 @@ export interface StoredCard {
 
 interface Team {
   teamName: string;
-  storedCards: StoredCard[];
+  cards: cards[];
 }
 
 interface TeamResponse {
@@ -61,7 +61,7 @@ const CardStorage = () => {
       const formattedTeams = data.data.map((team: TeamResponse) => ({
         teamName: team.teamName,
         // 팀 내 명함 맵핑
-        storageCards: team.cards.map((card) => ({
+        cards: team.cards.map((card) => ({
           storedCardId: card.storedCardId,
           name: card.name,
           age: card.age,
@@ -111,7 +111,7 @@ const CardStorage = () => {
         <div key={`key-${index}`}>
           <NameCardComponent
             name={team.teamName}
-            storedCards={team.storedCards || []}
+            storedCards={team.cards || []}
           />
         </div>
       ))}

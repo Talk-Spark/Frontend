@@ -1,10 +1,10 @@
 // 개별 팀 명함
 import ProfileImage from "../../ProfileImage";
-import { StoredCard } from "./CardStorage";
+import { cards } from "./CardStorage";
 
 interface NameCardProps {
   name: string; // 팀 이름
-  storedCards: StoredCard[]; // 팀 내 저장된 명함 담은 배열
+  storedCards: cards[]; // 팀 내 저장된 명함 담은 배열
 }
 
 const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
