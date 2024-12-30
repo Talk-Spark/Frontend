@@ -42,7 +42,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
     const fetchData = async () => {
       try {
         const response = await instance.get("/api/cards");
-        const cardRes = response.data.data[response.data.data.length - 1];
+        const cardRes = response.data.data[0]; //response.data.data.length - 1
 
         if (oneCard !== cardRes) {
           setOneCard(cardRes);
