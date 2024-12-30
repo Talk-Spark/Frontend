@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 import { MutableRefObject, Suspense, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useRouter, useSearchParams } from "next/navigation";
+import Header from "@/src/components/Headers/Header";
 // export const CARD_FLOW = [
 //   "엠비티아이",
 //   "취미",
