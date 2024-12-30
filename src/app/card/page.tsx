@@ -74,7 +74,6 @@ const Card = () => {
           const response = await get(`/api/storedCards${queryParam}`);
           // 데이터 잘 들어옴
           // 응답 데이터가 올바른 형식인지 확인
-
           const resData = response.data as ApiResponse;
           const data = resData.data;
           if (data?.cardHolders) {
