@@ -41,7 +41,7 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-[6.1rem]">
+    <div className="flex h-[58.7rem] flex-col justify-between">
       <div className="flex flex-col gap-[5.2rem]">
         <div>
           <h2 className="relative mb-[0.8rem] text-headline-3 text-black">

@@ -34,6 +34,8 @@ interface ProfileImageProps {
   size?: 36 | 52 | 64 | 68 | 148; // Added size 36px
   backColor?: "gray" | "blue";
   isSecond?: boolean; //명함 맞추기 flow에서 2순위에 사용할 prop
+  noBorder?: boolean; //최종 스코어에서 3등에게 사용할 prop
+  hasTransparency?: boolean; // 투명도 적용 여부
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -45,6 +47,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   size = 68,
   backColor = "blue",
   isSecond = false,
+  hasTransparency = true,
+  noBorder = false,
 }) => {
   const profileImageUrl = profileImages[color] || profileImages.PINK;
   const crownImageUrl = crownImages[color] || crownImages.PINK;
@@ -104,9 +108,11 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         : size === 52
           ? isSecond
             ? "border-2 border-sub-pink" // isSecond true일때
-            : isSelected
-              ? "border-2 border-main-pink"
-              : "border-2 border-gray-3"
+            : noBorder
+              ? ""
+              : isSelected
+                ? "border-2 border-main-pink"
+                : "border-2 border-gray-3"
           : size === 64
             ? isSelected
               ? "border-2 border-main-pink"
@@ -117,7 +123,11 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
   const borderStyleSecond = "border-2 border-sub-pink";
 
-  const textColor = isSelected ? "text-main-pink" : "text-black";
+  const textColor = noBorder
+    ? "text-black"
+    : isSelected
+      ? "text-main-pink"
+      : "text-black";
 
   const imageSize =
     size === 36
@@ -130,10 +140,15 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
             ? "h-[68px] w-[68px]"
             : "h-[148px] w-[148px]";
 
-  const bgStyle = backColor === "blue" ? "bg-sub-blue-40" : "bg-gray-1";
+  const bgStyle =
+    backColor === "blue"
+      ? hasTransparency
+        ? "bg-sub-blue-40" // 투명도 적용
+        : "bg-[#9CAEF9]" // 투명도 없는 색상
+      : "bg-gray-1";
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex w-[6.8rem] flex-col items-center">
       <div className={`relative box-border ${imageSize}`}>
         <div
           className={`relative h-full w-full overflow-hidden rounded-full ${bgStyle}`}
@@ -185,7 +200,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       {/* 이름 */}
       {children && (
         <div
-          className={`mt-[0.4rem] text-center text-body-2-bold text-sm ${textColor}`}
+          className={`mt-[0.4rem] text-center ${isSelected ? "text-body-2-bold" : "text-body-2-reg"} ${textColor}`}
         >
           {children}
         </div>

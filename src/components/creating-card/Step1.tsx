@@ -95,7 +95,7 @@ const Step1 = ({ onNext, formData, onChange }: StepProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-[13.5rem]">
+    <div className="flex h-[58.7rem] flex-col justify-between">
       <div className="flex flex-col gap-[5.2rem]">
         <div>
           <h2 className="relative mb-[0.8rem] text-headline-3 text-black">

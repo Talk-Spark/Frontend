@@ -107,11 +107,11 @@ const CardStorage = () => {
   return (
     <div className="flex gap-[1.6rem] overflow-x-auto">
       {/* 최대 5개 렌더링 */}
-      {teams.slice(0, 5).map((team) => (
-        <div key={team.teamName}>
+      {teams.slice(0, 5).map((team, index) => (
+        <div key={`key-${index}`}>
           <NameCardComponent
             name={team.teamName}
-            storedCards={team.storageCards || []}
+            storedCards={team.storedCards || []}
           />
         </div>
       ))}

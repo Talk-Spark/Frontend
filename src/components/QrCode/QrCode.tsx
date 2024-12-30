@@ -1,7 +1,7 @@
 import { QRCodeCanvas } from "qrcode.react";
 
 interface QrCodeProps {
-  cardId: number | string; // 방 개설 입장하기: roomID, 명함 : cardId
+  cardId: string | number; // 방 개설 입장하기: roomID, 명함 : cardId
   name: string;
   size: number;
 }

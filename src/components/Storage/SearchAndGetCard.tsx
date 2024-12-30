@@ -210,55 +210,54 @@ const SearchAndGetCard = (props: NameCardProps) => {
     }
   }, [toggleFav, isToggle]);
 
-  const handleDeleteAll = async () => {
-    try {
-      if (setSelectedTeamBoxes) {
-        /* 보관된 명함 삭제하기 (전체)  API */
-        if (ver === "명함" && teamData && setTeamData) {
-          const deleteRequests = teamData.map((data) =>
-            instance.delete(`/api/storedCard/${data.cardHolderId}`),
-          );
-          await Promise.all(deleteRequests);
-          // 모든 박스가 이미 선택된 상태인지 확인
-          // if (selectedTeamBoxes?.length === teamData.length) {
-          //   setSelectedTeamBoxes([]); // 선택 해제
-          // } else {
-          //   console.log(teamData)
-          //   const allIndexes = teamData.map((_, index) => index); // 모든 박스의 인덱스 생성
-          //   setSelectedTeamBoxes(allIndexes); // 모든 박스를 선택
-          //   console.log(selectedTeamBoxes);
-          // }
-        } else if (ver === "방명록" && roomData && setRoomData) {
-          /* 방명록 삭제하기  API */
-          // const deleteRequests = roomData.map((data) =>
-          //   instance.delete(`/api/guest-books/${data.roomId}`),
-          // );
-          // await Promise.all(deleteRequests);
-          // setRoomData([]);
-          if (selectedTeamBoxes?.length === roomData.length) {
-            setSelectedTeamBoxes([]); // 선택 해제
-          } else {
-            const allIndexes = roomData.map((_, index) => index); // 모든 박스의 인덱스 생성
-            setSelectedTeamBoxes(allIndexes); // 모든 박스를 선택
-          }
-        }
+  useEffect(() => {
+    // Logic to run when selectedTeamBoxes changes
+    console.log(selectedTeamBoxes);
+  }, [selectedTeamBoxes]); // This will run every time selectedTeamBoxes is updated
 
-        setSelectedTeamBoxes([]);
+  const handleDeleteAll = () => {
+    if (setSelectedTeamBoxes) {
+      /* 보관된 명함 삭제하기 (전체)  API */
+
+      if (ver === "명함" && teamData) {
+        let allIndexes: number[] = [];
+
+        // Log the expected data before setting state
+        allIndexes = teamData.map((_, index) => index);
+        console.log("Selected Indexes to Set:", allIndexes);
+
+        if (selectedTeamBoxes?.length === allIndexes.length) {
+          setSelectedTeamBoxes([]); // Deselect all
+        } else {
+          setSelectedTeamBoxes(allIndexes); // Select all boxes
+        }
+      } else if (ver === "방명록" && roomData && setRoomData) {
+        /* 방명록 삭제하기  API */
+        // const deleteRequests = roomData.map((data) =>
+        //   instance.delete(`/api/guest-books/${data.roomId}`),
+        // );
+        // await Promise.all(deleteRequests);
+        // setRoomData([]);
+        if (selectedTeamBoxes?.length === roomData.length) {
+          setSelectedTeamBoxes([]); // 선택 해제
+        } else {
+          const allIndexes = roomData.map((_, index) => index); // 모든 박스의 인덱스 생성
+          setSelectedTeamBoxes(allIndexes); // 모든 박스를 선택
+        }
       }
-      setIsModal(false);
-    } catch (e) {
-      console.error(e);
+
+      setSelectedTeamBoxes([]);
     }
+    setIsModal(false);
   };
 
   const deleteModal = (type: "selected" | "all") => {
     setDeleteType(type);
-    setIsModal(true);
-    // if (type === "selected") {
-    // }
-    // else if (type === "all") {
-    //   handleDeleteAll();
-    // }
+    if (type === "selected") {
+      setIsModal(true);
+    } else if (type === "all") {
+      handleDeleteAll();
+    }
   };
 
   const handleConfirmDelete = () => {

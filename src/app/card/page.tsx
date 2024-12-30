@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/card/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
@@ -9,7 +10,6 @@ import Logout from "@/src/components/Storage/Logout";
 import Modal from "@/src/components/common/Modal";
 import ReadCode from "@/src/components/QrCode/ReadCode";
 import { get, instance } from "@/src/apis";
-import { useRouter } from "next/navigation";
 
 type CardHolderResponse = {
   cardHolderId: number;
@@ -22,6 +22,8 @@ type CardHolderResponse = {
 
 const Card = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const viewParam = searchParams.get("view"); // "mine" 또는 "others" 가져오기
   const [sortOption, setSortOption] = useState("최신순");
   const [searchValue, setSearchValue] = useState<string>("");
   const [myRun, setMyRun] = useState<{
@@ -30,7 +32,9 @@ const Card = () => {
   } | null>(null);
 
   const [teamData, setTeamData] = useState<CardHolderResponse[]>([]);
-  const [activeView, setActiveView] = useState<"mine" | "others">("mine");
+  const [activeView, setActiveView] = useState<"mine" | "others">(
+    viewParam === "others" ? "others" : "mine",
+  ); // 초기값 설정
   const [isVisible, setIsVisible] = useState(false); //
   const [isEdit, setIsEdit] = useState<"edit" | "complete">("edit");
   const [isModalVisible, setIsModalVisible] = useState(false); // 로그아웃 | 회원탈퇴 모달
@@ -108,7 +112,7 @@ const Card = () => {
     if (activeView === "mine") {
       handleToggle("mine");
     }
-  }, []);
+  }, [searchParams]);
 
   const handleCompleteClick = () => {
     if (activeView === "mine") {
@@ -117,6 +121,21 @@ const Card = () => {
       setIsEdit((prev) => (prev === "edit" ? "complete" : "edit"));
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = localStorage.getItem("user");
+      if (user) {
+        try {
+          const userObj = JSON.parse(user);
+          console.log(userObj);
+        } catch (e) {
+          console.log("Failed to parse user from localStorage", e);
+        }
+      }
+    }
+  }, []);
+
   const getAccessToken = (): string | null => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -245,4 +264,11 @@ const Card = () => {
   );
 };
 
-export default Card;
+
+export default function PageWithSuspense() {
+  return (
+    <Suspense>
+      <Card />
+    </Suspense>
+  );
+}

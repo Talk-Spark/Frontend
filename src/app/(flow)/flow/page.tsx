@@ -1,14 +1,20 @@
 "use client";
 
-import { get } from "@/src/apis";
-import AfterSelect from "@/src/components/flow/AfterSelect";
-import BeforeSelect from "@/src/components/flow/BeforeSelect";
-import Header from "@/src/components/Headers/Header";
+const AfterSelect = dynamic(
+  () => import('@/src/components/flow/AfterSelect'),
+  { ssr: false }
+)
+const BeforeSelect = dynamic(
+  () => import('@/src/components/flow/BeforeSelect'),
+  { ssr: false }
+)
+// import AfterSelect from "@/src/components/flow/AfterSelect";
+// import BeforeSelect from "@/src/components/flow/BeforeSelect";
 import { getUserData } from "@/src/utils";
+import dynamic from "next/dynamic";
+import { MutableRefObject, Suspense, useEffect, useRef, useState } from "react";
+import io from "socket.io-client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import io  from "socket.io-client";
-
 // export const CARD_FLOW = [
 //   "엠비티아이",
 //   "취미",
@@ -32,12 +38,17 @@ export interface NameCardObjProps {
 
 export interface singleQuestionObjProps {
   sparkUserId: number;
-  correct : boolean;
+  correct: boolean;
   color: "PINK" | "MINT" | "YELLOW" | "BLUE";
-  name : string;
+  name: string;
 }
 
-export type FieldType = "mbti" | "hobby" | "lookAlike" | "selfDescription" | "tmi";
+export type FieldType =
+  | "mbti"
+  | "hobby"
+  | "lookAlike"
+  | "selfDescription"
+  | "tmi";
 
 //question으로 받아오는 1번째 데이터 타입
 interface UserProfile {
@@ -70,8 +81,6 @@ export interface QuizDataProps {
   options: string[]; //정답 보기들(아마 4개)
 }
 
-
-
 const Flow = () => {
   /* 
     /flow?roomId={roomId}  와 같은 주소에서 roomId 내용을 뽑아올거임
@@ -82,6 +91,7 @@ const Flow = () => {
   const router = useRouter();
 
   const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost")); //방장 여부
+
   const [isReady, setIsReady] = useState(false);
   const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정 -> todo: 아마 현재 문제가 뭔지에 대해서...
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
@@ -93,20 +103,19 @@ const Flow = () => {
 
   //소켓에서 받아오는 정보들
   const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
-      //더미데이터
-      teamName: "팀 이름 없음",
-      name: "JunHyuk Kong",
-      age: 18,
-      major: "컴퓨터공학과",
-      mbti: "INTJ",
-      hobby: "축구",
-      lookAlike: "강동원",
-      selfDescription: "안녕하세요 저는 공준혁이라고 합니다",
-      tmi: "카페인이 너무 잘 들어요",
-    });
-    const [quizInfo, setQuizInfo] = useState<QuizDataProps | null>(null);
-    const [fieldHoles, setFieldHoles] = useState<FieldType[] | null>(null);
-  
+    //더미데이터
+    teamName: "팀 이름 없음",
+    name: "JunHyuk Kong",
+    age: 18,
+    major: "컴퓨터공학과",
+    mbti: "INTJ",
+    hobby: "축구",
+    lookAlike: "강동원",
+    selfDescription: "안녕하세요 저는 공준혁이라고 합니다",
+    tmi: "카페인이 너무 잘 들어요",
+  });
+  const [quizInfo, setQuizInfo] = useState<QuizDataProps | null>(null);
+  const [fieldHoles, setFieldHoles] = useState<FieldType[] | null>(null);
 
   const socketRef = useRef<any>(null);
 
@@ -117,15 +126,17 @@ const Flow = () => {
     });
 
     //방에 잘 접속했다는 메세지 전송
-    socketRef.current.emit("joinGame", { roomId, accessToken:  user?.accessToken});
-    socketRef.current.on("gameJoined", () => { 
+    socketRef.current.emit("joinGame", {
+      roomId,
+      accessToken: user?.accessToken,
+    });
+    socketRef.current.on("gameJoined", () => {
       if (socketRef.current && isHost)
         socketRef.current.emit("prepareQuizzes", { roomId });
 
       setTimeout(() => {
         setIsReady(true);
       }, 3000); //3초 대기 후 진행
-
     });
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기 - 맞출 사람이 더 남은 경우
@@ -135,7 +146,7 @@ const Flow = () => {
       setIsQuizEnd(true);
       setIsAllCorrect(false);
     });
-    socketRef.current.on("lastResult", (data : any) => {
+    socketRef.current.on("lastResult", (data: any) => {
       console.log(data);
 
       setIsGameEnd(true);
@@ -170,7 +181,7 @@ const Flow = () => {
     );
 
     // 최종 스코어 가져오기
-    socketRef.current.on("scores", (data : any) => {
+    socketRef.current.on("scores", (data: any) => {
       console.log(data);
       //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
       router.push("/game-end"); //최종스코어 창으로 이동!
@@ -235,4 +246,10 @@ const Flow = () => {
   );
 };
 
-export default Flow;
+export default function SuspenseFlow() {
+  return (
+    <Suspense>
+      <Flow />
+    </Suspense>
+  );
+}

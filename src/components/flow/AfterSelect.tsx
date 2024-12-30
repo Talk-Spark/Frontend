@@ -25,9 +25,7 @@ const STORAGE_CARD = {
   lookAlike: "강동원",
   selfDescription: "저는 아무 생각이 없는 사람입니당나귀",
   tmi: "티엠아이입니다 하하 티엠아이 딱히 없어요",
-  color: "yellow" as const,
-  isFull: true,
-  isStorage: false,
+  cardThema: "YELLOW" as const,
 };
 
 interface AfterSelectProps {
@@ -89,18 +87,9 @@ const AfterSelect = ({
               공준혁님의 명함 완성!
             </span>
             <StorageNameCard
-              teamName={STORAGE_CARD.teamName}
-              name={STORAGE_CARD.name}
-              age={STORAGE_CARD.age}
-              major={STORAGE_CARD.major}
-              mbti={STORAGE_CARD.mbti}
-              hobby={STORAGE_CARD.hobby}
-              lookAlike={STORAGE_CARD.lookAlike}
-              slogan={STORAGE_CARD.selfDescription}
-              tmi={STORAGE_CARD.tmi}
-              cardThema={STORAGE_CARD.color}
-              isFull={STORAGE_CARD.isFull}
-              isStorage={STORAGE_CARD.isStorage}
+              oneCard={STORAGE_CARD}
+              isFull={true}
+              isStorage={false}
             />
           </section>
 
@@ -133,7 +122,15 @@ const AfterSelect = ({
                 </span>
                 <div className="grid-row-3 grid w-full grid-cols-4 gap-x-[1.6rem] gap-y-[2rem]">
                   {/*todo: 소켓으로 참여자리스트 가져와서 렌더링하기*/}
-                  {correctedPeople.map((person)=><ProfileImage isSelected={person.correct} color={person.color}>{person.name}</ProfileImage>)}
+                  {correctedPeople.map((person) => (
+                    <ProfileImage
+                      key={person.sparkUserId}
+                      isSelected={person.correct}
+                      color={person.color}
+                    >
+                      {person.name}
+                    </ProfileImage>
+                  ))}
                 </div>
               </div>
             </article>

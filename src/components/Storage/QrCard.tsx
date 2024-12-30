@@ -40,7 +40,7 @@ const QrCard = ({ name = "", color = "PINK", cardId = 1 }: QrCardProps) => {
         className={`"flex h-[30.1rem] rounded-[2rem] ${backColorTop[color]}`}
       >
         <div className="flex h-full w-full items-center justify-center">
-          <QrCode cardId={cardId} name={name} size={200} />{" "}
+          <QrCode cardId={String(cardId)} name={name} size={200} />{" "}
         </div>
       </div>
       <div

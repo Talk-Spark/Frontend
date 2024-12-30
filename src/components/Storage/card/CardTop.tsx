@@ -98,7 +98,7 @@ const CardTop = ({
         ? "text-main-pink"
         : "text-gray-12";
   const downImageUrl = selectedColor === "BLUE" ? whiteDown : blackDown;
-
+  const IsBtn = isEditing;
   const completeBtn =
     selectedColor === "BLUE"
       ? "text-body-1-bold text-gray-1"
@@ -193,7 +193,7 @@ const CardTop = ({
             onClick={() => handleColorChange(c)}
             className={`z-100 h-[2.8rem] w-[2.8rem] rounded-full border-2 ${btnColor[c]} ${
               putData?.cardThema === c ? "border-white" : "border-transparent"
-            }`}
+            } ${isEditing ? "opacity-100" : "opacity-0"} transition-opacity duration-700`}
           ></button>
         ))}
       </div>
@@ -307,11 +307,26 @@ const CardTop = ({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-[0.4rem]">
-          <div className={`text-body-2-bold ${mbtiColor}`}>
-            {oneCard.mbti ? "MBTI" : ""}
-          </div>
-          <div className={contentTextColor}>{oneCard.mbti}</div>
+        <div className="relative flex items-center gap-[0.7rem]">
+          {isEditing ? (
+            <>
+              <div className={`text-body-2-bold ${mbtiColor}`}>MBTI</div>
+              <textarea
+                value={putData?.mbti || ""}
+                name="mbti"
+                onChange={(e) => handleInputChange("mbti", e.target.value)}
+                className={`absolute -bottom-[1.84rem] ${contentTextColor} left-[4.12rem] bg-transparent text-body-2-med focus:outline-none`}
+                maxLength={4}
+              />{" "}
+            </>
+          ) : (
+            <>
+              <div className={`text-body-2-bold ${mbtiColor}`}>
+                {oneCard.mbti ? "MBTI" : ""}
+              </div>
+              <div className={contentTextColor}>{oneCard.mbti}</div>
+            </>
+          )}
         </div>
       </div>
       <Image src={graphicImageUrl} alt="그래픽 이미지" />

@@ -16,7 +16,7 @@ const Storage = () => {
 
   const handleViewAll = () => {
     if (activeTab === "namecard") {
-      router.push("/card");
+      router.push("/card?view=others");
     } else {
       router.push("/guest-book");
     }

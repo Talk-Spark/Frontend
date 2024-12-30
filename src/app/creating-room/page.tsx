@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Header from "@/src/components/Headers/Header";
 import Step1 from "@/src/components/creating-room/Step1";
 import Step2 from "@/src/components/creating-room/Step2";
@@ -103,4 +103,11 @@ const CreatingRoomPage = () => {
   );
 };
 
-export default CreatingRoomPage;
+
+export default function PageWithSuspense() {
+  return (
+    <Suspense>
+      <CreatingRoomPage />
+    </Suspense>
+  );
+}
