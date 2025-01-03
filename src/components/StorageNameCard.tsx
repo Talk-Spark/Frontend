@@ -3,11 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import CardTop from "./Storage/card/CardTop";
 import CardBottom from "./Storage/card/CardBotttom";
-import html2canvas from "html2canvas";
-import { saveAs } from "file-saver";
-import * as htmlToImage from "html-to-image";
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
-import { filter } from "lodash";
+import { toPng } from "html-to-image";
 
 type CardDataProps = {
   // 기본 정보
