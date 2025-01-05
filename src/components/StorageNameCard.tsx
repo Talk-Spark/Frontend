@@ -18,7 +18,7 @@ type CardDataProps = {
   cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
 };
 
-type MyNameCardProps = CardDataProps & {
+export type MyNameCardProps = CardDataProps & {
   // 내 명함 response 바디
   // response body
   id?: number;

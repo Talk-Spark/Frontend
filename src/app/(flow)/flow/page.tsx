@@ -82,6 +82,39 @@ export interface QuizDataProps {
   options: string[]; //정답 보기들(아마 4개)
 }
 
+export interface StorageCardProps {
+  teamName: string;
+  name: string;
+  age: number;
+  major: string;
+  mbti: string;
+  hobby: string;
+  lookAlike: string;
+  selfDescription: string;
+  tmi: string;
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
+}
+
+export interface FinalPeopleProps {
+  age: number;
+  cardThema: "PINK" | "MINT" | "YELLOW" | "BLUE";
+  hobby: string;
+  id: number;
+  kakaoId: string;
+  lookAlike: string;
+  major: string;
+  mbti: string;
+  name: string;
+  ownerId: number;
+  selfDescription: string;
+  tmi: string;
+}
+
+interface ScoresProps {
+  [ownerId: number]: number;
+}
+
+
 const Flow = () => {
   /* 
     /flow?roomId={roomId}  와 같은 주소에서 roomId 내용을 뽑아올거임
@@ -100,8 +133,8 @@ const Flow = () => {
   const [correctedPeople, setCorrectedPeople] = useState<singleQuestionObjProps[] | null>(null);
   const [isAllCorrect, setIsAllCorrect] = useState(false);
   const [isQuizEnd, setIsQuizEnd] = useState(false);
+  const [storageCard, setStorageCard] = useState<StorageCardProps | null>(null);
   
-
   //소켓에서 받아오는 정보들
   const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
     //더미데이터
@@ -141,11 +174,23 @@ const Flow = () => {
     });
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기 - 맞출 사람이 더 남은 경우
-    socketRef.current.on("singleResult", (data : any) => {
+    socketRef.current.on("singleResult", (data : StorageCardProps) => {
       console.log(data);
 
       setIsQuizEnd(true);
       setIsAllCorrect(false);
+      setStorageCard({
+        name : data.name,
+        teamName : NameCardInfo.teamName,
+        age: data.age,
+        major: data.major,
+        mbti: data.mbti,
+        hobby: data.hobby,
+        lookAlike: data.lookAlike,
+        selfDescription: data.selfDescription,
+        tmi: data.tmi,
+        cardThema: data.cardThema,
+      })
     });
     socketRef.current.on("lastResult", (data: any) => {
       console.log(data);
@@ -182,11 +227,12 @@ const Flow = () => {
     );
 
     // 최종 스코어 가져오기
-    socketRef.current.on("scores", (data: any) => {
+    socketRef.current.on("scores", (scores: ScoresProps ,data: FinalPeopleProps[]) => {
       console.log(data);
       //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
       router.push("/game-end"); //최종스코어 창으로 이동!
-      localStorage.setItem("finalScores", JSON.stringify(data)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기
+      localStorage.setItem("finalScores", JSON.stringify(scores)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기
+      localStorage.setItem("finalPeople", JSON.stringify(data));
     }); 
 
     return () => {
@@ -236,6 +282,7 @@ const Flow = () => {
             answer = {quizInfo?.correctAnswer as string}
             answerCount = {correctedPeople?.length as number}
             isAllCorrect ={isAllCorrect}
+            storageCard={storageCard as StorageCardProps}
           />
         )
       ) : (

@@ -13,20 +13,7 @@ import Lottie from "lottie-react";
 import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
-import { singleQuestionObjProps } from "@/src/app/(flow)/flow/page";
-
-const STORAGE_CARD = {
-  teamName: "팀이름없어용",
-  name: "공준혁",
-  age: 26,
-  major: "컴퓨터공학과",
-  mbti: "intj",
-  hobby: "운동",
-  lookAlike: "강동원",
-  selfDescription: "저는 아무 생각이 없는 사람입니당나귀",
-  tmi: "티엠아이입니다 하하 티엠아이 딱히 없어요",
-  cardThema: "YELLOW" as const,
-};
+import { singleQuestionObjProps, StorageCardProps } from "@/src/app/(flow)/flow/page";
 
 interface AfterSelectProps {
   cardStep: number;
@@ -40,6 +27,7 @@ interface AfterSelectProps {
   answer : string;
   answerCount : number;
   isAllCorrect : boolean;
+  storageCard : StorageCardProps;
 }
 const AfterSelect = ({
   cardStep,
@@ -52,7 +40,8 @@ const AfterSelect = ({
   correctedPeople,
   answer,
   answerCount,
-  isAllCorrect
+  isAllCorrect,
+  storageCard
 }: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
   const [isAllCorrected, setIsAllCorrected] = useState(isAllCorrect);
@@ -77,6 +66,10 @@ const AfterSelect = ({
     } 
   };
 
+  useEffect(()=>{
+    console.log(storageCard);
+  },[storageCard])
+
   //전부 다 맞췄을 때 로띠 뜨는 것도 구현 필요 + 방장만 클릭 가능한 거 많음.
   return (
     <>
@@ -87,7 +80,7 @@ const AfterSelect = ({
               공준혁님의 명함 완성!
             </span>
             <StorageNameCard
-              oneCard={STORAGE_CARD}
+              oneCard={storageCard}
               isFull={true}
               isStorage={false}
             />
@@ -96,7 +89,7 @@ const AfterSelect = ({
           <div className="mb-[6rem] mt-[2.4rem]">
             <Button
               onClick={handleNextPerson}
-              variant={isGameEnd ? "pink" : "black"}
+              variant={isGameEnd ? "pink" : !isHost ?  "gray" : "black" }
               disabled={!isGameEnd && !isHost}
             >
               {isGameEnd ? "최종 스코어 보기" : "다음 사람 맞추기"}
@@ -137,7 +130,7 @@ const AfterSelect = ({
           </section>
 
           <div className="mb-[6rem] mt-[7rem]">
-            <Button onClick={handleNextQuestion} disabled={isHost}>
+            <Button onClick={handleNextQuestion} disabled={!isHost} variant={`${!isHost ? "gray" : "black"}`}>
               {cardStep <= 4 ? "다음 질문으로" : "다음으로"}
             </Button>
           </div>
