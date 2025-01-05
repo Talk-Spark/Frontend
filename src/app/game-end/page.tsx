@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { FinalPeopleProps } from "../(flow)/flow/page";
 import Header from "@/src/components/Headers/Header";
 import { useRouter } from "next/navigation";
+import { getDataFromLocalStorage } from "@/src/utils";
 
 export interface Player {
   name: string;
@@ -20,18 +21,7 @@ const DUMMY_DATA: Player[] = [
   { name: "Eve", score: 88 },
 ];
 
-export const getDataFromLocalStorage = (key : string) => {
-  const data = localStorage.getItem(key); // localStorage에서 데이터를 가져옴
-  if (data) {
-    try {
-      return JSON.parse(data); // JSON으로 파싱하여 반환
-    } catch (error) {
-      console.error("JSON 파싱 오류:", error);
-      return null; // 파싱 실패 시 null 반환
-    }
-  }
-  return null; // 데이터가 없으면 null 반환
-};
+
 
 export default function GameEnd() {
   const router = useRouter();
@@ -70,3 +60,4 @@ export default function GameEnd() {
     </>
   );
 }
+

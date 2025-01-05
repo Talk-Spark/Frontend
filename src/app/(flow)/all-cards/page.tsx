@@ -8,9 +8,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import StorageNameCard from "@/src/components/StorageNameCard";
-import { getDataFromLocalStorage } from "../../game-end/page";
 import { FinalPeopleProps } from "../flow/page";
 import Header from "@/src/components/Headers/Header";
+import { getDataFromLocalStorage } from "@/src/utils";
 
 const AllCards = () => {
   const [finalPeople, setFinalPeople] = useState<FinalPeopleProps[] | null>(null);
