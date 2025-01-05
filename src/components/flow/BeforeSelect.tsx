@@ -161,11 +161,16 @@ const BeforeSelect = ({
     return;
   }
 
+  const convertFieldName = (field : string) => {
+    if(field === "SELFDESCRIPTION") return "SELFDESC";
+    return field;
+  }
+
   useEffect(()=>{
     if(quizInfo){
       const getQuestionTip = async() => {
         try{
-          const response = await get(`/api/rooms/question-tip?field=${(quizInfo.fieldName).toUpperCase()}`)
+          const response = await get(`/api/rooms/question-tip?field=${convertFieldName((quizInfo.fieldName).toUpperCase())}`)
           const questionTips = splitByNewline(response.data as string);
           setQuestionTips(questionTips);
         }catch(e){

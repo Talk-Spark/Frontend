@@ -17,6 +17,7 @@ type MyNameCardProps = CardDataProps & {
   id?: number;
   kakaoId?: string;
   ownerId?: number;
+  selfDescription? : string;
 };
 
 type PutCardProps = CardDataProps & {
@@ -103,7 +104,7 @@ const CardBottom = ({
       </div>
       <div className="flex w-[12.6rem] flex-1 flex-col gap-[1.6rem]">
         {renderField("닮은 꼴", "lookAlike", oneCard.lookAlike, 15)}
-        {renderField("나는 이런 사람이야", "slogan", oneCard.slogan, 20)}
+        {renderField("나는 이런 사람이야", "slogan", oneCard.slogan || oneCard.selfDescription, 20)}
       </div>
     </div>
   );

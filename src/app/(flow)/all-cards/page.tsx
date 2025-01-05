@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "@/src/app/(flow)/all-cards/mystyle.css";
@@ -8,116 +8,55 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import StorageNameCard from "@/src/components/StorageNameCard";
-
-const STORAGE_CARD = {
-  teamName: "팀이름없어용",
-  name: "공준혁",
-  age: 26,
-  major: "컴퓨터공학과",
-  mbti: "intj",
-  hobby: "운동",
-  lookAlike: "강동원",
-  selfDescription: "저는 아무 생각이 없는 사람입니당나귀",
-  tmi: "티엠아이입니다 하하 티엠아이 딱히 없어요",
-  color: "yellow" as const,
-  isFull: true,
-  isStorage: false,
-};
+import { FinalPeopleProps } from "../flow/page";
+import Header from "@/src/components/Headers/Header";
+import { getDataFromLocalStorage } from "@/src/utils";
 
 const AllCards = () => {
+  const [finalPeople, setFinalPeople] = useState<FinalPeopleProps[] | null>(null);
+  
+  useEffect(()=>{
+    const finalPeople : FinalPeopleProps[] = getDataFromLocalStorage("finalPeople");
+    setFinalPeople(finalPeople);
+  },[])
+
+  if(!finalPeople) return;
   return (
-    <section className="mt-[3.2rem] flex flex-col items-center gap-[2.4rem]">
-      <article className="flex flex-col items-center gap-[0.8rem]">
-        <h1 className="text-center text-headline-3 text-black">
-          모든 명함을 다 모았어요!
-        </h1>
-        <span className="text-body-1-med text-gray-12">
-          보관함에 자동으로 저장돼요
-        </span>
-      </article>
-      <Swiper
-        className="myclass"
-        modules={[Navigation, Pagination]}
-        spaceBetween={12}
-        slidesPerView={1.12}
-        centeredSlides={true}
-        navigation={true}
-        pagination={{ clickable: true, type: "fraction" }}
-        scrollbar={{ draggable: true }}
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log("slide change")}
-        style={{ width: "100%", height: "590px" }}
-      >
-        <SwiperSlide>
-          {/* <StorageNameCard
-            ownerId={2}
-            teamName={STORAGE_CARD.teamName}
-            name={STORAGE_CARD.name}
-            age={STORAGE_CARD.age}
-            major={STORAGE_CARD.major}
-            mbti={STORAGE_CARD.mbti}
-            hobby={STORAGE_CARD.hobby}
-            lookAlike={STORAGE_CARD.lookAlike}
-            slogan={STORAGE_CARD.selfDescription}
-            tmi={STORAGE_CARD.tmi}
-            cardThema={STORAGE_CARD.color}
-            isFull={STORAGE_CARD.isFull}
-            isStorage={STORAGE_CARD.isStorage}
-          /> */}
-        </SwiperSlide>
-        <SwiperSlide>
-          {/* <StorageNameCard
-            ownerId={3}
-            teamName={STORAGE_CARD.teamName}
-            name={STORAGE_CARD.name}
-            age={STORAGE_CARD.age}
-            major={STORAGE_CARD.major}
-            mbti={STORAGE_CARD.mbti}
-            hobby={STORAGE_CARD.hobby}
-            lookAlike={STORAGE_CARD.lookAlike}
-            slogan={STORAGE_CARD.selfDescription}
-            tmi={STORAGE_CARD.tmi}
-            cardThema={"green"}
-            isFull={STORAGE_CARD.isFull}
-            isStorage={STORAGE_CARD.isStorage}
-          /> */}
-        </SwiperSlide>
-        <SwiperSlide>
-          {/* <StorageNameCard
-            ownerId={4}
-            teamName={STORAGE_CARD.teamName}
-            name={STORAGE_CARD.name}
-            age={STORAGE_CARD.age}
-            major={STORAGE_CARD.major}
-            mbti={STORAGE_CARD.mbti}
-            hobby={STORAGE_CARD.hobby}
-            lookAlike={STORAGE_CARD.lookAlike}
-            slogan={STORAGE_CARD.selfDescription}
-            tmi={STORAGE_CARD.tmi}
-            cardThema={"pink"}
-            isFull={STORAGE_CARD.isFull}
-            isStorage={STORAGE_CARD.isStorage}
-          /> */}
-        </SwiperSlide>
-        <SwiperSlide>
-          {/* <StorageNameCard
-            ownerId={1}
-            teamName={STORAGE_CARD.teamName}
-            name={STORAGE_CARD.name}
-            age={STORAGE_CARD.age}
-            major={STORAGE_CARD.major}
-            mbti={STORAGE_CARD.mbti}
-            hobby={STORAGE_CARD.hobby}
-            lookAlike={STORAGE_CARD.lookAlike}
-            slogan={STORAGE_CARD.selfDescription}
-            tmi={STORAGE_CARD.tmi}
-            cardThema={"blue"}
-            isFull={STORAGE_CARD.isFull}
-            isStorage={STORAGE_CARD.isStorage}
-          /> */}
-        </SwiperSlide>
-      </Swiper>
-    </section>
+    <>
+    <Header title="전체 명함 공개" button2Type="next" button2Action={()=>alert("네비게이션 연결 필요!")}/>
+      <section className="mt-[3.2rem] flex flex-col items-center gap-[2.4rem]">
+        <article className="flex flex-col items-center gap-[0.8rem]">
+          <h1 className="text-center text-headline-3 text-black">
+            모든 명함을 다 모았어요!
+          </h1>
+          <span className="text-body-1-med text-gray-12">
+            보관함에 자동으로 저장돼요
+          </span>
+        </article>
+        <Swiper
+          className="myclass"
+          modules={[Navigation, Pagination]}
+          spaceBetween={12}
+          slidesPerView={1}
+          centeredSlides={true}
+          navigation={true}
+          pagination={{ clickable: true, type: "fraction" }}
+          scrollbar={{ draggable: true }}
+          onSwiper={(swiper) => {}}
+          onSlideChange={() => {/*noting to do*/}}
+          style={{ width: "100%", height: "590px" }}
+        >
+          {finalPeople.map((user)=><SwiperSlide>
+            <StorageNameCard
+            oneCard={user}
+            isFull={true}
+            />
+          </SwiperSlide>)}
+    
+        </Swiper>
+      </section>
+    </>
+    
   );
 };
 

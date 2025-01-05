@@ -27,6 +27,7 @@ const Button = ({
     gray: "bg-gray-3",
   }[variant || "black"]; //default값은 black으로
 
+
   const textColorClass = (() => {
     if (!disabled && variant == "gray") return "text-gray-8";
     else if (size === "s") return "text-gray-7";

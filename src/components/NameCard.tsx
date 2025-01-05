@@ -1,6 +1,7 @@
 import majorIcon from "@/public/nameCard/major.svg";
 import Image from "next/image";
 import { FieldType } from "./flow/BeforeSelect";
+import { useEffect } from "react";
 
 type NameCardProps = {
   teamName: string;
@@ -33,7 +34,7 @@ const NameCard: React.FC<NameCardProps> = ({
 }) => {
   // 각 카테고리 항목에 대해 상태 가져오기 (active와 hole을 주로 사용)
   const getCategoryStatus = (category: string) => {
-    const isHole = fieldHoles.includes(selectedCategory as FieldType);
+    const isHole = fieldHoles.includes(category as FieldType);
 
     if (selectedCategory === category) {
       return "active";
@@ -67,11 +68,19 @@ const NameCard: React.FC<NameCardProps> = ({
     if (categoryStatus=== "active") {
       return <span className="text-gray-5"></span>;
     } else if(categoryStatus === "hole"){
+      if(category === "mbti"){
+        return <span className="text-gray-5">순서 아님!</span>; //아직 순서가 아니에요 텍스트 색
+      }
       return <span className="text-gray-5">아직 순서가 아니에요!</span>; //아직 순서가 아니에요 텍스트 색
     } else{
       return value || <span className="text-gray-5"></span>; //공개된 내용에 대한 텍스트 내용
     }
   };
+
+  useEffect(()=>{
+    console.log(fieldHoles);
+    console.log(selectedCategory);
+  },[fieldHoles])
 
   return (
     <div className="flex h-[30rem] flex-col rounded-xl bg-white px-[1.2rem] py-[1.6rem] shadow">
