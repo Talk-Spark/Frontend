@@ -12,6 +12,7 @@ import blackDown from "@/public/storageNameCard/blackDown.svg";
 import whiteDown from "@/public/storageNameCard/down.svg";
 import { instance } from "@/src/apis";
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const graphicColor: Record<string, StaticImageData> = {
   PINK: pinkGraphic,
@@ -186,17 +187,44 @@ const CardTop = ({
       >
         완료
       </button>
-      <div className="z-10 flex w-full flex-col items-center justify-around gap-[1.4rem]">
+      <motion.div
+        initial="start"
+        animate="end"
+        variants={{
+          start: { scale: 0, opacity: 0.5 },
+          end: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+              duration: 0.7,
+              type: "spring",
+              stiffness: 110,
+              delayChildren: 0.3,
+              staggerChildren: 0.2,
+            },
+          },
+        }}
+        className="z-10 flex w-full flex-col items-center justify-around gap-[1.4rem]"
+      >
         {(["PINK", "YELLOW", "MINT", "BLUE"] as const).map((c) => (
-          <button
+          // 모션 애니메이션 추가
+          <motion.div
             key={c}
-            onClick={() => handleColorChange(c)}
-            className={`z-100 h-[2.8rem] w-[2.8rem] rounded-full border-2 ${btnColor[c]} ${
-              putData?.cardThema === c ? "border-white" : "border-transparent"
-            } ${isEditing ? "opacity-100" : "opacity-0"} transition-opacity duration-700`}
-          ></button>
+            variants={{
+              start: { opacity: 0, y: 20 },
+              end: { opacity: 1, y: 0 },
+            }}
+          >
+            <button
+              key={c}
+              onClick={() => handleColorChange(c)}
+              className={`z-100 h-[2.8rem] w-[2.8rem] rounded-full border-2 ${btnColor[c]} ${
+                putData?.cardThema === c ? "border-white" : "border-transparent"
+              } ${isEditing ? "opacity-100" : "opacity-0"} transition-opacity duration-700`}
+            ></button>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 

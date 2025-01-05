@@ -3,8 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import CardTop from "./Storage/card/CardTop";
 import CardBottom from "./Storage/card/CardBotttom";
-import html2canvas from "html2canvas";
-import { saveAs } from "file-saver";
+import { toPng } from "html-to-image";
 
 type CardDataProps = {
   // 기본 정보
@@ -69,34 +68,36 @@ const StorageNameCard: React.FC<NameCardProps> = ({
   const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
   console.log(oneCard);
 
-  const cardRef = useRef<HTMLDivElement>(null); // Ref to capture the entire card
+  const cardRef = useRef<HTMLDivElement>(null);
 
+  // 명함 이미지 저장 html-to-image
   const handleDownload = () => {
     if (cardRef.current) {
       console.log("Card ref saved.");
-
-      html2canvas(cardRef.current, {
-        backgroundColor: "transparent", // 투명 배경 설정
-        useCORS: true,
-        logging: true,
-        scale: 2,
-        // onclone: (element) => {
-        //   element.clonedDocument = "lightgray";
-        // },
-        ignoreElements: (element) => element.tagName === "BUTTON", // 버튼 필터링
+      // 작동하나 몇 요소가 느리게 저장됨
+      const filter = (node: HTMLElement) => {
+        // 편집, 다운로드 버튼 제거
+        if (node.tagName === "BUTTON") {
+          return false;
+        }
+        const exclusionClasses = ["remove-me", "secret-div"];
+        return !exclusionClasses.some((classname) =>
+          node.classList?.contains(classname),
+        );
+      };
+      toPng(cardRef.current, {
+        cacheBust: true,
+        filter: filter,
       })
-        .then((canvas) => {
-          canvas.toBlob((blob) => {
-            if (blob) {
-              saveAs(blob, "명함.png");
-            }
-          });
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "명함.png";
+          link.href = dataUrl;
+          link.click();
         })
-        .catch((error) => {
-          console.error("Error generating image:", error); // 오류 처리
+        .catch((err) => {
+          console.log(err);
         });
-    } else {
-      console.log("Card ref is not found.");
     }
   };
 
