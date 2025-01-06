@@ -24,6 +24,7 @@ const Page = () => {
   };
 
   const [roomData, setRoomData] = useState<RoomData[]>([]);
+  const [idToggle, setIdToggle] = useState(0);
 
   /* 정렬 조건에 따른 방명록 검색하기 */
   useEffect(() => {
@@ -92,6 +93,8 @@ const Page = () => {
         searchValue={searchValue}
         setSearchValue={setSearchValue}
         setSortOption={setSortOption}
+        idToggle={idToggle}
+        setIdToggle={setIdToggle}
       />
     </div>
   );
