@@ -267,7 +267,6 @@ const Flow = () => {
             NameCardInfo ={NameCardInfo}
             quizInfo ={quizInfo as QuizDataProps}
             fieldHoles ={fieldHoles as FieldType[]}
-
           />
         ) : (
           <AfterSelect

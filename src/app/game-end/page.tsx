@@ -55,8 +55,10 @@ export default function GameEnd() {
   return (
     <>
       <Header title="최종 스코어" button2Type="next" button2Action={()=>{router.push("/all-cards")}}/>
-      <BarGraph players={finalData} />
-      <RankingSheet otherPlayers={otherPlayers} />
+      <main className="flex flex-col items-center bg-gray-1 w-[cal(100% + 4rem)] -mx-[2rem] ">
+        <BarGraph players={finalData} />
+        <RankingSheet otherPlayers={otherPlayers} />
+      </main>
     </>
   );
 }
