@@ -22,8 +22,8 @@ const Modal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-70">
       <div className="h-auto w-[33.5rem] rounded-[12px] bg-white px-[1.6rem] pb-[2.4rem] pt-[4rem] text-center shadow">
-        <h2 className="mb-[1.2rem] text-headline-3">{title}</h2>
-        <p className="mb-[2.8rem] text-body-1-med">{description}</p>
+        <h2 className="mb-[1.2rem] text-headline-3 text-black">{title}</h2>
+        <p className="mb-[2.8rem] text-body-1-med text-black">{description}</p>
         <div className="flex justify-between">
           <button
             onClick={onAction}

@@ -74,7 +74,7 @@ const MyCard = () => {
           {cardInfo?.name} 님의 명함
         </div>
         <div
-          className="flex items-center text-body-1-med text-gray-7"
+          className="flex cursor-pointer items-center text-body-1-med text-gray-7"
           onClick={() => {
             router.push("/card?view=mine");
           }}

@@ -13,6 +13,7 @@ interface CardBox {
   bookMark: boolean;
   storedAt: string;
 }
+
 interface RoomBox {
   roomId: number;
   roomName: string;
@@ -23,19 +24,19 @@ interface RoomBox {
 }
 
 interface TeamBoxProps {
+  ver: "명함" | "방명록";
   team?: CardBox;
   room?: RoomBox;
   index: number;
   isSelected: boolean;
   isEdit: "complete" | "edit";
   onSelect: (index: number) => void;
-  toggleFav: number;
-  setIsToggle: (value: boolean) => void;
-  setToggleFav: (index: number) => void;
+  setIsToggle?: (value: boolean) => void;
   isNewData?: boolean;
   setIsNewData?: (value: boolean) => void;
   isLoading?: boolean;
-  ver: "명함" | "방명록";
+  idToggle?: number;
+  setIdToggle: (value: number) => void;
 }
 
 const TeamBox = (props: TeamBoxProps) => {
@@ -48,14 +49,15 @@ const TeamBox = (props: TeamBoxProps) => {
     isLoading,
     isNewData,
     onSelect,
-    setToggleFav,
     setIsNewData,
-    toggleFav,
     ver,
+    idToggle,
+    setIdToggle,
   } = props;
   const [bgColor, setBgColor] = useState("bg-gray-1");
   const router = useRouter();
 
+  // 큐알 코드를 통해 새로운 데이터 입력 시 3초 동안 pink 배경
   useEffect(() => {
     if (isNewData && index === 0 && !isLoading && setIsNewData) {
       setBgColor("bg-sub-palePink-55 border-sub-palePink");
@@ -66,11 +68,12 @@ const TeamBox = (props: TeamBoxProps) => {
     }
   }, [isNewData]);
 
-  // 선택되었을때 메인 컬러
+  // 편집 시 선택되었을때 pink 메인 컬러
   const boxBgColor = isSelected
     ? "bg-sub-palePink-55 border-sub-palePink"
     : bgColor;
 
+  //  개별 화면으로 이동
   const showDetailCard = () => {
     if (isEdit === "complete") {
       onSelect(index);
@@ -113,15 +116,32 @@ const TeamBox = (props: TeamBoxProps) => {
 
   const previewContent = getPreviewContent(content);
 
+  // 방명록 or 명함
   const dataName = team ? team.cardHolderName : room && room.roomName;
 
   const dataNum = team ? team.numOfTeammates : room && room.roomPeopleCount;
 
-  const dataBookMark = team ? team.bookMark : room && room.guestBookFavorited;
+  const dataBookMark = team
+    ? team.bookMark
+    : room
+      ? room.guestBookFavorited
+      : undefined;
 
+  const dataId = team ? team.cardHolderId : (room && room.roomId) || 0;
+
+  // 즐겨찾기 토글할 데이터의 아이디
   const handleFavClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setToggleFav(index);
+    if (dataId) {
+      if (idToggle === dataId) {
+        setIdToggle(-1);
+        setTimeout(() => {
+          setIdToggle(dataId); // 새로운 값 설정
+        }, 0); // 다음 렌더링 사이클에 적용
+      } else {
+        setIdToggle(dataId);
+      }
+    }
   };
 
   return (

@@ -5,7 +5,7 @@ interface ToggleBarProps {
 
 const ToggleBar: React.FC<ToggleBarProps> = ({ activeView, handleToggle }) => {
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col bg-white">
       <div className="relative mx-[2rem] mb-[0.8rem] flex w-[calc(100%-4rem)] flex-1 justify-between text-subhead-bold">
         <button
           onClick={() => handleToggle("mine")}

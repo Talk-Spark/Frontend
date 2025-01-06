@@ -46,6 +46,7 @@ const Card = () => {
   const [isNewData, setIsNewData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]); // 선택 박스
+  const [idToggle, setIdToggle] = useState(0);
 
   /* 정렬 조건에 따른 명함 보관함 속 명함 조회 */
   useEffect(() => {
@@ -78,7 +79,7 @@ const Card = () => {
           const data = resData.data;
           if (data?.cardHolders) {
             setTeamData(data.cardHolders);
-            console.log("teamData:", data.cardHolders);
+            // console.log("teamData:", data.cardHolders);
           } else {
             console.log("cardHolders 속성을 찾을 수 없습니다.");
           }
@@ -189,8 +190,8 @@ const Card = () => {
   };
 
   return (
-    <>
-      <div className="-mx-[2rem] w-[calc(100%+4rem)]">
+    <div className="relative">
+      <div className="fixed left-0 right-0 top-0 z-10 mb-[20rem]">
         <Header
           title={headerTitle}
           padding={true}
@@ -213,7 +214,7 @@ const Card = () => {
           />
         </div>
       ) : (
-        <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center">
+        <div className="relative -mx-[2rem] mt-[5.2rem] flex w-[calc(100%+4rem)] flex-col items-center">
           <Modal
             isOpen={confirmModal}
             onAction={() => setConfirmModal(false)}
@@ -254,16 +255,17 @@ const Card = () => {
               searchValue={searchValue}
               selectedTeamBoxes={selectedTeamBoxes}
               setSelectedTeamBoxes={setSelectedTeamBoxes}
+              idToggle={idToggle}
+              setIdToggle={setIdToggle}
             />
           ) : (
             <MyCard isVisible={isVisible} />
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
-
 
 export default function PageWithSuspense() {
   return (
