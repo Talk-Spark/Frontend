@@ -79,7 +79,7 @@ const Card = () => {
           const data = resData.data;
           if (data?.cardHolders) {
             setTeamData(data.cardHolders);
-            console.log("teamData:", data.cardHolders);
+            // console.log("teamData:", data.cardHolders);
           } else {
             console.log("cardHolders 속성을 찾을 수 없습니다.");
           }

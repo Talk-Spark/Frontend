@@ -197,35 +197,27 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   const handleDeleteAll = () => {
     if (setSelectedTeamBoxes) {
-      /* 보관된 명함 삭제하기 (전체)  API */
-
+      /* 보관된 명함 삭제하기 DELETE (전체)  API */
       if (ver === "명함" && teamData) {
         let allIndexes: number[] = [];
 
-        // Log the expected data before setting state
         allIndexes = teamData.map((_, index) => index);
 
         if (selectedTeamBoxes?.length === allIndexes.length) {
-          setSelectedTeamBoxes([]); // Deselect all
+          setSelectedTeamBoxes([]);
         } else {
-          setSelectedTeamBoxes(allIndexes); // Select all boxes
+          setSelectedTeamBoxes(allIndexes);
+          console.log(selectedTeamBoxes);
         }
       } else if (ver === "방명록" && roomData && setRoomData) {
         /* 방명록 삭제하기  API */
-        // const deleteRequests = roomData.map((data) =>
-        //   instance.delete(`/api/guest-books/${data.roomId}`),
-        // );
-        // await Promise.all(deleteRequests);
-        // setRoomData([]);
         if (selectedTeamBoxes?.length === roomData.length) {
           setSelectedTeamBoxes([]); // 선택 해제
         } else {
-          const allIndexes = roomData.map((_, index) => index); // 모든 박스의 인덱스 생성
-          setSelectedTeamBoxes(allIndexes); // 모든 박스를 선택
+          const allIndexes = roomData.map((_, index) => index);
+          setSelectedTeamBoxes(allIndexes);
         }
       }
-
-      setSelectedTeamBoxes([]);
     }
     setIsModal(false);
   };
@@ -250,7 +242,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   return (
     <div className="w-full bg-white">
-      <div className="w-[calc(100% - 4rem)] mx-[2rem] pb-[15rem]">
+      <div className="w-[calc(100% - 4rem)] mx-[2rem] pb-[19rem]">
         <SearchInput
           setSearchValue={setSearchValue}
           searchValue={searchValue}
