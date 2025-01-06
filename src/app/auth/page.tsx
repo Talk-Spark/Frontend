@@ -68,7 +68,7 @@ const Page = () => {
     fetchToken();
   }, [searchParams]);
 
-  return <div>리다이렉션중...</div>;
+  return <div></div>;
 };
 
 export default function PageWithSuspense() {

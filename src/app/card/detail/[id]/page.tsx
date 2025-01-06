@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { instance, put } from "@/src/apis";
 import Header from "@/src/components/Headers/Header";
 import { useRouter } from "next/navigation";
+import PageTransition from "@/src/components/common/PageTransition";
 
 type OthersNameCardProps = {
   storedCardId: number;
@@ -104,65 +105,69 @@ const DetailCard = () => {
   }
 
   return (
-    <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center justify-center overflow-hidden pb-[4rem]">
-      <div className="w-full">
-        <Header
-          title="명함 보관함"
-          padding={true}
-          showButton1={true}
-          button1Action={() => router.push("/card?view=others")}
-        />
-      </div>
-      {/* 즐겨찾기 */}
-      <div className="mb-[2rem] mt-[1.6rem] flex w-[37.5rem] flex-col items-center justify-center gap-[0.8rem]">
-        <Image
-          src={otherCards[0]?.bookMark ? favPinkStar : favStar}
-          onClick={() => putFav()}
-          alt="즐겨찾기"
-        />
-        <span className="text-headline-5">{otherCards[0]?.cardHolderName}</span>
-      </div>
-      {/* 슬라이더 */}
-      <div
-        className={`h-[60.3rem] w-[50rem] ${isVisible ? "opacity-100" : "opacity-0"} transition-opacity duration-700`}
-      >
-        {otherCards && otherCards.length > 1 ? (
-          <Slider {...sliderSettings} ref={slickRef}>
-            {otherCards.map((card, index) => (
-              <div key={card.storedCardId} className="flex justify-center">
-                <div
-                  className={`${
-                    index === currentIndex
-                      ? "scale-100 opacity-100"
-                      : "scale-95 opacity-80"
-                  } flex w-[35rem] items-center justify-normal transition-all duration-200 ease-in-out`}
-                >
-                  <StorageNameCard
-                    oneCard={card}
-                    isFull={true}
-                    isStorage={false}
-                  />
+    <PageTransition>
+      <div className="relative -mx-[2rem] flex h-[100vh] w-[calc(100%+4rem)] flex-col items-center overflow-hidden bg-white pb-[4rem]">
+        <div className="w-full bg-white">
+          <Header
+            title="명함 보관함"
+            padding={true}
+            showButton1={true}
+            button1Action={() => router.push("/card?view=others")}
+          />
+        </div>
+        {/* 즐겨찾기 */}
+        <div className="mb-[2rem] mt-[1.6rem] flex w-[37.5rem] flex-col items-center justify-center gap-[0.8rem]">
+          <Image
+            src={otherCards[0]?.bookMark ? favPinkStar : favStar}
+            onClick={() => putFav()}
+            alt="즐겨찾기"
+          />
+          <span className="text-headline-5 text-black">
+            {otherCards[0]?.cardHolderName}
+          </span>
+        </div>
+        {/* 슬라이더 */}
+        <div
+          className={`h-[60.3rem] w-[50rem] ${isVisible ? "opacity-100" : "opacity-0"} transition-opacity duration-700`}
+        >
+          {otherCards && otherCards.length > 1 ? (
+            <Slider {...sliderSettings} ref={slickRef}>
+              {otherCards.map((card, index) => (
+                <div key={card.storedCardId} className="flex justify-center">
+                  <div
+                    className={`${
+                      index === currentIndex
+                        ? "scale-100 opacity-100"
+                        : "scale-95 opacity-80"
+                    } flex w-[35rem] items-center justify-normal transition-all duration-200 ease-in-out`}
+                  >
+                    <StorageNameCard
+                      oneCard={card}
+                      isFull={true}
+                      isStorage={false}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Slider>
-        ) : (
-          <div className="flex justify-center">
-            <StorageNameCard
-              oneCard={otherCards[0]}
-              isFull={true}
-              isStorage={false}
-            />
-          </div>
-        )}
-        <Arrow
-          otherCards={otherCards}
-          previous={previous}
-          next={next}
-          currentIndex={currentIndex}
-        />
-      </div>{" "}
-    </div>
+              ))}
+            </Slider>
+          ) : (
+            <div className="flex justify-center">
+              <StorageNameCard
+                oneCard={otherCards[0]}
+                isFull={true}
+                isStorage={false}
+              />
+            </div>
+          )}
+          <Arrow
+            otherCards={otherCards}
+            previous={previous}
+            next={next}
+            currentIndex={currentIndex}
+          />
+        </div>{" "}
+      </div>
+    </PageTransition>
   );
 };
 

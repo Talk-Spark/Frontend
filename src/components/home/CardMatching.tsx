@@ -28,7 +28,7 @@ const CardMatching = () => {
         <div className="text-headline-3 text-white">명함 맞추기</div>
         <div className="flex gap-[1.2rem]">
           <div
-            className="h-[13.2rem] w-[16.2rem] text-subhead-bold shadow-DEFAULT"
+            className="h-[13.2rem] w-[16.2rem] cursor-pointer text-subhead-bold shadow-DEFAULT"
             onClick={() => handleRouting("/creating-room")}
           >
             {/* 방 만들기 */}
@@ -40,7 +40,7 @@ const CardMatching = () => {
             />
           </div>
           <div
-            className="h-[13.2rem] w-[16.2rem] text-subhead-bold shadow-DEFAULT"
+            className="h-[13.2rem] w-[16.2rem] cursor-pointer text-subhead-bold shadow-DEFAULT"
             onClick={() => handleRouting("/entry")}
           >
             {/* 입장하기 */}

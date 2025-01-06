@@ -4,6 +4,7 @@ import Sorting from "./Sorting";
 import TeamBox from "./TeamBox";
 import Modal from "../common/Modal";
 import { instance, put } from "@/src/apis";
+import { motion } from "framer-motion";
 
 interface Team {
   cardHolderId: number;
@@ -318,12 +319,16 @@ const SearchAndGetCard = (props: NameCardProps) => {
         />
       )}
       {ver === "명함" && (
-        <div
+        <motion.div
           className="fixed bottom-0 flex h-[16.2rem] w-full max-w-[76.8rem] justify-center"
           style={{
             background:
               "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
           }}
+          initial={{ y: 100, opacity: 0 }} // 시작 상태
+          animate={{ y: 0, opacity: 1 }} // 애니메이션 상태
+          exit={{ y: 100, opacity: 0 }} // 종료 상태
+          transition={{ duration: 0.5 }} // 애니메이션 지속 시간
         >
           <button
             onClick={addCardBtn}
@@ -331,7 +336,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
           >
             명함 추가하기
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );

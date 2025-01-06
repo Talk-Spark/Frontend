@@ -350,7 +350,7 @@ const CardTop = ({
                 value={putData?.mbti || ""}
                 name="mbti"
                 onChange={(e) => handleInputChange("mbti", e.target.value)}
-                className={`absolute -bottom-[1.84rem] ${contentTextColor} left-[4.12rem] bg-transparent text-body-2-med focus:outline-none`}
+                className={`absolute -bottom-[1.84rem] ${contentTextColor} left-[4.12rem] w-[5rem] bg-transparent text-body-2-med focus:outline-none`}
                 maxLength={4}
               />{" "}
             </>

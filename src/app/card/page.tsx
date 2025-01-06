@@ -190,8 +190,8 @@ const Card = () => {
   };
 
   return (
-    <div>
-      <div className="-mx-[2rem] w-[calc(100%+4rem)]">
+    <div className="relative">
+      <div className="fixed left-0 right-0 top-0 z-10 mb-[20rem]">
         <Header
           title={headerTitle}
           padding={true}
@@ -214,7 +214,7 @@ const Card = () => {
           />
         </div>
       ) : (
-        <div className="relative -mx-[2rem] flex w-[calc(100%+4rem)] flex-col items-center">
+        <div className="relative -mx-[2rem] mt-[5.2rem] flex w-[calc(100%+4rem)] flex-col items-center">
           <Modal
             isOpen={confirmModal}
             onAction={() => setConfirmModal(false)}
