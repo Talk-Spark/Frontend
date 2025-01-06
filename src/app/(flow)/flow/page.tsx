@@ -175,7 +175,7 @@ const Flow = () => {
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기 - 맞출 사람이 더 남은 경우
     socketRef.current.on("singleResult", (data : StorageCardProps) => {
-      console.log(data);
+      //console.log(data);
 
       setIsQuizEnd(true);
       setIsAllCorrect(false);
@@ -192,8 +192,23 @@ const Flow = () => {
         cardThema: data.cardThema,
       })
     });
-    socketRef.current.on("lastResult", (data: any) => {
-      console.log(data);
+    socketRef.current.on("lastResult", (data: StorageCardProps) => {
+      //console.log(data);
+
+      setIsQuizEnd(true);
+      setIsAllCorrect(false);
+      setStorageCard({
+        name : data.name,
+        teamName : NameCardInfo.teamName,
+        age: data.age,
+        major: data.major,
+        mbti: data.mbti,
+        hobby: data.hobby,
+        lookAlike: data.lookAlike,
+        selfDescription: data.selfDescription,
+        tmi: data.tmi,
+        cardThema: data.cardThema,
+      })
 
       setIsGameEnd(true);
     });
