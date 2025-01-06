@@ -212,7 +212,14 @@ const CardTop = ({
             key={c}
             variants={{
               start: { opacity: 0, y: 20 },
-              end: { opacity: 1, y: 0 },
+              end: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  stiffness: 10,
+                  duration: 0.1,
+                },
+              },
             }}
           >
             <button

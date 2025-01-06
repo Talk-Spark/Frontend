@@ -46,6 +46,7 @@ const Card = () => {
   const [isNewData, setIsNewData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]); // 선택 박스
+  const [idToggle, setIdToggle] = useState(0);
 
   /* 정렬 조건에 따른 명함 보관함 속 명함 조회 */
   useEffect(() => {
@@ -189,7 +190,7 @@ const Card = () => {
   };
 
   return (
-    <>
+    <div>
       <div className="-mx-[2rem] w-[calc(100%+4rem)]">
         <Header
           title={headerTitle}
@@ -254,16 +255,17 @@ const Card = () => {
               searchValue={searchValue}
               selectedTeamBoxes={selectedTeamBoxes}
               setSelectedTeamBoxes={setSelectedTeamBoxes}
+              idToggle={idToggle}
+              setIdToggle={setIdToggle}
             />
           ) : (
             <MyCard isVisible={isVisible} />
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
-
 
 export default function PageWithSuspense() {
   return (

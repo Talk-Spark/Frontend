@@ -44,9 +44,9 @@ type NameCardProps = GuestBookProps & {
   searchValue: string;
   selectedTeamBoxes?: number[];
   setSelectedTeamBoxes?: (value: number[]) => void;
+  idToggle: number;
+  setIdToggle: (value: number) => void;
 };
-
-// type SearchAndGetCardProps = GuestBookProps | NameCardProps;
 
 const SearchAndGetCard = (props: NameCardProps) => {
   const {
@@ -66,13 +66,14 @@ const SearchAndGetCard = (props: NameCardProps) => {
     setSelectedTeamBoxes,
     isNewData,
     setIsNewData,
+    idToggle,
+    setIdToggle,
   } = props;
 
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
-  const [toggleFav, setToggleFav] = useState<number>(0);
   const dataLength = teamData ? teamData?.length : roomData?.length;
-  const [isToggle, setIsToggle] = useState(false); // 같은 박스 연속 선택을 고려
+
   const addCardBtn = () => {
     if (ver === "명함" && setIsCamera) {
       setIsCamera(true); // setIsCamera가 정의되어 있을 때만 호출
@@ -103,16 +104,13 @@ const SearchAndGetCard = (props: NameCardProps) => {
   };
 
   const handleDeleteSelected = async () => {
-    console.log(isLoading);
     if (teamData && setTeamData && selectedTeamBoxes && setSelectedTeamBoxes) {
-      console.log("아이디");
       /* 보관된 명함 삭제 (선택)) API */
       try {
         // 선택된 팀 Id
         const selectedTeamIds = selectedTeamBoxes?.map(
           (index) => teamData[index].cardHolderId,
         );
-        console.log(selectedTeamIds);
 
         // 각 선택된 cardId에 대해 DELETE 요청 보내기
         const deleteRequests = selectedTeamIds.map((cardHolderId) =>
@@ -164,56 +162,38 @@ const SearchAndGetCard = (props: NameCardProps) => {
   };
 
   useEffect(() => {
-    if (toggleFav !== null) {
-      console.log(isToggle);
-      if (teamData && setTeamData) {
-        /* 보관된 명함에 대한 즐겨찾기 PUT */
-        // const selectedTeam = teamData[toggleFav];
-        // if (!selectedTeam) return;
+    if (teamData && setTeamData) {
+      /* 보관된 명함에 대한 즐겨찾기 PUT */
+      const putFav = async (favId: number) => {
+        await put(`/api/storedCard/${favId}`);
+      };
+      if (idToggle && idToggle >= 0) {
+        putFav(idToggle);
         setTeamData((prevData) =>
           prevData.map((team) =>
-            team.cardHolderId === toggleFav
+            team.cardHolderId === idToggle
               ? { ...team, bookMark: !team.bookMark }
               : team,
           ),
         );
-        if (isToggle) {
-          setIsToggle(false);
-        }
-
-        const putFav = async (favId: number) => {
-          await put(`/api/storedCard/${favId}`);
-        };
-
-        if (toggleFav) {
-          putFav(toggleFav);
-        }
-        setToggleFav(0);
-      } else if (roomData && setRoomData) {
-        /* 보관된 방명록에 대한 즐겨찾기 PUT (배열) */
-        const selectedTeam = roomData[toggleFav];
-        if (!selectedTeam) return;
-
-        // 작동 불완전시 toggleFav를 페이지에서 관리, fetch시 의존성 배열로
+      }
+    } else if (roomData && setRoomData) {
+      /* 보관된 방명록에 대한 즐겨찾기 PUT (배열) */
+      const putFav = async () => {
+        await put(`/api/guest-books/${idToggle}`);
+      };
+      if (idToggle && idToggle >= 0) {
         setRoomData((prevData) =>
           prevData.map((room) =>
-            room.roomName === selectedTeam.roomName
+            room.roomId === idToggle
               ? { ...room, bookMark: !room.guestBookFavorited }
               : room,
           ),
         );
-        const putFav = async () => {
-          await put(`/api/guest-books/${selectedTeam.roomId}`);
-        };
         putFav();
       }
     }
-  }, [toggleFav, isToggle]);
-
-  useEffect(() => {
-    // Logic to run when selectedTeamBoxes changes
-    console.log(selectedTeamBoxes);
-  }, [selectedTeamBoxes]); // This will run every time selectedTeamBoxes is updated
+  }, [idToggle]);
 
   const handleDeleteAll = () => {
     if (setSelectedTeamBoxes) {
@@ -224,7 +204,6 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
         // Log the expected data before setting state
         allIndexes = teamData.map((_, index) => index);
-        console.log("Selected Indexes to Set:", allIndexes);
 
         if (selectedTeamBoxes?.length === allIndexes.length) {
           setSelectedTeamBoxes([]); // Deselect all
@@ -270,7 +249,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white">
       <div className="w-[calc(100% - 4rem)] mx-[2rem] pb-[15rem]">
         <SearchInput
           setSearchValue={setSearchValue}
@@ -298,33 +277,31 @@ const SearchAndGetCard = (props: NameCardProps) => {
             ? teamData?.map((team, index) => (
                 <TeamBox
                   key={index}
+                  ver={ver}
+                  team={team}
                   isSelected={selectedTeamBoxes?.includes(index) || false}
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
                   index={index}
-                  setToggleFav={setToggleFav}
-                  team={team}
                   isLoading={isLoading}
-                  ver={ver}
                   isNewData={isNewData}
                   setIsNewData={setIsNewData}
-                  toggleFav={toggleFav}
-                  setIsToggle={setIsToggle}
+                  idToggle={idToggle}
+                  setIdToggle={setIdToggle}
                 />
               ))
             : roomData?.map((room, index) => (
                 <TeamBox
                   key={index}
+                  ver={ver}
+                  index={index}
                   isSelected={selectedTeamBoxes?.includes(index) || false}
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
-                  index={index}
-                  setToggleFav={setToggleFav}
                   isLoading={isLoading}
-                  {...(ver === "방명록" ? { room } : {})}
-                  ver={ver}
-                  toggleFav={toggleFav}
-                  setIsToggle={setIsToggle}
+                  room={room}
+                  idToggle={idToggle}
+                  setIdToggle={setIdToggle}
                 />
               ))}
         </div>
