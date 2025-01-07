@@ -1,20 +1,72 @@
 "use client";
+
 import Button from "@/src/components/common/Button";
 import kakaoImage from "@/public/Image/onBoarding/kakaoImage.svg";
 import Image from "next/image";
 import QrCode from "@/src/components/QrCode/QrCode";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-// todo: 버튼들 기능 구현, QR코드 실제 생성
 const Result = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
-  const roomName = localStorage.getItem("roomName");
+
+  // roomName 관리
+  const [roomName, setRoomName] = useState<string | null>(null);
+
+  // 브라우저 환경에서만 localStorage 접근
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const name = localStorage.getItem("roomName");
+      setRoomName(name);
+    }
+  }, []);
+
+  // 카카오 SDK 초기화
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.Kakao) {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
+        console.log("Kakao SDK Initialized:", window.Kakao.isInitialized());
+      }
+    }
+  }, []);
+
+  const handleKakaoShare = () => {
+    if (typeof window !== "undefined" && window.Kakao) {
+      const kakao = window.Kakao;
+      if (!kakao.isInitialized()) {
+        kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
+      }
+
+      kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: "방에 초대합니다!",
+          description: `방 이름: ${roomName || "Unknown"}`,
+          link: {
+            mobileWebUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
+            webUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
+          },
+        },
+        buttons: [
+          {
+            title: "방에 참여하기",
+            link: {
+              mobileWebUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
+              webUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
+            },
+          },
+        ],
+      });
+    }
+  };
 
   const handleHostStartGame = () => {
-    localStorage.setItem("isGameHost", "true");
+    if (typeof window !== "undefined") {
+      localStorage.setItem("isGameHost", "true");
+    }
     router.push(`/team/${roomId}`);
   };
 
@@ -25,18 +77,23 @@ const Result = () => {
         <div className="h-[30.3rem] w-[30.3rem]">
           <QrCode
             cardId={Number(roomId)}
-            name={roomName as string}
+            name={roomName || "Unknown"}
             size={287}
           />
         </div>
-        <button className="flex h-[5.6rem] w-[33.5rem] items-center justify-center gap-[1rem] rounded-[1.2rem] border-[1.5px] border-gray-3 bg-white">
+        <button
+          className="flex h-[5.6rem] w-[33.5rem] items-center justify-center gap-[1rem] rounded-[1.2rem] border-[1.5px] border-gray-3 bg-white"
+          onClick={handleKakaoShare}
+        >
           <Image src={kakaoImage} width={20} height={18} alt="kakaoImage" />
           <p className="text-body-1-bold text-gray-9">카카오톡 초대장 보내기</p>
         </button>
       </div>
       <div className="flex flex-col items-center justify-center gap-[1.2rem]">
         {/* todo: 입장하기 1_방장으로 이동 */}
-        <Button variant="pink" onClick={handleHostStartGame}>시작하기</Button>
+        <Button variant="pink" onClick={handleHostStartGame}>
+          시작하기
+        </Button>
         <p
           className="text-body-2-med text-gray-7 underline decoration-solid decoration-1 underline-offset-4"
           onClick={() => router.push("/home")}
@@ -48,7 +105,6 @@ const Result = () => {
   );
 };
 
-
 export default function PageWithSuspense() {
   return (
     <Suspense>
@@ -56,4 +112,3 @@ export default function PageWithSuspense() {
     </Suspense>
   );
 }
-
