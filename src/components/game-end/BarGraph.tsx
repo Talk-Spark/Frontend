@@ -141,14 +141,14 @@ const BarGraph = ({ players }: BarGraphProps) => {
     }
 
     //top 3명 이름, 점수, 랭킹 정보 저장 & 랭킹 타입 저장
-    console.log(temp);
+    // console.log(temp);
     setTopThree(temp);
     setRankingType(tempRankingType);
   }, [players]);
 
   //barHeight 계산 (순위에 맞는 bar 높이 부여)
   useEffect(() => {
-    console.log(topThree);
+    // console.log(topThree);
     if (topThree && topThree.length >= 2) {
       const heightsWithRank = [166, 145, 134];
 
@@ -163,7 +163,7 @@ const BarGraph = ({ players }: BarGraphProps) => {
   }, [topThree]);
 
   useEffect(() => {
-    console.log(barHeights);
+    // console.log(barHeights);
   }, [barHeights]);
 
   /*
@@ -202,7 +202,7 @@ const BarGraph = ({ players }: BarGraphProps) => {
     <section className="bg-gradient-35-pink relative h-[31.7rem] w-[37.5rem] shrink-0 overflow-hidden">
       <article className="mt-[3.2rem] flex flex-col items-center gap-[0.8rem] self-stretch">
         <span className="self-stretch text-center text-body-2-bold text-main-pink">
-          총 NN문항
+          {topThree?.[0]?.score  || '총 NN문항'}
         </span>
         <h1 className="self-stretch text-center text-headline-3 text-black">
           누가 가장 많이 맞췄을까요?

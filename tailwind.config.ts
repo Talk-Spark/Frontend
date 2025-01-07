@@ -78,6 +78,8 @@ const config: Config = {
         "pink-gradient": "linear-gradient(204deg, #FFCCE1 0%, #FF80B4 101.19%)",
         "blue-gradient":
           "linear-gradient(196deg, #9CACFF 21.25%, #3D5BF5 95.64%)",
+        "gradient-35-pink":
+          "linear-gradient(180deg, rgba(255, 204, 225, 0.35) 0%, rgba(255, 0, 106, 0.35) 100%)",
         "yellow-gradient":
           "linear-gradient(196deg, #FFEFB7 21.25%, #FDD853 95.64%)",
         "white-storage":

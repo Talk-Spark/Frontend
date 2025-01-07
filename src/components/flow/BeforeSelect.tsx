@@ -185,7 +185,7 @@ const BeforeSelect = ({
 
   return (
     <section className="flex h-auto w-[37.5rem] flex-col items-center gap-[2.4rem]">
-      <article className="flex h-[37.2rem] w-[37.5rem] shrink-0 items-center justify-center self-stretch bg-sub-pink-55">
+      <article className="flex h-[37.2rem] w-[37.5rem] shrink-0 items-center justify-center self-stretch bg-sub-palePink-55">
         <div className="flex w-[33.5rem] flex-col gap-[1.2rem]">
           <NameCard
             teamName={NameCardInfo.teamName}

@@ -208,7 +208,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
           setSelectedTeamBoxes([]);
         } else {
           setSelectedTeamBoxes(allIndexes);
-          console.log(selectedTeamBoxes);
+          // console.log(selectedTeamBoxes);
         }
       } else if (ver === "방명록" && roomData && setRoomData) {
         /* 방명록 삭제하기  API */

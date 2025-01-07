@@ -78,8 +78,8 @@ const NameCard: React.FC<NameCardProps> = ({
   };
 
   useEffect(()=>{
-    console.log(fieldHoles);
-    console.log(selectedCategory);
+    // console.log(fieldHoles);
+    // console.log(selectedCategory);
   },[fieldHoles])
 
   return (

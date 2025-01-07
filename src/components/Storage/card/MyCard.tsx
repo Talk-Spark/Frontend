@@ -47,7 +47,7 @@ const MyCard = ({ isVisible }: { isVisible: boolean }) => {
         if (oneCard !== cardRes) {
           setOneCard(cardRes);
         }
-        console.log(cardRes);
+        // console.log(cardRes);
       } catch (e) {
         console.log(e);
       }

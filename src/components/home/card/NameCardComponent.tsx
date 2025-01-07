@@ -15,7 +15,7 @@ const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
     BLUE: "/Image/home/blueBackgroundImage.svg",
   };
   // 팀의 첫번째 팀원의 색상으로 배경색 지정
-  const firstMemberColor = storedCards[0].cardThema;
+  const firstMemberColor = storedCards[0]?.cardThema;
   // console.log(firstMemberColor);
   const backgroundStyle = {
     backgroundImage: `url(${backgroundImage[firstMemberColor as keyof typeof backgroundImage]})`,
@@ -23,7 +23,7 @@ const NameCardComponent = ({ name, storedCards }: NameCardProps) => {
     backgroundPosition: "center",
   };
 
-  console.log("storedCards: ", storedCards);
+  //console.log("storedCards: ", storedCards);
 
   return (
     <div
