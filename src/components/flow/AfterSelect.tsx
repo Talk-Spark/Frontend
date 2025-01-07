@@ -14,6 +14,7 @@ import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
 import { singleQuestionObjProps, StorageCardProps } from "@/src/app/(flow)/flow/page";
+import { getUserData } from "@/src/utils";
 
 interface AfterSelectProps {
   cardStep: number;
@@ -45,7 +46,7 @@ const AfterSelect = ({
 }: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
   const [isAllCorrected, setIsAllCorrected] = useState(isAllCorrect);
-
+  const user = getUserData()
   const router = useRouter();
 
   //todo: key가 string일 수 있음 (userId : 맞춤 여부) 형식이기 때문!
@@ -62,7 +63,7 @@ const AfterSelect = ({
    
     //최종 스코어 보기
     if (isGameEnd) { 
-      socketRef.current.emit("getEnd", { roomId });
+      socketRef.current.emit("getEnd", { roomId, sparkUserId: user?.sparkUserId });
     } 
   };
 
@@ -99,8 +100,8 @@ const AfterSelect = ({
       ) : (
         <>
           <section className="relative flex h-auto w-[37.5rem] flex-col items-center justify-start gap-[2.4rem] pt-[2.4rem]">
-            <article className="flex w-[33.5rem] flex-col items-center gap-[3.6rem]">
-              <div className="br-[1.2rem] flex flex-col items-start gap-[1rem] self-stretch bg-white p-[20px_25px] shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)]">
+            <article className="flex w-[33.5rem] flex-col items-center gap-[3.6rem] ">
+              <div className="rounded-[1.2rem] flex flex-col items-start gap-[1rem] self-stretch bg-white p-[20px_25px] shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)]">
                 <span className="self-stretch text-center text-body-2-bold text-main-pink">
                   정답은?
                 </span>

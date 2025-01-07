@@ -213,7 +213,6 @@ const Flow = () => {
       setIsGameEnd(true);
     });
 
-    //todo: 근데 생각해보니까, 이것도 상위에서 받아서 넘겨야할 듯(그래야 자식 요소에서 컨트롤 가능)
     socketRef.current.on("question", (profileData : UserProfile, blankData : UserBlanks, QuizData: QuizDataProps, teamName: string) => {
       
       setNameCardInfo({
@@ -262,6 +261,7 @@ const Flow = () => {
     }
     
   },[correctedPeople])
+
 
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
