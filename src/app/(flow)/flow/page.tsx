@@ -243,7 +243,6 @@ const Flow = () => {
 
     // 최종 스코어 가져오기
     socketRef.current.on("scores", (scores: ScoresProps ,data: FinalPeopleProps[]) => {
-      console.log(data);
       //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
       router.push("/game-end"); //최종스코어 창으로 이동!
       localStorage.setItem("finalScores", JSON.stringify(scores)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기

@@ -141,14 +141,14 @@ const BarGraph = ({ players }: BarGraphProps) => {
     }
 
     //top 3명 이름, 점수, 랭킹 정보 저장 & 랭킹 타입 저장
-    console.log(temp);
+    // console.log(temp);
     setTopThree(temp);
     setRankingType(tempRankingType);
   }, [players]);
 
   //barHeight 계산 (순위에 맞는 bar 높이 부여)
   useEffect(() => {
-    console.log(topThree);
+    // console.log(topThree);
     if (topThree && topThree.length >= 2) {
       const heightsWithRank = [166, 145, 134];
 
@@ -163,7 +163,7 @@ const BarGraph = ({ players }: BarGraphProps) => {
   }, [topThree]);
 
   useEffect(() => {
-    console.log(barHeights);
+    // console.log(barHeights);
   }, [barHeights]);
 
   /*

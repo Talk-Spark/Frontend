@@ -40,7 +40,6 @@ export default function GameEnd() {
         score: finalScores[person.ownerId],
       }));
 
-      console.log(finalData);
       setFinalData(finalData);    
     }
     
