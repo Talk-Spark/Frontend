@@ -262,6 +262,11 @@ const Flow = () => {
     
   },[correctedPeople])
 
+  const addLabelToCorrectAnswer = (quizInfoOptions : string[], correctAnswer: string) : string => {
+    const index = quizInfoOptions.indexOf(correctAnswer);
+    const label = String.fromCharCode(65 + index)
+    return `${label}. ${correctAnswer}`;
+  }
 
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
@@ -292,7 +297,7 @@ const Flow = () => {
             isQuizEnd={isQuizEnd}
             isGameEnd={isGameEnd}
             correctedPeople = {correctedPeople as singleQuestionObjProps[]}
-            answer = {quizInfo?.correctAnswer as string}
+            answer = {addLabelToCorrectAnswer(quizInfo?.options as string[], quizInfo?.correctAnswer as string)}
             answerCount = {correctedPeople?.length as number}
             isAllCorrect ={isAllCorrect}
             storageCard={storageCard as StorageCardProps}
