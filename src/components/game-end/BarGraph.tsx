@@ -202,7 +202,7 @@ const BarGraph = ({ players }: BarGraphProps) => {
     <section className="bg-gradient-35-pink relative h-[31.7rem] w-[37.5rem] shrink-0 overflow-hidden">
       <article className="mt-[3.2rem] flex flex-col items-center gap-[0.8rem] self-stretch">
         <span className="self-stretch text-center text-body-2-bold text-main-pink">
-          총 NN문항
+          {topThree?.[0]?.score  || '총 NN문항'}
         </span>
         <h1 className="self-stretch text-center text-headline-3 text-black">
           누가 가장 많이 맞췄을까요?
