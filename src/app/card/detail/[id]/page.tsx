@@ -51,7 +51,7 @@ const DetailCard = () => {
             const res = await instance.get(`/api/storedCard/${id}`);
             if (res.data.data) {
               setOtherCards(res.data.data);
-              console.log(res.data.data);
+              //console.log(res.data.data);
             }
           } catch (e) {
             console.log(e);

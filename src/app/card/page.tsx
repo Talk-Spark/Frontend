@@ -129,7 +129,7 @@ const Card = () => {
       if (user) {
         try {
           const userObj = JSON.parse(user);
-          console.log(userObj);
+         // console.log(userObj);
         } catch (e) {
           console.log("Failed to parse user from localStorage", e);
         }
@@ -142,7 +142,7 @@ const Card = () => {
     if (user) {
       try {
         const userObj = JSON.parse(user);
-        console.log(userObj);
+        //console.log(userObj);
         return userObj.accessToken || "";
       } catch (e) {
         console.log("Failed to parse user from localStorage", e);

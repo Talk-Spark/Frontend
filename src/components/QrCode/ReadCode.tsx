@@ -90,7 +90,7 @@ const ReadCode = ({
       // 큐알 스캔이 되고 값이 입력되었을때
       if (qrVer === "card") {
         if (!isLoading) {
-          console.log(myRun);
+          //console.log(myRun);
           const getResponse = async () => {
             // if (!myRun || myRun.cardId) return;
 
@@ -106,12 +106,12 @@ const ReadCode = ({
                 setIsLoading(true);
                 /* 명함 보관함에 개인 명함 저장 */
                 const res = await post("/api/store/ind", requestData);
-                console.log(res);
+                // console.log(res);
               } catch (e) {
                 console.log(e);
               }
-              console.log(requestData);
-              console.log("뉴데이터 드러간다");
+              // console.log(requestData);
+              // console.log("뉴데이터 드러간다");
               setIsLoading(false);
               setIsNewData(true);
             } else {

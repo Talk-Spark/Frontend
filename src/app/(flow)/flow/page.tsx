@@ -175,7 +175,7 @@ const Flow = () => {
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기 - 맞출 사람이 더 남은 경우
     socketRef.current.on("singleResult", (data : StorageCardProps) => {
-      console.log(data);
+      //console.log(data);
 
       setIsQuizEnd(true);
       setIsAllCorrect(false);
@@ -192,13 +192,27 @@ const Flow = () => {
         cardThema: data.cardThema,
       })
     });
-    socketRef.current.on("lastResult", (data: any) => {
-      console.log(data);
+    socketRef.current.on("lastResult", (data: StorageCardProps) => {
+      //console.log(data);
+
+      setIsQuizEnd(true);
+      setIsAllCorrect(false);
+      setStorageCard({
+        name : data.name,
+        teamName : NameCardInfo.teamName,
+        age: data.age,
+        major: data.major,
+        mbti: data.mbti,
+        hobby: data.hobby,
+        lookAlike: data.lookAlike,
+        selfDescription: data.selfDescription,
+        tmi: data.tmi,
+        cardThema: data.cardThema,
+      })
 
       setIsGameEnd(true);
     });
 
-    //todo: 근데 생각해보니까, 이것도 상위에서 받아서 넘겨야할 듯(그래야 자식 요소에서 컨트롤 가능)
     socketRef.current.on("question", (profileData : UserProfile, blankData : UserBlanks, QuizData: QuizDataProps, teamName: string) => {
       
       setNameCardInfo({
@@ -228,7 +242,6 @@ const Flow = () => {
 
     // 최종 스코어 가져오기
     socketRef.current.on("scores", (scores: ScoresProps ,data: FinalPeopleProps[]) => {
-      console.log(data);
       //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
       router.push("/game-end"); //최종스코어 창으로 이동!
       localStorage.setItem("finalScores", JSON.stringify(scores)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기
@@ -249,6 +262,12 @@ const Flow = () => {
     
   },[correctedPeople])
 
+  const addLabelToCorrectAnswer = (quizInfoOptions : string[], correctAnswer: string) : string => {
+    const index = quizInfoOptions.indexOf(correctAnswer);
+    const label = String.fromCharCode(65 + index)
+    return `${label}. ${correctAnswer}`;
+  }
+
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
@@ -267,7 +286,6 @@ const Flow = () => {
             NameCardInfo ={NameCardInfo}
             quizInfo ={quizInfo as QuizDataProps}
             fieldHoles ={fieldHoles as FieldType[]}
-
           />
         ) : (
           <AfterSelect
@@ -279,7 +297,7 @@ const Flow = () => {
             isQuizEnd={isQuizEnd}
             isGameEnd={isGameEnd}
             correctedPeople = {correctedPeople as singleQuestionObjProps[]}
-            answer = {quizInfo?.correctAnswer as string}
+            answer = {addLabelToCorrectAnswer(quizInfo?.options as string[], quizInfo?.correctAnswer as string)}
             answerCount = {correctedPeople?.length as number}
             isAllCorrect ={isAllCorrect}
             storageCard={storageCard as StorageCardProps}
