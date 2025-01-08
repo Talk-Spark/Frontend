@@ -164,12 +164,12 @@ const CardTop = ({
     if (setIsEditing) {
       if (isEditing) {
         try {
-          console.log(putData);
+          // console.log(putData);
           const res = await instance.put(`/api/cards/${oneCard.id}`, {
             ...putData,
             cardThema: putData?.cardThema,
           });
-          console.log(res);
+          // console.log(res);
         } catch (e) {
           console.error(e);
         }

@@ -54,7 +54,7 @@ const MyCard = () => {
     try {
       const response = await get<AxiosResponse<CardInfo[]>>(`/api/cards`);
       const data = response.data.data[0];
-      console.log(response.data.data);
+      //console.log(response.data.data);
       setCardInfo(data);
     } catch (error) {
       console.error("명함 정보를 불러오는데 실패했습니다: ", error);
@@ -65,7 +65,7 @@ const MyCard = () => {
     fetchCardInfo();
   }, []);
 
-  console.log("cardInfo: ", cardInfo);
+  //console.log("cardInfo: ", cardInfo);
 
   return (
     <div className="my-[3.2rem] flex flex-col gap-[1.6rem]">

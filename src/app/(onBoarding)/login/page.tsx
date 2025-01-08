@@ -11,10 +11,10 @@ const page = () => {
     window.location.href = KAKAO_AUTH_URL;
   };
 
-  console.log(process.env.NEXT_PUBLIC_REST_API_KEY);
+  //console.log(process.env.NEXT_PUBLIC_REST_API_KEY);
 
   return (
-    <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center gap-[1.3rem]">
+    <div className="-mx-[2rem] flex w-[100%+4rem] flex-col items-center justify-center gap-[1.3rem] bg-white pb-[6rem] pt-[2.4rem]">
       <div className="flex flex-col items-center gap-[3.2rem] text-center text-black">
         <div className="text-headline-3">
           어색한 첫 만남,

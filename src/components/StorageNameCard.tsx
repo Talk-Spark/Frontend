@@ -66,14 +66,14 @@ const StorageNameCard: React.FC<NameCardProps> = ({
     ...oneCard,
   });
   const selectedColor = putData ? putData.cardThema : oneCard.cardThema;
-  console.log(oneCard);
+  //console.log(oneCard);
 
   const cardRef = useRef<HTMLDivElement>(null);
 
   // 명함 이미지 저장 html-to-image
   const handleDownload = () => {
     if (cardRef.current) {
-      console.log("Card ref saved.");
+      //console.log("Card ref saved.");
       // 작동하나 몇 요소가 느리게 저장됨
       const filter = (node: HTMLElement) => {
         // 편집, 다운로드 버튼 제거

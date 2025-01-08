@@ -82,8 +82,8 @@ export const CARD_FIELD_NUMBER = {
   tmi: 4,
 } as const;
 
-function splitByNewline(input : string) {
-  return input.split('\n');
+function splitByNewline(input: string) {
+  return input.split("\n");
 }
 
 const BeforeSelect = ({
@@ -103,7 +103,7 @@ const BeforeSelect = ({
   const [selectedButton, setSelectedButton] = useState(""); //선택하는 거 emit하고 넘어가야함
   const [isAnswerSeleted, setIsAnswerSeleted] = useState(false);
   const [questionTips, setQuestionTips] = useState<string[]>([]);
-  
+
   const popUpRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -121,19 +121,19 @@ const BeforeSelect = ({
     };
   }, []);
 
-  useLayoutEffect(()=>{
+  useLayoutEffect(() => {
     const handleClickOutSide = (e: MouseEvent) => {
       if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
         setIsPopupOpen(false);
       }
     };
-  
+
     document.addEventListener("click", handleClickOutSide);
-  
+
     return () => {
       document.removeEventListener("click", handleClickOutSide);
     };
-  },[])
+  }, []);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -161,31 +161,33 @@ const BeforeSelect = ({
     return;
   }
 
-  const convertFieldName = (field : string) => {
-    if(field === "SELFDESCRIPTION") return "SELFDESC";
+  const convertFieldName = (field: string) => {
+    if (field === "SELFDESCRIPTION") return "SELFDESC";
     return field;
-  }
+  };
 
-  useEffect(()=>{
-    if(quizInfo){
-      const getQuestionTip = async() => {
-        try{
-          const response = await get(`/api/rooms/question-tip?field=${convertFieldName((quizInfo.fieldName).toUpperCase())}`)
+  useEffect(() => {
+    if (quizInfo) {
+      const getQuestionTip = async () => {
+        try {
+          const response = await get(
+            `/api/rooms/question-tip?field=${convertFieldName(quizInfo.fieldName.toUpperCase())}`,
+          );
           const questionTips = splitByNewline(response.data as string);
           setQuestionTips(questionTips);
-        }catch(e){
+        } catch (e) {
           console.log(e);
         }
-      }
+      };
       getQuestionTip();
     }
-  },[quizInfo])
+  }, [quizInfo]);
 
   if (!NameCardInfo || !quizInfo || !popUpRef || !fieldHoles) return;
 
   return (
     <section className="flex h-auto w-[37.5rem] flex-col items-center gap-[2.4rem]">
-      <article className="flex h-[37.2rem] w-[37.5rem] shrink-0 items-center justify-center self-stretch bg-sub-pink-55">
+      <article className="flex h-[37.2rem] w-[37.5rem] shrink-0 items-center justify-center self-stretch bg-sub-palePink-55">
         <div className="flex w-[33.5rem] flex-col gap-[1.2rem]">
           <NameCard
             teamName={NameCardInfo.teamName}

@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-white antialiased`}
       >
         {/* EditProvider로 감싸서 전체에서 편집 상태 관리 */}
         <HeaderWrapper />

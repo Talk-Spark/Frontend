@@ -72,7 +72,7 @@ const TeamDetail = () => {
         transports: ["websocket"],
       });
 
-      console.log(socketRef.current);
+      //console.log(socketRef.current);
 
       socketRef.current.emit("joinRoom", {
         roomId: id,
@@ -89,9 +89,9 @@ const TeamDetail = () => {
         setGameStart(true);
       });
 
-      socketRef.current.on("roomJoinError",(data : any)=>{
+      socketRef.current.on("roomJoinError", (data: any) => {
         alert(data);
-      })
+      });
 
       const handleBeforeUnload = () => {
         socketRef.current.emit("leaveRoom", {
@@ -120,7 +120,7 @@ const TeamDetail = () => {
       return () => {
         if (socketRef.current) {
           //방 퇴장시
-          console.log(gameStart);
+          //console.log(gameStart);
           if (!gameStartRef) {
             socketRef.current.emit("leaveRoom", {
               roomId: id,
@@ -143,7 +143,6 @@ const TeamDetail = () => {
   // console.log(teamData);
   //console.log(userDatas); //특이하게, 참여자 수가 넘치면 더이상 정보를 못 받아옴 (메세지를 안 넘기는거임)
   if (!teamData || !userDatas) {
-    
     return (
       <div>
         <FindRoom findText={"우리 팀 로딩 중이에요!"} />

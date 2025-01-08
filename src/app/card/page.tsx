@@ -129,7 +129,7 @@ const Card = () => {
       if (user) {
         try {
           const userObj = JSON.parse(user);
-          console.log(userObj);
+         // console.log(userObj);
         } catch (e) {
           console.log("Failed to parse user from localStorage", e);
         }
@@ -142,7 +142,7 @@ const Card = () => {
     if (user) {
       try {
         const userObj = JSON.parse(user);
-        console.log(userObj);
+        //console.log(userObj);
         return userObj.accessToken || "";
       } catch (e) {
         console.log("Failed to parse user from localStorage", e);
@@ -190,8 +190,8 @@ const Card = () => {
   };
 
   return (
-    <div className="relative">
-      <div className="fixed left-0 right-0 top-0 z-10 mb-[20rem]">
+    <div className="relative -mx-[2rem] w-[calc(100%+4rem)]">
+      <div className="mb-[0.4rem]">
         <Header
           title={headerTitle}
           padding={true}
@@ -214,7 +214,7 @@ const Card = () => {
           />
         </div>
       ) : (
-        <div className="relative -mx-[2rem] mt-[5.2rem] flex w-[calc(100%+4rem)] flex-col items-center">
+        <div className="relative flex flex-col items-center">
           <Modal
             isOpen={confirmModal}
             onAction={() => setConfirmModal(false)}

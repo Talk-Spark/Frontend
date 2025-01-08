@@ -52,11 +52,11 @@ const CardStorage = () => {
     try {
       setLoading(true);
       const response = await instance.get("/api/storedCards/main");
-      console.log("response: ", response);
+      //console.log("response: ", response);
 
       const data = response.data;
-      console.log("data: ", data);
-      console.log("data.data: ", data.data);
+      // console.log("data: ", data);
+      // console.log("data.data: ", data.data);
       // 팀 별로 맵핑
       const formattedTeams = data.data.map((team: TeamResponse) => ({
         teamName: team.teamName,
@@ -77,7 +77,7 @@ const CardStorage = () => {
         })),
       }));
       setTeams(formattedTeams);
-      console.log("formattedTeams: ", formattedTeams);
+      //console.log("formattedTeams: ", formattedTeams);
       setError(null);
     } catch (error: any) {
       if (error.response?.status === 404) {
@@ -94,7 +94,7 @@ const CardStorage = () => {
     fetchStoredCards();
   }, []);
 
-  console.log("teams: ", teams);
+  //console.log("teams: ", teams);
 
   if (loading) {
     return <div className="text-body-1-med text-gray-7">로딩 중...</div>;
