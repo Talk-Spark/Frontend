@@ -31,24 +31,18 @@ const CardMatching = () => {
             className="h-[13.2rem] w-[16.2rem] cursor-pointer text-subhead-bold shadow-DEFAULT"
             onClick={() => handleRouting("/creating-room")}
           >
-            {/* 방 만들기 */}
-            <Image
-              src={creatingRoomImage}
-              width={162}
-              height={132}
-              alt="방 만들기"
+            <iframe
+              src="/Image/home/creatingRoomImage.svg"
+              className="pointer-events-none h-auto w-full"
             />
           </div>
           <div
             className="h-[13.2rem] w-[16.2rem] cursor-pointer text-subhead-bold shadow-DEFAULT"
             onClick={() => handleRouting("/entry")}
           >
-            {/* 입장하기 */}
-            <Image
-              src={enteringRoomImage}
-              width={162}
-              height={132}
-              alt="입장하기"
+            <iframe
+              src="/Image/home/enteringRoomImage.svg"
+              className="pointer-events-none h-auto w-full"
             />
           </div>
         </div>
