@@ -89,8 +89,8 @@ const NameCard: React.FC<NameCardProps> = ({
           {teamName}
         </div>
         <div className="flex items-center gap-[1.2rem]">
-          <div className="text-headline-2">{name}</div>
-          <div className="text-subhead-med">{age}세</div>
+          <div className="text-headline-2 text-black">{name}</div>
+          <div className="text-subhead-med text-black">{age}세</div>
         </div>
 
         <div className="flex items-center justify-between gap-[2.4rem]">

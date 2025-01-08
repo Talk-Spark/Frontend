@@ -18,7 +18,7 @@ const Page = () => {
   };
 
   return (
-    <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center">
+    <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center bg-white">
       <div className="mb-[3.2rem] text-center text-headline-3 text-black">
         환영해요
         <br />

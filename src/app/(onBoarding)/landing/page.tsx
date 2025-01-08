@@ -24,7 +24,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="mb-[6rem] mt-[2.4rem] flex flex-col items-center justify-center gap-[1.3rem]">
+    <div className="-mx-[2rem] pb-[6rem] pt-[2.4rem] flex w-[100%+4rem] flex-col items-center justify-center gap-[1.3rem] bg-white">
       <div className="flex flex-col items-center gap-[3.2rem] text-center text-black">
         <div className="text-headline-3">
           TalkSpark

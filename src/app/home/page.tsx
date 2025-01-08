@@ -4,7 +4,7 @@ import Storage from "@/src/components/home/Storage";
 
 const Page = () => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="-mx-[2rem] flex w-[100%+4rem] flex-col items-center justify-center bg-white">
       <CardMatching />
       <MyCard />
       <Storage />
