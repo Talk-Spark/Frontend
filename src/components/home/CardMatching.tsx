@@ -1,6 +1,6 @@
 "use client";
-import creatingRoomImage from "@/public/Image/home/creatingRoomImage.svg";
-import enteringRoomImage from "@/public/Image/home/enteringRoomImage.svg";
+import creatingRoomImage from "@/public/Image/home/creatingRoomImage.png";
+import enteringRoomImage from "@/public/Image/home/enteringRoomImage.png";
 import talkSparkImage from "@/public/Image/home/TalkSpark.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -31,24 +31,20 @@ const CardMatching = () => {
             className="h-[13.2rem] w-[16.2rem] cursor-pointer text-subhead-bold shadow-DEFAULT"
             onClick={() => handleRouting("/creating-room")}
           >
-            {/* 방 만들기 */}
             <Image
               src={creatingRoomImage}
-              width={162}
-              height={132}
-              alt="방 만들기"
+              alt="명함 맞추기 만들기"
+              className="h-full w-full"
             />
           </div>
           <div
             className="h-[13.2rem] w-[16.2rem] cursor-pointer text-subhead-bold shadow-DEFAULT"
             onClick={() => handleRouting("/entry")}
           >
-            {/* 입장하기 */}
             <Image
               src={enteringRoomImage}
-              width={162}
-              height={132}
-              alt="입장하기"
+              alt="명함 맞추기 입장하기"
+              className="h-full w-full"
             />
           </div>
         </div>
