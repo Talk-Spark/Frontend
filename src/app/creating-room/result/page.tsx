@@ -11,17 +11,7 @@ const Result = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
-
-  // roomName 관리
-  const [roomName, setRoomName] = useState<string | null>(null);
-
-  // 브라우저 환경에서만 localStorage 접근
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const name = localStorage.getItem("roomName");
-      setRoomName(name);
-    }
-  }, []);
+  const roomName = searchParams.get("roomName");
 
   // 카카오 SDK 초기화
   useEffect(() => {
@@ -43,7 +33,7 @@ const Result = () => {
       kakao.Share.sendDefault({
         objectType: "feed",
         content: {
-          title: "방에 초대합니다!",
+          title: "톡스파크에 초대합니다!",
           description: `방 이름: ${roomName || "Unknown"}`,
           link: {
             mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,

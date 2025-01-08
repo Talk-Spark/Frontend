@@ -82,7 +82,10 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
 
       //roomId를 사용할 일이 있으면 사용
       const roomId = response.data.roomId;
-      router.push(`/creating-room/result?roomId=${roomId}`);
+      const roomName = response.data.roomName;
+      router.push(
+        `/creating-room/result?roomId=${roomId}&roomName=${roomName}`,
+      );
     } catch (e) {
       console.error(e);
     }
