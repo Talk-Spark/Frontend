@@ -46,16 +46,16 @@ const Result = () => {
           title: "방에 초대합니다!",
           description: `방 이름: ${roomName || "Unknown"}`,
           link: {
-            mobileWebUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
-            webUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
+            mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+            webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
           },
         },
         buttons: [
           {
             title: "방에 참여하기",
             link: {
-              mobileWebUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
-              webUrl: `https://talkspark-dev-api.p-e.kr/team/${roomId}`,
+              mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+              webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
             },
           },
         ],
