@@ -30,25 +30,28 @@ const Result = () => {
         kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
       }
 
-      kakao.Share.sendDefault({
-        objectType: "feed",
-        content: {
-          title: "톡스파크에 초대합니다!",
-          description: `방 이름: ${roomName || "Unknown"}`,
-          link: {
-            mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-            webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-          },
-        },
-        buttons: [
-          {
-            title: "방에 참여하기",
-            link: {
-              mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-              webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-            },
-          },
-        ],
+      // kakao.Share.sendDefault({
+      //   objectType: "feed",
+      //   content: {
+      //     title: "톡스파크에 초대합니다!",
+      //     description: `방 이름: ${roomName || "Unknown"}`,
+      //     link: {
+      //       mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //       webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //     },
+      //   },
+      //   buttons: [
+      //     {
+      //       title: "방에 참여하기",
+      //       link: {
+      //         mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //         webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //       },
+      //     },
+      //   ],
+      // });
+      kakao.Share.sendCustom({
+        templateId: 116096,
       });
     }
   };

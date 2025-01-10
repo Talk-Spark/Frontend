@@ -8,8 +8,8 @@ const HeaderWrapper = () => {
   const getHeaderProps = () => {
     if (pathname === "/" || pathname === "/page1") {
       return {
-        showButton1: true,
-        title: "TEXT텍스트영역",
+        showButton1: false,
+        title: "",
       };
     } else if (pathname === "/page2") {
       return {

@@ -36,6 +36,7 @@ interface ProfileImageProps {
   isSecond?: boolean; //명함 맞추기 flow에서 2순위에 사용할 prop
   noBorder?: boolean; //최종 스코어에서 3등에게 사용할 prop
   hasTransparency?: boolean; // 투명도 적용 여부
+  hasFixedWidth?: boolean; // 고정 너비(w-[6.8rem]) 적용 여부
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
@@ -49,6 +50,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   isSecond = false,
   hasTransparency = true,
   noBorder = false,
+  hasFixedWidth = true,
 }) => {
   const profileImageUrl = profileImages[color] || profileImages.PINK;
   const crownImageUrl = crownImages[color] || crownImages.PINK;
@@ -148,7 +150,9 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       : "bg-gray-1";
 
   return (
-    <div className="flex w-[6.8rem] flex-col items-center">
+    <div
+      className={`flex ${hasFixedWidth ? "w-[6.8rem]" : ""} flex-col items-center`}
+    >
       <div className={`relative box-border ${imageSize}`}>
         <div
           className={`relative h-full w-full overflow-hidden rounded-full ${bgStyle}`}
