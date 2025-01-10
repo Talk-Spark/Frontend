@@ -74,8 +74,8 @@ const Page = () => {
   };
 
   function formatTimeWithMeridiem(dateTime: string) {
-    if (!dateTime || !dateTime.includes(" ")) return "시간 정보 없음"; // dateTime이 비어있으면 기본값 반환
-    const time = dateTime.split(" ")[1];
+    if (!dateTime || !dateTime.includes("T")) return "시간 정보 없음"; // dateTime이 비어있으면 기본값 반환
+    const time = dateTime.split("T")[1].split(".")[0]; // "T"로 분리 후 초 단위를 제외한 시간 정보만 가져옴
     const [hour, minute] = time.split(":").map(Number);
     const meridiem = hour < 12 ? "오전" : "오후";
     const formattedHour = hour % 12 || 12;
@@ -96,7 +96,7 @@ const Page = () => {
   return (
     /* 방명록 없는 경우 대비 전체 bg-gray-1수정 */
     <div className="relative -mx-[2rem] h-[100vh] w-[calc(100%+4rem)] bg-gray-1">
-      <div className="fixed top-0 z-10 w-[calc(100%+4rem)]">
+      <div className="max-[76.8rem] fixed top-0 z-10 w-full">
         <Header title={roomName} padding={true} showButton1={true} />
       </div>
       <div className="flex flex-col items-center pb-[10.4rem]">

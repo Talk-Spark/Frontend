@@ -201,6 +201,7 @@ const TeamDetail = () => {
             <button
               onClick={startGame}
               className="w-full cursor-pointer rounded-[1.2rem] bg-main-pink py-[1.6rem] text-center text-subhead-bold text-white"
+              // disabled={userDatas.length < 2}
             >
               시작하기
             </button>

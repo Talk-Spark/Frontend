@@ -82,6 +82,12 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
 
       //roomId를 사용할 일이 있으면 사용
       const roomId = response.data.roomId;
+      // roomId가 유효한 숫자인지 확인
+      if (typeof roomId === "number") {
+        // 숫자를 문자열로 변환 후 저장
+        localStorage.setItem("roomId", roomId.toString());
+      }
+
       router.push(`/creating-room/result?roomId=${roomId}`);
     } catch (e) {
       console.error(e);

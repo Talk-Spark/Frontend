@@ -66,7 +66,7 @@ const Header = ({
       )}
 
       {/* 헤더 제목 */}
-      <h1 className="absolute left-1/2 -translate-x-1/2 transform text-body-1-med text-gray-10">
+      <h1 className="absolute left-1/2 flex-1 -translate-x-1/2 transform text-body-1-med text-gray-10">
         {title}
       </h1>
 
