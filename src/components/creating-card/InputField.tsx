@@ -34,7 +34,7 @@ const InputField = ({
           onChange={onChange}
           placeholder={placeholder}
           maxLength={maxLength}
-          className={`w-full border-b-[1.5px] px-[1.2rem] py-[1rem] pr-[3.2rem] text-subhead-med focus:border-gray-10 focus:text-black focus:outline-none ${
+          className={`w-full rounded-none border-b-[1.5px] px-[1.2rem] py-[1rem] pr-[3.2rem] text-subhead-med focus:border-gray-10 focus:text-black focus:outline-none ${
             isDuplicate === true
               ? "border-main-pink focus:border-main-pink"
               : value
