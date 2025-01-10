@@ -52,6 +52,9 @@ const Result = () => {
       // });
       kakao.Share.sendCustom({
         templateId: 116096,
+        templateArgs: {
+          roomId: roomId,
+        },
       });
     }
   };
