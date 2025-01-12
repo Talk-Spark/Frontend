@@ -33,7 +33,7 @@ const TeamRoomList: React.FC<TeamRoomListProps> = ({ gameRooms }) => {
               방장 {gameRoom.hostName}
             </span>
             <div className="flex gap-[0.4rem]">
-              <span className="text-body-2-bold">{gameRoom.roomName}</span>
+              <span className="text-body-2-bold text-gray-11">{gameRoom.roomName}</span>
               <span className="text-body-2-med text-gray-7">
                 {gameRoom.currentPeople}
               </span>

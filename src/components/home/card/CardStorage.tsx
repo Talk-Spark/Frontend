@@ -52,7 +52,7 @@ const CardStorage = () => {
     try {
       setLoading(true);
       const response = await instance.get("/api/storedCards/main");
-      //console.log("response: ", response);
+      console.log("response: ", response);
 
       const data = response.data;
       // console.log("data: ", data);

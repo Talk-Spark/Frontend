@@ -4,7 +4,7 @@ import { useState } from "react";
 import CardStorage from "./card/CardStorage";
 import { ArrowForwardIos } from "@mui/icons-material";
 import BookStorage from "./guest/BookStorage";
-import { useRouter } from "next/navigation";
+import { useRouterWrapper } from "../Router/RouterWrapperProvider";
 
 const Storage = () => {
   // 컴포넌트 전환 관리 (명함, 방명록)
@@ -12,7 +12,7 @@ const Storage = () => {
     "namecard",
   );
 
-  const router = useRouter();
+  const router = useRouterWrapper();
 
   const handleViewAll = () => {
     if (activeTab === "namecard") {

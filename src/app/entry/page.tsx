@@ -7,6 +7,8 @@ import FindRoom from "@/src/components/entry/FindRoom";
 import { instance } from "@/src/apis";
 import ReadCode from "@/src/components/QrCode/ReadCode";
 import Header from "@/src/components/Headers/Header";
+import Template from "@/src/components/Router/template";
+import { useRouterWrapper } from "@/src/components/Router/RouterWrapperProvider";
 
 // 방 타입 정의
 interface GameRoom {
@@ -18,6 +20,7 @@ interface GameRoom {
 }
 
 const Entry = () => {
+  const router = useRouterWrapper();
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
   const [isCamera, setIsCamera] = useState(false);
@@ -26,10 +29,9 @@ const Entry = () => {
     name: string;
   } | null>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     localStorage.removeItem("isGameHost"); //entry를 통해 접근하는 사람은 방장이 아닌 것으로 치부.
-
-  },[])
+  }, []);
 
   const setIsNewData = () => {};
 
@@ -51,7 +53,7 @@ const Entry = () => {
     if (isCamera) {
       setIsCamera(false);
     } else {
-      window.history.back();
+      router.back();
     }
   };
 
@@ -95,4 +97,10 @@ const Entry = () => {
   );
 };
 
-export default Entry;
+export default function EntryPage() {
+  return (
+    <Template>
+      <Entry />
+    </Template>
+  );
+}

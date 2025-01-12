@@ -73,7 +73,17 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
+  const [animateButton, setAnimateButton] = useState(false); // 버튼 애니메이션 상태
+
   const dataLength = teamData ? teamData?.length : roomData?.length;
+
+  // 버튼 애니메이션을 0.5초 뒤에 실행
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimateButton(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const addCardBtn = () => {
     if (ver === "명함" && setIsCamera) {
@@ -326,9 +336,9 @@ const SearchAndGetCard = (props: NameCardProps) => {
               "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
           }}
           initial={{ y: 100, opacity: 0 }} // 시작 상태
-          animate={{ y: 0, opacity: 1 }} // 애니메이션 상태
+          animate={animateButton ? { y: 0, opacity: 1 } : {}} // 애니메이션 실행 조건
           exit={{ y: 100, opacity: 0 }} // 종료 상태
-          transition={{ duration: 0.5 }} // 애니메이션 지속 시간
+          transition={{ duration: 0.8 }} // 애니메이션 지속 시간
         >
           <button
             onClick={addCardBtn}

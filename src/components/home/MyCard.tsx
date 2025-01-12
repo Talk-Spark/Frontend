@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { get, instance } from "@/src/apis";
 import { useEffect, useState } from "react";
 import { AxiosResponse } from "axios";
+import { useRouterWrapper } from "../Router/RouterWrapperProvider";
 
 interface CardInfo {
   id: number;
@@ -46,7 +47,7 @@ type MyNameCardProps = CardDataProps & {
 const MyCard = () => {
   const [cardInfo, setCardInfo] = useState<CardInfo>();
 
-  const router = useRouter();
+  const router = useRouterWrapper();
 
   const fetchCardInfo = async () => {
     const cardId = localStorage.getItem("cardId");

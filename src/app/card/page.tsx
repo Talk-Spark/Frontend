@@ -1,7 +1,9 @@
 "use client";
 
+import React from "react";
+
 import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/card/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
@@ -10,6 +12,8 @@ import Logout from "@/src/components/Storage/Logout";
 import Modal from "@/src/components/common/Modal";
 import ReadCode from "@/src/components/QrCode/ReadCode";
 import { get, instance } from "@/src/apis";
+import Template from "@/src/components/Router/template";
+import { useRouterWrapper } from "@/src/components/Router/RouterWrapperProvider";
 
 type CardHolderResponse = {
   cardHolderId: number;
@@ -21,8 +25,10 @@ type CardHolderResponse = {
 };
 
 const Card = () => {
-  const router = useRouter();
+  const router = useRouterWrapper();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const viewParam = searchParams.get("view"); // "mine" 또는 "others" 가져오기
   const [sortOption, setSortOption] = useState("최신순");
   const [searchValue, setSearchValue] = useState<string>("");
@@ -129,7 +135,7 @@ const Card = () => {
       if (user) {
         try {
           const userObj = JSON.parse(user);
-         // console.log(userObj);
+          // console.log(userObj);
         } catch (e) {
           console.log("Failed to parse user from localStorage", e);
         }
@@ -142,7 +148,6 @@ const Card = () => {
     if (user) {
       try {
         const userObj = JSON.parse(user);
-        //console.log(userObj);
         return userObj.accessToken || "";
       } catch (e) {
         console.log("Failed to parse user from localStorage", e);
@@ -185,85 +190,87 @@ const Card = () => {
     if (isCamera) {
       setIsCamera(false);
     } else {
-      router.push("/home");
+      router.back();
     }
   };
 
   return (
-    <div className="relative -mx-[2rem] w-[calc(100%+4rem)]">
-      <div className="mb-[0.4rem]">
-        <Header
-          title={headerTitle}
-          padding={true}
-          showButton1={true}
-          button1Action={headerBtn1}
-          button2Type={headerBtn2}
-          button2Action={handleCompleteClick}
-        />
-      </div>
-      {isCamera ? (
-        <div className="-mx-[2rem] w-[calc(100%+4rem)]">
-          <ReadCode
-            myRun={myRun}
-            setMyRun={setMyRun}
-            setIsNewData={setIsNewData}
-            setIsCamera={setIsCamera}
-            setIsLoading={setIsLoading}
-            isLoading={isLoading}
-            qrVer="card"
+    <Template>
+      <div className="relative -mx-[2rem] w-[calc(100%+4rem)]">
+        <div className="mb-[0.4rem]">
+          <Header
+            title={headerTitle}
+            padding={true}
+            showButton1={true}
+            button1Action={headerBtn1}
+            button2Type={headerBtn2}
+            button2Action={handleCompleteClick}
           />
         </div>
-      ) : (
-        <div className="relative flex flex-col items-center">
-          <Modal
-            isOpen={confirmModal}
-            onAction={() => setConfirmModal(false)}
-            onClose={handleCloseModal}
-            title={
-              modalAction === "delete"
-                ? "회원 탈퇴 하시겠어요?"
-                : "로그아웃 하시겠어요?"
-            }
-            description={
-              modalAction === "delete"
-                ? "재가입 시에도 이용 내역이 복구되지 않아요"
-                : "로그인 상태여야 서비스를 이용할 수 있어요"
-            }
-            actionText="돌아가기"
-            buttonText={modalAction === "delete" ? "탈퇴하기" : "로그아웃"}
-          />
-          {activeView === "mine" && isModalVisible && (
-            <Logout
-              modalAction={modalAction}
-              setModalAction={setModalAction}
-              setConfirmModal={setConfirmModal}
-            />
-          )}
-          <ToggleBar handleToggle={handleToggle} activeView={activeView} />
-          {activeView === "others" ? (
-            <SearchAndGetCard
-              teamData={teamData}
-              setTeamData={setTeamData}
-              ver={"명함"}
-              isEdit={isEdit}
-              setIsCamera={setIsCamera}
-              isNewData={isNewData}
+        {isCamera ? (
+          <div className="-mx-[2rem] w-[calc(100%+4rem)]">
+            <ReadCode
+              myRun={myRun}
+              setMyRun={setMyRun}
               setIsNewData={setIsNewData}
+              setIsCamera={setIsCamera}
+              setIsLoading={setIsLoading}
               isLoading={isLoading}
-              setSortOption={setSortOption}
-              setSearchValue={setSearchValue}
-              searchValue={searchValue}
-              selectedTeamBoxes={selectedTeamBoxes}
-              setSelectedTeamBoxes={setSelectedTeamBoxes}
-              idToggle={idToggle}
-              setIdToggle={setIdToggle}
+              qrVer="card"
             />
-          ) : (
-            <MyCard isVisible={isVisible} />
-          )}
-        </div>
-      )}
-    </div>
+          </div>
+        ) : (
+          <div className="relative flex flex-col items-center">
+            <Modal
+              isOpen={confirmModal}
+              onAction={() => setConfirmModal(false)}
+              onClose={handleCloseModal}
+              title={
+                modalAction === "delete"
+                  ? "회원 탈퇴 하시겠어요?"
+                  : "로그아웃 하시겠어요?"
+              }
+              description={
+                modalAction === "delete"
+                  ? "재가입 시에도 이용 내역이 복구되지 않아요"
+                  : "로그인 상태여야 서비스를 이용할 수 있어요"
+              }
+              actionText="돌아가기"
+              buttonText={modalAction === "delete" ? "탈퇴하기" : "로그아웃"}
+            />
+            {activeView === "mine" && isModalVisible && (
+              <Logout
+                modalAction={modalAction}
+                setModalAction={setModalAction}
+                setConfirmModal={setConfirmModal}
+              />
+            )}
+            <ToggleBar handleToggle={handleToggle} activeView={activeView} />
+            {activeView === "others" ? (
+              <SearchAndGetCard
+                teamData={teamData}
+                setTeamData={setTeamData}
+                ver={"명함"}
+                isEdit={isEdit}
+                setIsCamera={setIsCamera}
+                isNewData={isNewData}
+                setIsNewData={setIsNewData}
+                isLoading={isLoading}
+                setSortOption={setSortOption}
+                setSearchValue={setSearchValue}
+                searchValue={searchValue}
+                selectedTeamBoxes={selectedTeamBoxes}
+                setSelectedTeamBoxes={setSelectedTeamBoxes}
+                idToggle={idToggle}
+                setIdToggle={setIdToggle}
+              />
+            ) : (
+              <MyCard isVisible={isVisible} />
+            )}
+          </div>
+        )}
+      </div>
+    </Template>
   );
 };
 

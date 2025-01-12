@@ -61,7 +61,13 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
   const handleLevelClick = (levelId: number) => {
     setIsFormValid(true);
     setSelectedLevel(levelId);
-    onChange({ difficulty: levelId });
+
+    if (levelId === 4) {
+      const randomLevel = Math.floor(Math.random() * 3) + 1; // 1~3 범위의 랜덤 값
+      onChange({ difficulty: randomLevel });
+    } else {
+      onChange({ difficulty: levelId });
+    }
   };
 
   const createNewRoom = async () => {

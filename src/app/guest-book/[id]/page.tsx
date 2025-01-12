@@ -53,7 +53,7 @@ const Page = () => {
         }> = await instance.get(`/api/guest-books/${roomId}`);
         const resData = response.data.data;
         setGuestDetailData(resData);
-        //console.log(guestDetailData);
+        console.log(guestDetailData);
       } catch (error) {
         console.log("Error fetching guest book data:", error);
       }

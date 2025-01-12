@@ -1,6 +1,7 @@
 import CardMatching from "@/src/components/home/CardMatching";
 import MyCard from "@/src/components/home/MyCard";
 import Storage from "@/src/components/home/Storage";
+import Template from "@/src/components/Router/template";
 
 const Page = () => {
   return (
@@ -12,4 +13,10 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default function HomePage() {
+  return (
+    <Template>
+      <Page />
+    </Template>
+  );
+}

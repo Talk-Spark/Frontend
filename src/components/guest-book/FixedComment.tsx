@@ -42,7 +42,7 @@ const FixedComment = ({
 
   return (
     <div className="flex gap-[0.8rem]">
-      <div>
+      <div className="-mx-[1.5rem]">
         <ProfileImage size={36} color={color} />
       </div>
       <div>

@@ -1,6 +1,8 @@
 "use client";
 import { instance } from "@/src/apis";
 import Header from "@/src/components/Headers/Header";
+import { useRouterWrapper } from "@/src/components/Router/RouterWrapperProvider";
+import Template from "@/src/components/Router/template";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import { useEffect, useState } from "react";
 
@@ -22,9 +24,12 @@ const Page = () => {
     guestBookFavorited: boolean;
     preViewContent: string;
   };
-
+  const router = useRouterWrapper();
   const [roomData, setRoomData] = useState<RoomData[]>([]);
   const [idToggle, setIdToggle] = useState(0);
+  const headerBtn1 = () => {
+    router.back();
+  };
 
   /* 정렬 조건에 따른 방명록 검색하기 */
   useEffect(() => {
@@ -83,6 +88,7 @@ const Page = () => {
         button2Action={handleCompleteClick}
         padding={true}
         showButton1={true}
+        button1Action={headerBtn1}
       />{" "}
       <SearchAndGetCard
         ver="방명록"
@@ -99,4 +105,10 @@ const Page = () => {
     </div>
   );
 };
-export default Page;
+export default function GuestBookPage() {
+  return (
+    <Template>
+      <Page />
+    </Template>
+  );
+}
