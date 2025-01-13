@@ -70,6 +70,7 @@ const Step4 = ({ formData, onChange }: Step4Props) => {
                   backColor={
                     formData.cardThema === color.toUpperCase() ? "blue" : "gray"
                   }
+                  hasFixedWidth={false}
                 />
               </div>
             ))}

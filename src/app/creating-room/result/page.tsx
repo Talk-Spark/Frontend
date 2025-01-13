@@ -11,17 +11,7 @@ const Result = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId");
-
-  // roomName 관리
-  const [roomName, setRoomName] = useState<string | null>(null);
-
-  // 브라우저 환경에서만 localStorage 접근
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const name = localStorage.getItem("roomName");
-      setRoomName(name);
-    }
-  }, []);
+  const roomName = searchParams.get("roomName");
 
   // 카카오 SDK 초기화
   useEffect(() => {
@@ -40,25 +30,31 @@ const Result = () => {
         kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
       }
 
-      kakao.Share.sendDefault({
-        objectType: "feed",
-        content: {
-          title: "방에 초대합니다!",
-          description: `방 이름: ${roomName || "Unknown"}`,
-          link: {
-            mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-            webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-          },
+      // kakao.Share.sendDefault({
+      //   objectType: "feed",
+      //   content: {
+      //     title: "톡스파크에 초대합니다!",
+      //     description: `방 이름: ${roomName || "Unknown"}`,
+      //     link: {
+      //       mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //       webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //     },
+      //   },
+      //   buttons: [
+      //     {
+      //       title: "방에 참여하기",
+      //       link: {
+      //         mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //         webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
+      //       },
+      //     },
+      //   ],
+      // });
+      kakao.Share.sendCustom({
+        templateId: 116096,
+        templateArgs: {
+          roomId: roomId,
         },
-        buttons: [
-          {
-            title: "방에 참여하기",
-            link: {
-              mobileWebUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-              webUrl: `https://talk-spark-frontend-nine.vercel.app/team/${roomId}`,
-            },
-          },
-        ],
       });
     }
   };
