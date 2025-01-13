@@ -335,10 +335,10 @@ const SearchAndGetCard = (props: NameCardProps) => {
             background:
               "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
           }}
-          initial={{ y: 100, opacity: 0 }} // 시작 상태
-          animate={animateButton ? { y: 0, opacity: 1 } : {}} // 애니메이션 실행 조건
-          exit={{ y: 100, opacity: 0 }} // 종료 상태
-          transition={{ duration: 0.8 }} // 애니메이션 지속 시간
+          // initial={{ y: 100, opacity: 0 }} // 시작 상태
+          // animate={animateButton ? { y: 0, opacity: 1 } : {}} // 애니메이션 실행 조건
+          // exit={{ y: 100, opacity: 0 }} // 종료 상태
+          // transition={{ duration: 0.8 }} // 애니메이션 지속 시간
         >
           <button
             onClick={addCardBtn}

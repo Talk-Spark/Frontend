@@ -9,7 +9,14 @@ export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { direction } = useRouterWrapper();
 
+  // 캐싱된 이전 페이지를 저장할 상태
+  const [prevCache, setPrevCache] = React.useState<React.ReactNode | null>(
+    null,
+  );
+
   React.useLayoutEffect(() => {
+    // 새 경로로 이동할 때 이전 페이지를 캐싱
+    setPrevCache(children);
     window.scrollTo(0, 0); // 애니메이션 시작 전에 스크롤 이동
   }, [pathname]);
 
@@ -48,11 +55,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
         }}
         initial={"center"}
         animate={"exit"}
-        transition={{ duration: 0.1, ease: "easeInOut" }}
-        style={{
-          position: "absolute",
-          width: "100vw",
-        }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+        className="absolute w-[100vw]"
       ></motion.div>
     </div>
   );

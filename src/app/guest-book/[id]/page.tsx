@@ -8,6 +8,8 @@ import CommnetInput from "@/src/components/guest-book/CommentInput";
 import Header from "@/src/components/Headers/Header";
 import { AxiosResponse } from "axios";
 import { instance } from "@/src/apis";
+import Template from "@/src/components/Router/template";
+import { useRouterWrapper } from "@/src/components/Router/RouterWrapperProvider";
 
 interface GuestBookDataProps {
   guestBookId: number;
@@ -38,6 +40,7 @@ const Page = () => {
   const [commentValue, setCommentValue] = useState("");
   const [guestDetailData, setGuestDetailData] =
     useState<RoomDataProps>(defaultRoom);
+  const router = useRouterWrapper();
 
   const { id } = useParams(); // roomId 파라미터 가져온 후 get
   const roomId = id ? Number(id) : 0;
@@ -92,12 +95,20 @@ const Page = () => {
   }[] = [
     // 더미데이터
   ];
+  const headerBtn1 = () => {
+    router.back();
+  };
 
   return (
     /* 방명록 없는 경우 대비 전체 bg-gray-1수정 */
     <div className="relative -mx-[2rem] h-[100vh] w-[calc(100%+4rem)] bg-gray-1">
-      <div className="max-[76.8rem] fixed top-0 z-10 w-full">
-        <Header title={roomName} padding={true} showButton1={true} />
+      <div className="max-[76.8rem] fixed top-0 z-10 w-full max-w-[76.8rem]">
+        <Header
+          title={roomName}
+          padding={true}
+          showButton1={true}
+          button1Action={headerBtn1}
+        />
       </div>
       <div className="flex flex-col items-center pb-[10.4rem]">
         <div className="mb-[2rem] mt-[8rem] rounded-[1.2rem] border-[0.1rem] border-gray-7 px-[0.7rem] py-[0.3rem] text-caption-med text-gray-7">
@@ -146,4 +157,10 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default function GuestBookPage() {
+  return (
+    <Template>
+      <Page />
+    </Template>
+  );
+}

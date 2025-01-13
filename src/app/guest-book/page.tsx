@@ -65,7 +65,7 @@ const Page = () => {
         const response = await instance.get(`/api/guest-books${queryParam}`);
 
         // 응답 데이터가 올바른 형식인지 확인
-        const data = response.data as ApiResponse;
+        const data = response.data.data as ApiResponse;
 
         if (data && data.guestBookRooms) {
           setRoomData(data.guestBookRooms); // 응답 데이터를 RoomData 형식으로 설정
