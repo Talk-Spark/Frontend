@@ -10,6 +10,7 @@ type HeaderProps = {
   button2Type?: "edit" | "complete" | "next" | "exit" | "settings" | string; // 버튼2 종류
   button2Action?: () => void; // 버튼2 클릭 동작
   padding?: boolean;
+  isPositionFixed?: boolean;
 };
 
 const Header = ({
@@ -19,6 +20,7 @@ const Header = ({
   button2Type,
   button2Action,
   padding = true,
+  isPositionFixed = true,
 }: HeaderProps) => {
   // 버튼2 텍스트 및 스타일 매핑
   const button2Config: Record<
@@ -42,10 +44,12 @@ const Header = ({
   };
 
   const button2 = button2Type ? button2Config[button2Type] : null;
-
+  const headerStyle = isPositionFixed
+    ? "absolute left-1/2 -translate-x-1/2 transform"
+    : "flex justify-center items-center flex-1";
   return (
     <header
-      className={`relative flex h-[5.2rem] items-center justify-between bg-white ${
+      className={`flex h-[5.2rem] items-center justify-between bg-white ${
         padding ? "px-[2rem]" : "px-0"
       }`}
     >
@@ -66,7 +70,7 @@ const Header = ({
       )}
 
       {/* 헤더 제목 */}
-      <h1 className="absolute left-1/2 -translate-x-1/2 transform text-body-1-med text-gray-10">
+      <h1 className={` ${headerStyle} text-body-1-med text-gray-10`}>
         {title}
       </h1>
 

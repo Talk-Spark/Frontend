@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import FixedComment from "@/src/components/guest-book/FixedComment";
 import MyTalk from "@/src/components/guest-book/MyTalk";
@@ -45,6 +45,24 @@ const Page = () => {
   const { id } = useParams(); // roomId 파라미터 가져온 후 get
   const roomId = id ? Number(id) : 0;
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // 방명록 데이터나 다른 상태 업데이트 후 스크롤을 맨 밑으로
+  const scrollBottom = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
+    }
+  };
+
+  // 데이터를 불러오고 난 후 스크롤을 밑으로 이동
+  useEffect(() => {
+    fetchGuestBookData();
+  }, []);
+
+  useLayoutEffect(() => {
+    if (guestDetailData) scrollBottom(); // 데이터가 들어온 후 스크롤 이동
+  }, [guestDetailData]);
+
   /* 방명록 내용 조회하기 (상세정보) */
   const fetchGuestBookData = async () => {
     if (roomId) {
@@ -56,7 +74,7 @@ const Page = () => {
         }> = await instance.get(`/api/guest-books/${roomId}`);
         const resData = response.data.data;
         setGuestDetailData(resData);
-        console.log(guestDetailData);
+        console.log(resData);
       } catch (error) {
         console.log("Error fetching guest book data:", error);
       }
@@ -78,11 +96,21 @@ const Page = () => {
 
   function formatTimeWithMeridiem(dateTime: string) {
     if (!dateTime || !dateTime.includes("T")) return "시간 정보 없음"; // dateTime이 비어있으면 기본값 반환
-    const time = dateTime.split("T")[1].split(".")[0]; // "T"로 분리 후 초 단위를 제외한 시간 정보만 가져옴
-    const [hour, minute] = time.split(":").map(Number);
+    // 날짜 객체로 변환
+    const date = new Date(dateTime);
+
+    // 7시간 추가
+    const correctedDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+    // 시간 및 분 추출
+    const hour = correctedDate.getHours();
+    const minute = correctedDate.getMinutes();
+
+    // 오전/오후 및 시각 변환
     const meridiem = hour < 12 ? "오전" : "오후";
     const formattedHour = hour % 12 || 12;
 
+    // 최종 포맷된 문자열 반환
     return `${meridiem} ${formattedHour}:${minute.toString().padStart(2, "0")}`;
   }
 
@@ -101,13 +129,17 @@ const Page = () => {
 
   return (
     /* 방명록 없는 경우 대비 전체 bg-gray-1수정 */
-    <div className="relative -mx-[2rem] h-[100vh] w-[calc(100%+4rem)] bg-gray-1">
+    <div
+      ref={scrollContainerRef}
+      className="relative -mx-[2rem] min-h-screen w-[calc(100%+4rem)] overflow-y-auto bg-gray-1"
+    >
       <div className="max-[76.8rem] fixed top-0 z-10 w-full max-w-[76.8rem]">
         <Header
           title={roomName}
           padding={true}
           showButton1={true}
           button1Action={headerBtn1}
+          isPositionFixed={false}
         />
       </div>
       <div className="flex flex-col items-center pb-[10.4rem]">
@@ -121,26 +153,73 @@ const Page = () => {
             date={date}
           />
           {/* Guest Book Data */}
-          <div className="mt-[1.6rem] flex flex-col gap-[1.6rem]">
+          <div className="flex flex-col bg-gray-1">
             {guestDetailData?.guestBookData?.length > 0 ? (
-              guestDetailData?.guestBookData.map((data) =>
-                data.ownerGuestBook ? (
-                  <MyTalk
-                    key={data.guestBookId}
-                    content={data.guestBookContent}
-                    dateTime={data.guestBookDateTime}
-                  />
-                ) : (
-                  <YourTalk
-                    key={data.guestBookId}
-                    userName={data.sparkUserName}
-                    content={data.guestBookContent}
-                    dateTime={data.guestBookDateTime}
-                    formatTimeWithMeridiem={formatTimeWithMeridiem}
-                    color={data.cardThema}
-                  />
-                ),
-              )
+              guestDetailData?.guestBookData.map((data, index) => {
+                const isLastOfSameTime =
+                  index === guestDetailData.guestBookData.length - 1 || // 마지막 메시지거나
+                  formatTimeWithMeridiem(data.guestBookDateTime) !==
+                    formatTimeWithMeridiem(
+                      guestDetailData.guestBookData[index + 1]
+                        ?.guestBookDateTime,
+                    ); // 다음 메시지와 시간이 다르면 true
+
+                // 동일한 사람과 시간에 대해서 첫 번째 메시지에만 프로필 이미지를 표시
+                const isFirstOfSameUserAndTime =
+                  index === 0 ||
+                  data.sparkUserName !==
+                    guestDetailData.guestBookData[index - 1]?.sparkUserName ||
+                  formatTimeWithMeridiem(data.guestBookDateTime) !==
+                    formatTimeWithMeridiem(
+                      guestDetailData.guestBookData[index - 1]
+                        ?.guestBookDateTime,
+                    );
+
+                const shouldShowDate =
+                  index !== 0 && // 첫 번째 메시지에서는 날짜 표시 안함
+                  (formatDate(data.guestBookDateTime) !==
+                    formatDate(
+                      guestDetailData.guestBookData[index - 1]
+                        ?.guestBookDateTime,
+                    ) ||
+                    index === 0); // 이전 메시지와 날짜가 다르면 날짜 표시
+
+                return (
+                  <div key={data.guestBookId}>
+                    {shouldShowDate && (
+                      <div className="flex justify-center">
+                        <div
+                          className="mt-[2.8rem] w-full rounded-[1.2rem] border-[0.1rem] border-gray-7 px-[0.7rem] py-[0.3rem] text-caption-med text-gray-7"
+                          style={{ width: "auto" }} // Auto width based on content
+                        >
+                          {formatDate(data.guestBookDateTime)}{" "}
+                        </div>
+                      </div>
+                    )}
+                    {data.ownerGuestBook ? (
+                      <MyTalk
+                        key={data.guestBookId}
+                        content={data.guestBookContent}
+                        dateTime={data.guestBookDateTime}
+                        formatTimeWithMeridiem={formatTimeWithMeridiem}
+                        shouldShowTime={isLastOfSameTime} // 시간을 표시할지 여부 전달
+                        isFirstOfSameUserAndTime={isFirstOfSameUserAndTime}
+                      />
+                    ) : (
+                      <YourTalk
+                        key={data.guestBookId}
+                        userName={data.sparkUserName}
+                        content={data.guestBookContent}
+                        dateTime={data.guestBookDateTime}
+                        formatTimeWithMeridiem={formatTimeWithMeridiem}
+                        color={data.cardThema}
+                        shouldShowTime={isLastOfSameTime} // 시간을 표시할지 여부 전달
+                        shouldShowProfile={isFirstOfSameUserAndTime} // 첫 번째 말에만 프로필 표시
+                      />
+                    )}
+                  </div>
+                );
+              })
             ) : (
               <p className="text-center text-gray-500"></p>
             )}

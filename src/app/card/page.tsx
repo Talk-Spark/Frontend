@@ -3,7 +3,7 @@
 import React from "react";
 
 import { Suspense, useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import SearchAndGetCard from "@/src/components/Storage/SearchAndGetCard";
 import MyCard from "@/src/components/Storage/card/MyCard";
 import ToggleBar from "@/src/components/Storage/ToggleBar";
@@ -15,7 +15,7 @@ import { get, instance } from "@/src/apis";
 import Template from "@/src/components/Router/template";
 import { useRouterWrapper } from "@/src/components/Router/RouterWrapperProvider";
 
-type CardHolderResponse = {
+export type CardHolderResponse = {
   cardHolderId: number;
   cardHolderName: string;
   numOfTeammates: number;
@@ -27,7 +27,6 @@ type CardHolderResponse = {
 const Card = () => {
   const router = useRouterWrapper();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   const viewParam = searchParams.get("view"); // "mine" 또는 "others" 가져오기
   const [sortOption, setSortOption] = useState("최신순");
@@ -38,6 +37,7 @@ const Card = () => {
   } | null>(null);
 
   const [teamData, setTeamData] = useState<CardHolderResponse[]>([]);
+
   const [activeView, setActiveView] = useState<"mine" | "others">(
     viewParam === "others" ? "others" : "mine",
   ); // 초기값 설정
@@ -68,7 +68,6 @@ const Card = () => {
           };
 
           // API 호출
-          // 쿼리 파라미터로 정렬 조건 추가
 
           // 쿼리 파라미터 생성 함수
           const getQueryParam = () => {
@@ -85,11 +84,11 @@ const Card = () => {
           const data = resData.data;
           if (data?.cardHolders) {
             setTeamData(data.cardHolders);
-            // console.log("teamData:", data.cardHolders);
           } else {
             console.log("cardHolders 속성을 찾을 수 없습니다.");
           }
 
+          // 큐알을 통한 새로운 데이터
           if (isNewData) {
             setIsNewData(true);
             setIsCamera(false);
@@ -102,7 +101,9 @@ const Card = () => {
         }
       }
     };
-    fetchStoredCards();
+    if (!searchValue) {
+      fetchStoredCards();
+    }
   }, [sortOption, searchValue, isNewData, selectedTeamBoxes]);
 
   const handleToggle = (view: "mine" | "others") => {
@@ -135,7 +136,6 @@ const Card = () => {
       if (user) {
         try {
           const userObj = JSON.parse(user);
-          // console.log(userObj);
         } catch (e) {
           console.log("Failed to parse user from localStorage", e);
         }
@@ -248,21 +248,21 @@ const Card = () => {
             <ToggleBar handleToggle={handleToggle} activeView={activeView} />
             {activeView === "others" ? (
               <SearchAndGetCard
+                ver="명함"
                 teamData={teamData}
                 setTeamData={setTeamData}
-                ver={"명함"}
                 isEdit={isEdit}
-                setIsCamera={setIsCamera}
-                isNewData={isNewData}
-                setIsNewData={setIsNewData}
                 isLoading={isLoading}
-                setSortOption={setSortOption}
-                setSearchValue={setSearchValue}
                 searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                setSortOption={setSortOption}
                 selectedTeamBoxes={selectedTeamBoxes}
                 setSelectedTeamBoxes={setSelectedTeamBoxes}
                 idToggle={idToggle}
                 setIdToggle={setIdToggle}
+                setIsCamera={setIsCamera}
+                isNewData={isNewData}
+                setIsNewData={setIsNewData}
               />
             ) : (
               <MyCard isVisible={isVisible} />

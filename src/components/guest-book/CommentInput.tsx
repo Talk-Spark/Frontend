@@ -35,7 +35,6 @@ const CommnetInput = ({
 
   const handleClickGuestBook = async () => {
     if (!commentValue.trim()) {
-      console.error("방명록 내용을 입력해주세요.");
       return;
     }
     /* 전송 버튼 클릭시 post 요청 후 새로고침처럼 get요청 */
@@ -45,7 +44,7 @@ const CommnetInput = ({
     try {
       const response = await instance.post(
         `/api/guest-books/${roomId}?anonymity=${queryParam}`,
-        { content: commentValue.trim() },
+        { content: commentValue },
       );
 
       if (response.status === 200) {

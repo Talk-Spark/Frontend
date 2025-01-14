@@ -42,9 +42,7 @@ const FixedComment = ({
 
   return (
     <div className="flex gap-[0.8rem]">
-      <div className="-mx-[1.5rem]">
-        <ProfileImage size={36} color={color} />
-      </div>
+      <ProfileImage size={36} color={color} hasFixedWidth={false} />
       <div>
         <span className="text-caption-med text-gray-8">{roomName}</span>
         <div className="mt-[0.8rem] flex flex-col gap-[0.4rem]">

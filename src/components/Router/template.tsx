@@ -35,7 +35,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         }}
         initial={"enter"}
         animate={"center"}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         {children}
       </motion.div>

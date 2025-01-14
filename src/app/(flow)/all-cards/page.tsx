@@ -19,9 +19,12 @@ const AllCards = () => {
     null,
   );
   const router = useRouter();
-  const roomId = localStorage.getItem("roomId");
+  const [roomId, setRoomId] = useState<string | null>(null);
 
   useEffect(() => {
+    const storedRoomId = localStorage.getItem("roomId");
+    setRoomId(storedRoomId);
+
     const finalPeople: FinalPeopleProps[] =
       getDataFromLocalStorage("finalPeople");
     setFinalPeople(finalPeople);
