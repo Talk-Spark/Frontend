@@ -178,7 +178,7 @@ const Card = () => {
         }
       }
     }
-    router.push("/"); // 메인 홈으로 이동
+    router.push("/login"); // 로그인 페이지으로 이동
   };
 
   const mineSettingBtn: "settings" | "edit" | "complete" =

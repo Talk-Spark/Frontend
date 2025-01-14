@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import FixedComment from "@/src/components/guest-book/FixedComment";
 import MyTalk from "@/src/components/guest-book/MyTalk";
@@ -46,21 +46,26 @@ const Page = () => {
   const roomId = id ? Number(id) : 0;
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // 방명록 데이터나 다른 상태 업데이트 후 스크롤을 맨 밑으로
-  const scrollBottom = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop =
-        scrollContainerRef.current.scrollHeight;
-    }
-  };
 
   // 데이터를 불러오고 난 후 스크롤을 밑으로 이동
   useEffect(() => {
     fetchGuestBookData();
   }, []);
 
-  useLayoutEffect(() => {
-    if (guestDetailData) scrollBottom(); // 데이터가 들어온 후 스크롤 이동
+  useEffect(() => {
+    if (
+      scrollContainerRef.current &&
+      scrollContainerRef.current.scrollHeight >
+        scrollContainerRef.current.offsetHeight &&
+      guestDetailData.guestBookData.length > 0
+    ) {
+      setTimeout(() => {
+        scrollContainerRef.current!.scrollTop =
+          scrollContainerRef.current!.scrollHeight;
+      }, 0);
+    } else {
+      console.log("스크롤이 필요하지 않음");
+    }
   }, [guestDetailData]);
 
   /* 방명록 내용 조회하기 (상세정보) */
@@ -128,10 +133,9 @@ const Page = () => {
   };
 
   return (
-    /* 방명록 없는 경우 대비 전체 bg-gray-1수정 */
     <div
       ref={scrollContainerRef}
-      className="relative -mx-[2rem] min-h-screen w-[calc(100%+4rem)] overflow-y-auto bg-gray-1"
+      className="scroll-container relative -mx-[2rem] h-[100vh] w-[calc(100%+4rem)] overflow-y-auto bg-gray-1"
     >
       <div className="max-[76.8rem] fixed top-0 z-10 w-full max-w-[76.8rem]">
         <Header
@@ -238,8 +242,8 @@ const Page = () => {
 
 export default function GuestBookPage() {
   return (
-    <Template>
-      <Page />
-    </Template>
+    // <Template>
+    <Page />
+    // </Template>
   );
 }
