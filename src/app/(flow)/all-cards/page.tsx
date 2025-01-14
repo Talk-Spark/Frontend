@@ -11,19 +11,53 @@ import StorageNameCard from "@/src/components/StorageNameCard";
 import { FinalPeopleProps } from "../flow/page";
 import Header from "@/src/components/Headers/Header";
 import { getDataFromLocalStorage } from "@/src/utils";
+import { useRouter } from "next/navigation";
+import { instance } from "@/src/apis";
 
 const AllCards = () => {
-  const [finalPeople, setFinalPeople] = useState<FinalPeopleProps[] | null>(null);
-  
-  useEffect(()=>{
-    const finalPeople : FinalPeopleProps[] = getDataFromLocalStorage("finalPeople");
-    setFinalPeople(finalPeople);
-  },[])
+  const [finalPeople, setFinalPeople] = useState<FinalPeopleProps[] | null>(
+    null,
+  );
+  const router = useRouter();
+  const [roomId, setRoomId] = useState<string | null>(null);
 
-  if(!finalPeople) return;
+  useEffect(() => {
+    const storedRoomId = localStorage.getItem("roomId");
+    setRoomId(storedRoomId);
+
+    const finalPeople: FinalPeopleProps[] =
+      getDataFromLocalStorage("finalPeople");
+    setFinalPeople(finalPeople);
+
+    const newGuestBook = async () => {
+      await instance.post(`/api/guest-books/create?roomId=${roomId}`);
+    };
+
+    if (roomId) {
+      newGuestBook();
+      console.log("방명록 생성");
+    }
+  }, []);
+
+  const headerBtn2 = () => {
+    if (roomId) {
+      const numericRoomId = parseInt(roomId, 10);
+
+      // 숫자로 변환된 roomId를 사용하여 라우팅
+      router.push(`/guest-book/${numericRoomId}`);
+    } else {
+      console.error("roomId is not found in localStorage.");
+    }
+  };
+
+  if (!finalPeople) return;
   return (
     <>
-    <Header title="전체 명함 공개" button2Type="next" button2Action={()=>alert("네비게이션 연결 필요!")}/>
+      <Header
+        title="전체 명함 공개"
+        button2Type="next"
+        button2Action={() => headerBtn2()}
+      />
       <section className="mt-[3.2rem] flex flex-col items-center gap-[2.4rem]">
         <article className="flex flex-col items-center gap-[0.8rem]">
           <h1 className="text-center text-headline-3 text-black">
@@ -43,20 +77,23 @@ const AllCards = () => {
           pagination={{ clickable: true, type: "fraction" }}
           scrollbar={{ draggable: true }}
           onSwiper={(swiper) => {}}
-          onSlideChange={() => {/*noting to do*/}}
+          onSlideChange={() => {
+            /*noting to do*/
+          }}
           style={{ width: "100%", height: "590px" }}
         >
-          {finalPeople.map((user)=><SwiperSlide>
-            <StorageNameCard
-            oneCard={user}
-            isFull={true}
-            />
-          </SwiperSlide>)}
-    
+          {finalPeople.map((user, index) => (
+            <SwiperSlide>
+              <StorageNameCard
+                key={`key-${index}`}
+                oneCard={user}
+                isFull={true}
+              />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </section>
     </>
-    
   );
 };
 

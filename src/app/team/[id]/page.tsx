@@ -7,7 +7,6 @@ import { useParams, useRouter } from "next/navigation";
 import ProfileImage from "@/src/components/ProfileImage";
 import FindRoom from "@/src/components/entry/FindRoom";
 import { Start } from "@mui/icons-material";
-import { AxiosResponse } from "axios";
 import { get } from "@/src/apis";
 import { getUserData, UserLocalData } from "@/src/utils";
 import io from "socket.io-client";
@@ -50,6 +49,13 @@ const TeamDetail = () => {
 
   const gameStartRef = useRef(false);
   const [gameStart, setGameStart] = useState(false);
+
+  const difficulty: Record<number, string> = {
+    1: "하",
+    2: "중",
+    3: "상",
+    4: "랜덤",
+  };
 
   //(only 방장) 게임 시작 버튼
   const handleStartGame = (roomId: string) => {
@@ -161,7 +167,9 @@ const TeamDetail = () => {
               <div className="flex flex-col">
                 <span className="text-center text-body-1-med text-gray-7">
                   난이도{" "}
-                  <span className="text-black">{teamData.difficulty}</span>
+                  <span className="text-black">
+                    {difficulty[teamData.difficulty]}
+                  </span>
                 </span>
                 <span className="mb-[1.2rem] mt-[0.8rem] text-headline-3 text-black">
                   {teamData.roomName}
@@ -170,8 +178,10 @@ const TeamDetail = () => {
                   <span className="text-subhead-bold text-main-pink">
                     {userDatas.length}
                   </span>
-                  {" / "}
-                  {teamData.maxPeople}
+                  <span className="text-gray-12">
+                    {" / "}
+                    {teamData.maxPeople}
+                  </span>
                 </span>
               </div>
             </div>
@@ -201,6 +211,7 @@ const TeamDetail = () => {
             <button
               onClick={startGame}
               className="w-full cursor-pointer rounded-[1.2rem] bg-main-pink py-[1.6rem] text-center text-subhead-bold text-white"
+              // disabled={userDatas.length < 2} // 참가자가 한명일때는 불가 
             >
               시작하기
             </button>

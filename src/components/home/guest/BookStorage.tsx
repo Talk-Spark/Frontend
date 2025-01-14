@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import GuestBookComponent from "./GuestBookComponent";
 import { instance } from "@/src/apis";
+import Image from "next/image";
+import deafultPink from "@/public/Image/home/defultPink.svg";
 
 export interface GuestBookRoom {
   roomId: number;
@@ -30,6 +32,7 @@ const BookStorage = () => {
 
       if (response.status === 200) {
         setGuestBookRooms(data.guestBookRooms);
+        console.log(data.guestBookRooms);
         setError(null);
       }
     } catch (error) {
@@ -45,7 +48,7 @@ const BookStorage = () => {
   }, []);
 
   if (loading) {
-    return <div>로딩 중...</div>;
+    return <div className="text-body-1-med text-gray-7">로딩 중...</div>;
   }
 
   if (error) {

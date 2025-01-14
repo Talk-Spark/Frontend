@@ -61,7 +61,13 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
   const handleLevelClick = (levelId: number) => {
     setIsFormValid(true);
     setSelectedLevel(levelId);
-    onChange({ difficulty: levelId });
+
+    if (levelId === 4) {
+      const randomLevel = Math.floor(Math.random() * 3) + 1; // 1~3 범위의 랜덤 값
+      onChange({ difficulty: randomLevel });
+    } else {
+      onChange({ difficulty: levelId });
+    }
   };
 
   const createNewRoom = async () => {
@@ -82,10 +88,13 @@ const Step3 = ({ formData, onChange }: Step3Props) => {
 
       //roomId를 사용할 일이 있으면 사용
       const roomId = response.data.roomId;
-      const roomName = response.data.roomName;
-      router.push(
-        `/creating-room/result?roomId=${roomId}&roomName=${roomName}`,
-      );
+      // roomId가 유효한 숫자인지 확인
+      if (typeof roomId === "number") {
+        // 숫자를 문자열로 변환 후 저장
+        localStorage.setItem("roomId", roomId.toString());
+      }
+
+      router.push(`/creating-room/result?roomId=${roomId}`);
     } catch (e) {
       console.error(e);
     }
