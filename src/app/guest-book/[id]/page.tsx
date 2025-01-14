@@ -242,8 +242,8 @@ const Page = () => {
 
 export default function GuestBookPage() {
   return (
-    // <Template>
-    <Page />
-    // </Template>
+    <Template>
+      <Page />
+    </Template>
   );
 }
