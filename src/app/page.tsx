@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+//해당 페이지에서 적절하게 navgiate하는 로직 구성하기
 export default function HomePage() {
   const router = useRouter();
 

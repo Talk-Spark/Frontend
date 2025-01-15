@@ -15,7 +15,7 @@ type NameCardProps = {
   tmi: string;
   selectedCategory: string | null; // 부모에서 전달받은 상태
   onCategorySelect?: (category: string) => void; // 부모에서 전달받은 상태 변경 함수
-  fieldHoles : FieldType[];
+  fieldHoles: FieldType[];
 };
 
 const NameCard: React.FC<NameCardProps> = ({
@@ -29,8 +29,8 @@ const NameCard: React.FC<NameCardProps> = ({
   selfDescription,
   tmi,
   selectedCategory,
-  onCategorySelect = ()=>{},
-  fieldHoles
+  onCategorySelect = () => {},
+  fieldHoles,
 }) => {
   // 각 카테고리 항목에 대해 상태 가져오기 (active와 hole을 주로 사용)
   const getCategoryStatus = (category: string) => {
@@ -38,22 +38,20 @@ const NameCard: React.FC<NameCardProps> = ({
 
     if (selectedCategory === category) {
       return "active";
-    }else if(isHole){
+    } else if (isHole) {
       return "hole";
-    }else{
+    } else {
       return "filled";
     }
   };
 
-  const getTextColor = (
-    category: string,
-  ) => {
+  const getTextColor = (category: string) => {
     const categoryStatus = getCategoryStatus(category);
-    if (categoryStatus=== "active") {
+    if (categoryStatus === "active") {
       return "text-main-pink";
-    } else if(categoryStatus === "hole"){
+    } else if (categoryStatus === "hole") {
       return "text-gray-7"; //아직 순서가 아니에요 텍스트 색깔
-    } else{
+    } else {
       return "text-gray-12"; //공개된 내용에 대한 텍스트 색
     }
   };
@@ -65,22 +63,22 @@ const NameCard: React.FC<NameCardProps> = ({
   ) => {
     const categoryStatus = getCategoryStatus(category);
 
-    if (categoryStatus=== "active") {
+    if (categoryStatus === "active") {
       return <span className="text-gray-5"></span>;
-    } else if(categoryStatus === "hole"){
-      if(category === "mbti"){
+    } else if (categoryStatus === "hole") {
+      if (category === "mbti") {
         return <span className="text-gray-5">순서 아님!</span>; //아직 순서가 아니에요 텍스트 색
       }
       return <span className="text-gray-5">아직 순서가 아니에요!</span>; //아직 순서가 아니에요 텍스트 색
-    } else{
+    } else {
       return value || <span className="text-gray-5"></span>; //공개된 내용에 대한 텍스트 내용
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log(fieldHoles);
     // console.log(selectedCategory);
-  },[fieldHoles])
+  }, [fieldHoles]);
 
   return (
     <div className="flex h-[30rem] flex-col rounded-xl bg-white px-[1.2rem] py-[1.6rem] shadow">
@@ -97,9 +95,7 @@ const NameCard: React.FC<NameCardProps> = ({
           {/* 전공 항목 */}
           <div
             className={`flex w-auto flex-1 items-center gap-[0.4rem] rounded-[0.4rem] py-[0.4rem] ${
-              getCategoryStatus("major") === "active"
-                ? "bg-sub-palePink"
-                : ""
+              getCategoryStatus("major") === "active" ? "bg-sub-palePink" : ""
             }`}
             onClick={() => onCategorySelect("전공")}
           >
@@ -112,18 +108,14 @@ const NameCard: React.FC<NameCardProps> = ({
           {/* MBTI 항목 */}
           <div
             className={`flex flex-1 items-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-              getCategoryStatus("mbti") === "active"
-                ? "bg-sub-palePink"
-                : ""
+              getCategoryStatus("mbti") === "active" ? "bg-sub-palePink" : ""
             }`}
             onClick={() => onCategorySelect("엠비티아이")}
           >
-            <div
-              className={`text-body-1-bold ${getTextColor("mbti")}`}
-            >
+            <div className={`text-body-1-bold ${getTextColor("mbti")}`}>
               MBTI
             </div>
-            <div className="text-body-1-med text-gray-10 text-left">
+            <div className="text-left text-body-1-med text-gray-10">
               {getCategoryValue("mbti", mbti)}
             </div>
           </div>
@@ -136,9 +128,7 @@ const NameCard: React.FC<NameCardProps> = ({
         {/* 취미 항목 */}
         <div
           className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-            getCategoryStatus("hobby") === "active"
-              ? "bg-sub-palePink"
-              : ""
+            getCategoryStatus("hobby") === "active" ? "bg-sub-palePink" : ""
           }`}
           onClick={() => onCategorySelect("취미")}
         >
@@ -153,15 +143,11 @@ const NameCard: React.FC<NameCardProps> = ({
         {/* 닮은꼴 항목 */}
         <div
           className={`flex items-center justify-center gap-[1.2rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-            getCategoryStatus("lookAlike") === "active"
-              ? "bg-sub-palePink"
-              : ""
+            getCategoryStatus("lookAlike") === "active" ? "bg-sub-palePink" : ""
           }`}
           onClick={() => onCategorySelect("닮은꼴")}
         >
-          <div
-            className={`text-body-1-bold ${getTextColor("lookAlike")}`}
-          >
+          <div className={`text-body-1-bold ${getTextColor("lookAlike")}`}>
             닮은꼴
           </div>
           <div className="flex-1 text-right text-body-1-med text-gray-10">
@@ -174,8 +160,7 @@ const NameCard: React.FC<NameCardProps> = ({
             {/* 나는 이런 사람이야 항목 */}
             <div
               className={`flex flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-                getCategoryStatus("selfDescription") ===
-                "active"
+                getCategoryStatus("selfDescription") === "active"
                   ? "bg-sub-palePink"
                   : ""
               }`}
@@ -187,7 +172,7 @@ const NameCard: React.FC<NameCardProps> = ({
                 나는 이런 사람이야
               </div>
 
-              <div className="flex-1 text-body-1-med tracking-tight">
+              <div className="flex-1 text-body-1-med tracking-tight text-gray-10">
                 {getCategoryValue("selfDescription", selfDescription)}
               </div>
             </div>
@@ -195,19 +180,15 @@ const NameCard: React.FC<NameCardProps> = ({
             {/* TMI 항목 */}
             <div
               className={`flex flex-1 flex-col gap-[0.8rem] rounded-[0.4rem] px-[0.4rem] py-[0.4rem] ${
-                getCategoryStatus("tmi") === "active"
-                  ? "bg-sub-palePink"
-                  : ""
+                getCategoryStatus("tmi") === "active" ? "bg-sub-palePink" : ""
               }`}
               onClick={() => onCategorySelect("tmi")}
             >
-              <div
-                className={`text-body-1-bold ${getTextColor("tmi")}`}
-              >
+              <div className={`text-body-1-bold ${getTextColor("tmi")}`}>
                 TMI
               </div>
 
-              <div className="flex-1 text-body-1-med tracking-tight">
+              <div className="flex-1 text-body-1-med tracking-tight text-gray-10">
                 {getCategoryValue("tmi", tmi)}
               </div>
             </div>

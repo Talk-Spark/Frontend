@@ -4,6 +4,7 @@ import starIcon from "@/public/nameCard/Star.svg";
 import starPinkIcon from "@/public/nameCard/pinkStar.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useRouterWrapper } from "../Router/RouterWrapperProvider";
 
 interface CardBox {
   cardHolderId?: number;
@@ -55,7 +56,7 @@ const TeamBox = (props: TeamBoxProps) => {
     setIdToggle,
   } = props;
   const [bgColor, setBgColor] = useState("bg-gray-1");
-  const router = useRouter();
+  const router = useRouterWrapper();
 
   // 큐알 코드를 통해 새로운 데이터 입력 시 3초 동안 pink 배경
   useEffect(() => {
@@ -108,7 +109,7 @@ const TeamBox = (props: TeamBoxProps) => {
   const getPreviewContent = (content?: string) => {
     if (ver === "방명록" && content) {
       return content.length > maxText
-        ? `${content.slice(0, maxText)}...`
+        ? `${content.slice(0, maxText)}∙∙∙`
         : content;
     }
     return content;

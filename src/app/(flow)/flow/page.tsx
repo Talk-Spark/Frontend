@@ -1,13 +1,12 @@
 "use client";
 
-const AfterSelect = dynamic(
-  () => import('@/src/components/flow/AfterSelect'),
-  { ssr: false }
-)
+const AfterSelect = dynamic(() => import("@/src/components/flow/AfterSelect"), {
+  ssr: false,
+});
 const BeforeSelect = dynamic(
-  () => import('@/src/components/flow/BeforeSelect'),
-  { ssr: false }
-)
+  () => import("@/src/components/flow/BeforeSelect"),
+  { ssr: false },
+);
 // import AfterSelect from "@/src/components/flow/AfterSelect";
 // import BeforeSelect from "@/src/components/flow/BeforeSelect";
 import { getUserData } from "@/src/utils";
@@ -16,6 +15,9 @@ import { MutableRefObject, Suspense, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/src/components/Headers/Header";
+import Image from "next/image";
+import loading from "@/public/loading/loadingColor.gif";
+
 // export const CARD_FLOW = [
 //   "엠비티아이",
 //   "취미",
@@ -114,7 +116,6 @@ interface ScoresProps {
   [ownerId: number]: number;
 }
 
-
 const Flow = () => {
   /* 
     /flow?roomId={roomId}  와 같은 주소에서 roomId 내용을 뽑아올거임
@@ -130,11 +131,13 @@ const Flow = () => {
   const [cardStep, setCardStep] = useState(0); //소켓으로 on 해올 예정 -> todo: 아마 현재 문제가 뭔지에 대해서...
   const [isBefore, setIsBefore] = useState(true); //소켓에서 현재 상태를 받아와서 대기 room으로 이동 여부 결정
   const [isGameEnd, setIsGameEnd] = useState(false);
-  const [correctedPeople, setCorrectedPeople] = useState<singleQuestionObjProps[] | null>(null);
+  const [correctedPeople, setCorrectedPeople] = useState<
+    singleQuestionObjProps[] | null
+  >(null);
   const [isAllCorrect, setIsAllCorrect] = useState(false);
   const [isQuizEnd, setIsQuizEnd] = useState(false);
   const [storageCard, setStorageCard] = useState<StorageCardProps | null>(null);
-  
+
   //소켓에서 받아오는 정보들
   const [NameCardInfo, setNameCardInfo] = useState<NameCardObjProps>({
     //더미데이터
@@ -174,14 +177,14 @@ const Flow = () => {
     });
 
     //todo: 명함 하나 공개, 전체 공개와 관련된 로직 구성하기 - 맞출 사람이 더 남은 경우
-    socketRef.current.on("singleResult", (data : StorageCardProps) => {
+    socketRef.current.on("singleResult", (data: StorageCardProps) => {
       //console.log(data);
 
       setIsQuizEnd(true);
       setIsAllCorrect(false);
       setStorageCard({
-        name : data.name,
-        teamName : NameCardInfo.teamName,
+        name: data.name,
+        teamName: NameCardInfo.teamName,
         age: data.age,
         major: data.major,
         mbti: data.mbti,
@@ -190,7 +193,7 @@ const Flow = () => {
         selfDescription: data.selfDescription,
         tmi: data.tmi,
         cardThema: data.cardThema,
-      })
+      });
     });
     socketRef.current.on("lastResult", (data: StorageCardProps) => {
       //console.log(data);
@@ -198,8 +201,8 @@ const Flow = () => {
       setIsQuizEnd(true);
       setIsAllCorrect(false);
       setStorageCard({
-        name : data.name,
-        teamName : NameCardInfo.teamName,
+        name: data.name,
+        teamName: NameCardInfo.teamName,
         age: data.age,
         major: data.major,
         mbti: data.mbti,
@@ -208,28 +211,35 @@ const Flow = () => {
         selfDescription: data.selfDescription,
         tmi: data.tmi,
         cardThema: data.cardThema,
-      })
+      });
 
       setIsGameEnd(true);
     });
 
-    socketRef.current.on("question", (profileData : UserProfile, blankData : UserBlanks, QuizData: QuizDataProps, teamName: string) => {
-      
-      setNameCardInfo({
-        teamName: teamName, 
-        name: profileData.name,
-        age: profileData.age,
-        major: profileData.major,
-        mbti: profileData.mbti,
-        hobby: profileData.hobby,
-        lookAlike: profileData.lookAlike,
-        selfDescription: profileData.selfDescription, 
-        tmi: profileData.tmi,
-      });
-      setQuizInfo(QuizData);
-      setFieldHoles(blankData.blanks);
-      setIsBefore(true);
-    });
+    socketRef.current.on(
+      "question",
+      (
+        profileData: UserProfile,
+        blankData: UserBlanks,
+        QuizData: QuizDataProps,
+        teamName: string,
+      ) => {
+        setNameCardInfo({
+          teamName: teamName,
+          name: profileData.name,
+          age: profileData.age,
+          major: profileData.major,
+          mbti: profileData.mbti,
+          hobby: profileData.hobby,
+          lookAlike: profileData.lookAlike,
+          selfDescription: profileData.selfDescription,
+          tmi: profileData.tmi,
+        });
+        setQuizInfo(QuizData);
+        setFieldHoles(blankData.blanks);
+        setIsBefore(true);
+      },
+    );
 
     //todo: 현재 이 메세지 안옴(서버 문제)
     socketRef.current.on(
@@ -241,12 +251,15 @@ const Flow = () => {
     );
 
     // 최종 스코어 가져오기
-    socketRef.current.on("scores", (scores: ScoresProps ,data: FinalPeopleProps[]) => {
-      //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
-      router.push("/game-end"); //최종스코어 창으로 이동!
-      localStorage.setItem("finalScores", JSON.stringify(scores)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기
-      localStorage.setItem("finalPeople", JSON.stringify(data));
-    }); 
+    socketRef.current.on(
+      "scores",
+      (scores: ScoresProps, data: FinalPeopleProps[]) => {
+        //data를 localStorage에 잘 저장해두었다가, /game-end 에서 사용하여 렌더링하도록 만들기.
+        router.push("/game-end"); //최종스코어 창으로 이동!
+        localStorage.setItem("finalScores", JSON.stringify(scores)); //todo: data 형식 잘 확인하고, 보내기, 나중에 이동한 game-end에서 잘 받아와서 사용하기
+        localStorage.setItem("finalPeople", JSON.stringify(data));
+      },
+    );
 
     return () => {
       socketRef.current?.disconnect();
@@ -254,61 +267,70 @@ const Flow = () => {
     };
   }, []);
 
-  useEffect(()=>{
-    if(correctedPeople){
-      const isAllCorrect = correctedPeople.every(person => person.correct === true);
+  useEffect(() => {
+    if (correctedPeople) {
+      const isAllCorrect = correctedPeople.every(
+        (person) => person.correct === true,
+      );
       setIsAllCorrect(isAllCorrect);
     }
-    
-  },[correctedPeople])
+  }, [correctedPeople]);
 
-  const addLabelToCorrectAnswer = (quizInfoOptions : string[], correctAnswer: string) : string => {
+  const addLabelToCorrectAnswer = (
+    quizInfoOptions: string[],
+    correctAnswer: string,
+  ): string => {
     const index = quizInfoOptions.indexOf(correctAnswer);
-    const label = String.fromCharCode(65 + index)
+    const label = String.fromCharCode(65 + index);
     return `${label}. ${correctAnswer}`;
-  }
+  };
 
   if (!roomId) return;
   //나중에 방장 여부 넘겨서, 버튼 활성화 여부 결정 필요
   return (
     <>
-    <Header title="명함 맞추기"/>
-      <main className="flex flex-col items-center bg-gray-1 w-[cal(100% + 4rem)] -mx-[2rem] h-[71.2rem]">
-      {isReady ? (
-        socketRef && isBefore ? (
-          <BeforeSelect
-            cardStep={cardStep}
-            setIsBefore={setIsBefore}
-            setCardStep={setCardStep}
-            socketRef={socketRef as MutableRefObject<any>}
-            roomId={roomId}
-            isHost={isHost}
-            NameCardInfo ={NameCardInfo}
-            quizInfo ={quizInfo as QuizDataProps}
-            fieldHoles ={fieldHoles as FieldType[]}
-          />
+      <Header title="명함 맞추기" />
+      <main className="w-[cal(100% + 4rem)] -mx-[2rem] flex h-[71.2rem] flex-col items-center bg-gray-1">
+        {isReady ? (
+          socketRef && isBefore ? (
+            <BeforeSelect
+              cardStep={cardStep}
+              setIsBefore={setIsBefore}
+              setCardStep={setCardStep}
+              socketRef={socketRef as MutableRefObject<any>}
+              roomId={roomId}
+              isHost={isHost}
+              NameCardInfo={NameCardInfo}
+              quizInfo={quizInfo as QuizDataProps}
+              fieldHoles={fieldHoles as FieldType[]}
+            />
+          ) : (
+            <AfterSelect
+              cardStep={cardStep}
+              setIsBefore={setIsBefore}
+              socketRef={socketRef as MutableRefObject<any>}
+              roomId={roomId}
+              isHost={isHost}
+              isQuizEnd={isQuizEnd}
+              isGameEnd={isGameEnd}
+              correctedPeople={correctedPeople as singleQuestionObjProps[]}
+              answer={addLabelToCorrectAnswer(
+                quizInfo?.options as string[],
+                quizInfo?.correctAnswer as string,
+              )}
+              answerCount={correctedPeople?.length as number}
+              isAllCorrect={isAllCorrect}
+              storageCard={storageCard as StorageCardProps}
+            />
+          )
         ) : (
-          <AfterSelect
-            cardStep={cardStep}
-            setIsBefore={setIsBefore}
-            socketRef={socketRef as MutableRefObject<any>}
-            roomId={roomId}
-            isHost={isHost}
-            isQuizEnd={isQuizEnd}
-            isGameEnd={isGameEnd}
-            correctedPeople = {correctedPeople as singleQuestionObjProps[]}
-            answer = {addLabelToCorrectAnswer(quizInfo?.options as string[], quizInfo?.correctAnswer as string)}
-            answerCount = {correctedPeople?.length as number}
-            isAllCorrect ={isAllCorrect}
-            storageCard={storageCard as StorageCardProps}
-          />
-        )
-      ) : (
-        <div>로딩중.. 3초만 기다려주세요</div>
-      )}
-    </main>
+          <div>
+            로딩중.. 3초만 기다려주세요
+            {/* <Image src={loading} alt="로딩" /> */}
+          </div>
+        )}
+      </main>
     </>
-
   );
 };
 

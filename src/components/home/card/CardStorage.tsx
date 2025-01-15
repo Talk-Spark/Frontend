@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import NameCardComponent from "./NameCardComponent";
 import { instance } from "@/src/apis";
+import Image from "next/image";
+import deafultPink from "@/public/Image/home/defultPink.svg";
 
 // 팀 내 명함 정보
 export interface cards {
@@ -52,7 +54,7 @@ const CardStorage = () => {
     try {
       setLoading(true);
       const response = await instance.get("/api/storedCards/main");
-      //console.log("response: ", response);
+      console.log("response: ", response);
 
       const data = response.data;
       // console.log("data: ", data);
@@ -101,7 +103,11 @@ const CardStorage = () => {
   }
 
   if (error) {
-    return <div className="text-body-1-med text-gray-7">{error}</div>;
+    return (
+      <div className="text-body-1-med text-gray-7">
+        {error}{" "}
+      </div>
+    );
   }
 
   return (

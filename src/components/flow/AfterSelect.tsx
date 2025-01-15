@@ -13,7 +13,10 @@ import Lottie from "lottie-react";
 import animationData from "@/public/flow/allCorrect.json";
 import StorageNameCard from "../StorageNameCard";
 import { useRouter } from "next/navigation";
-import { singleQuestionObjProps, StorageCardProps } from "@/src/app/(flow)/flow/page";
+import {
+  singleQuestionObjProps,
+  StorageCardProps,
+} from "@/src/app/(flow)/flow/page";
 import { getUserData } from "@/src/utils";
 
 interface AfterSelectProps {
@@ -22,13 +25,13 @@ interface AfterSelectProps {
   socketRef: MutableRefObject<any>;
   roomId: string;
   isHost: boolean;
-  isQuizEnd : boolean;
-  isGameEnd :boolean;
-  correctedPeople : singleQuestionObjProps[];
-  answer : string;
-  answerCount : number;
-  isAllCorrect : boolean;
-  storageCard : StorageCardProps;
+  isQuizEnd: boolean;
+  isGameEnd: boolean;
+  correctedPeople: singleQuestionObjProps[];
+  answer: string;
+  answerCount: number;
+  isAllCorrect: boolean;
+  storageCard: StorageCardProps;
 }
 const AfterSelect = ({
   cardStep,
@@ -42,11 +45,11 @@ const AfterSelect = ({
   answer,
   answerCount,
   isAllCorrect,
-  storageCard
+  storageCard,
 }: AfterSelectProps) => {
   //해당 state들은 전부 소켓으로 받아올 필요성 존재
   const [isAllCorrected, setIsAllCorrected] = useState(isAllCorrect);
-  const user = getUserData()
+  const user = getUserData();
   const router = useRouter();
 
   //todo: key가 string일 수 있음 (userId : 맞춤 여부) 형식이기 때문!
@@ -60,16 +63,19 @@ const AfterSelect = ({
 
   const handleNextPerson = () => {
     socketRef.current.emit("next", { roomId });
-   
+
     //최종 스코어 보기
-    if (isGameEnd) { 
-      socketRef.current.emit("getEnd", { roomId, sparkUserId: user?.sparkUserId });
-    } 
+    if (isGameEnd) {
+      socketRef.current.emit("getEnd", {
+        roomId,
+        sparkUserId: user?.sparkUserId,
+      });
+    }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     //console.log(storageCard);
-  },[storageCard])
+  }, [storageCard]);
 
   //전부 다 맞췄을 때 로띠 뜨는 것도 구현 필요 + 방장만 클릭 가능한 거 많음.
   return (
@@ -78,7 +84,7 @@ const AfterSelect = ({
         <>
           <section className="mt-[2.4rem] flex flex-col items-center gap-[2rem] self-stretch">
             <span className="text-center text-headline-3 text-black">
-              공준혁님의 명함 완성!
+              {storageCard.name}님의 명함 완성!
             </span>
             <StorageNameCard
               oneCard={storageCard}
@@ -90,7 +96,7 @@ const AfterSelect = ({
           <div className="mb-[6rem] mt-[2.4rem]">
             <Button
               onClick={handleNextPerson}
-              variant={isGameEnd ? "pink" : !isHost ?  "gray" : "black" }
+              variant={isGameEnd ? "pink" : !isHost ? "gray" : "black"}
               disabled={!isGameEnd && !isHost}
             >
               {isGameEnd ? "최종 스코어 보기" : "다음 사람 맞추기"}
@@ -100,8 +106,8 @@ const AfterSelect = ({
       ) : (
         <>
           <section className="relative flex h-auto w-[37.5rem] flex-col items-center justify-start gap-[2.4rem] pt-[2.4rem]">
-            <article className="flex w-[33.5rem] flex-col items-center gap-[3.6rem] ">
-              <div className="rounded-[1.2rem] flex flex-col items-start gap-[1rem] self-stretch bg-white p-[20px_25px] shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)]">
+            <article className="flex w-[33.5rem] flex-col items-center gap-[3.6rem]">
+              <div className="flex flex-col items-start gap-[1rem] self-stretch rounded-[1.2rem] bg-white p-[20px_25px] shadow-[0px_0px_12px_0px_rgba(0,0,0,0.08)]">
                 <span className="self-stretch text-center text-body-2-bold text-main-pink">
                   정답은?
                 </span>
@@ -131,7 +137,11 @@ const AfterSelect = ({
           </section>
 
           <div className="mb-[6rem] mt-[7rem]">
-            <Button onClick={handleNextQuestion} disabled={!isHost} variant={`${!isHost ? "gray" : "black"}`}>
+            <Button
+              onClick={handleNextQuestion}
+              disabled={!isHost}
+              variant={`${!isHost ? "gray" : "black"}`}
+            >
               {cardStep <= 4 ? "다음 질문으로" : "다음으로"}
             </Button>
           </div>

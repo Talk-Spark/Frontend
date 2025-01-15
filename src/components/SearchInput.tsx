@@ -25,13 +25,17 @@ const SearchInput = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
+  
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && onSearch) {
+    if (e.key === "Enter") {
       setSearchValue(value);
-      onSearch();
+      console.log("으하하")
+      if(onSearch){
+        onSearch();
+      }
     }
-  };
+  }
 
   const onCamera = () => {
     if (setIsCamera) setIsCamera(true);
@@ -42,7 +46,7 @@ const SearchInput = ({
     >
       {!value && <Image src={searchIcon} alt="돋보기 아이콘" />}
       <input
-        className="search-reset w-full text-subhead-med placeholder-gray-5 focus:outline-none"
+        className="search-reset w-full text-subhead-med text-black placeholder-gray-5 focus:outline-none"
         placeholder={placeholderText}
         onChange={handleChange}
         onKeyDown={handleKeyPress}

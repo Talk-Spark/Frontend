@@ -5,6 +5,7 @@ import TeamBox from "./TeamBox";
 import Modal from "../common/Modal";
 import { instance, put } from "@/src/apis";
 import { motion } from "framer-motion";
+import { CardHolderResponse } from "@/src/app/card/page";
 
 interface Team {
   cardHolderId: number;
@@ -73,7 +74,28 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
   const [isModal, setIsModal] = useState(false);
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
+  const [filterDataC, setFilterDataC] = useState<Team[]>([]);
+  const [filterDataR, setFilterDataR] = useState<Room[]>([]);
+
+  useEffect(() => {
+    if (teamData) {
+      setFilterDataC(teamData);
+    } else if (roomData) {
+      setFilterDataR(roomData);
+    }
+  }, [teamData, roomData]);
+
+  // const [animateButton, setAnimateButton] = useState(false); // 버튼 애니메이션 상태
+
   const dataLength = teamData ? teamData?.length : roomData?.length;
+
+  // 버튼 애니메이션을 0.5초 뒤에 실행
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // setAnimateButton(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const addCardBtn = () => {
     if (ver === "명함" && setIsCamera) {
@@ -153,7 +175,6 @@ const SearchAndGetCard = (props: NameCardProps) => {
 
         // 요청이 모두 완료되면 선택된 방명록 박스를 초기화하고 모달을 닫기
         setSelectedTeamBoxes([]);
-        setRoomData([]);
         setIsModal(false);
       } catch (error) {
         console.error("삭제 중 오류 발생:", error);
@@ -180,18 +201,18 @@ const SearchAndGetCard = (props: NameCardProps) => {
       }
     } else if (roomData && setRoomData) {
       /* 보관된 방명록에 대한 즐겨찾기 PUT (배열) */
-      const putFav = async () => {
-        await put(`/api/guest-books/${idToggle}`);
+      const putFav = async (favId: number) => {
+        await put(`/api/guest-books/${favId}`);
       };
       if (idToggle && idToggle >= 0) {
+        putFav(idToggle);
         setRoomData((prevData) =>
           prevData.map((room) =>
             room.roomId === idToggle
-              ? { ...room, bookMark: !room.guestBookFavorited }
+              ? { ...room, guestBookFavorited: !room.guestBookFavorited }
               : room,
           ),
         );
-        putFav();
       }
     }
   }, [idToggle]);
@@ -241,6 +262,26 @@ const SearchAndGetCard = (props: NameCardProps) => {
     setIsModal(false);
   };
 
+  const handleSearch = () => {
+    const keyword = searchValue.trim().toLowerCase(); // 검색어를 소문자로 변환
+    if (ver === "명함" && teamData && setTeamData) {
+      const filteredTeams = teamData.filter(
+        (team) => team.cardHolderName.toLowerCase().includes(keyword), // 팀 이름으로 검색
+      );
+      console.log(filteredTeams);
+      setFilterDataC(filteredTeams);
+    } else if (ver === "방명록" && roomData && setRoomData) {
+      const filteredRooms = roomData.filter(
+        (room) => room.roomName.toLowerCase().includes(keyword), // 방 이름으로 검색
+      );
+      setFilterDataR(filteredRooms);
+    }
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchValue]);
+
   return (
     <div className="w-full bg-white">
       <div className="w-[calc(100% - 4rem)] mx-[2rem] pb-[19rem]">
@@ -251,6 +292,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
             ver === "명함" ? "팀명 또는 이름 검색" : "방명록 검색"
           }
           isQr={false}
+          onSearch={handleSearch}
         />
         <div className="mb-[1.2rem] mt-[2.4rem] flex h-[3.6rem] w-full justify-between">
           <div className="flex items-center gap-[0.4rem]">
@@ -267,32 +309,32 @@ const SearchAndGetCard = (props: NameCardProps) => {
         </div>
         <div className="flex w-full flex-col gap-[1.2rem]">
           {ver === "명함"
-            ? teamData?.map((team, index) => (
+            ? filterDataC?.map((team, index) => (
                 <TeamBox
                   key={index}
                   ver={ver}
                   team={team}
+                  index={index}
                   isSelected={selectedTeamBoxes?.includes(index) || false}
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
-                  index={index}
                   isLoading={isLoading}
-                  isNewData={isNewData}
-                  setIsNewData={setIsNewData}
                   idToggle={idToggle}
                   setIdToggle={setIdToggle}
+                  isNewData={isNewData}
+                  setIsNewData={setIsNewData}
                 />
               ))
-            : roomData?.map((room, index) => (
+            : filterDataR?.map((room, index) => (
                 <TeamBox
                   key={index}
                   ver={ver}
+                  room={room}
                   index={index}
                   isSelected={selectedTeamBoxes?.includes(index) || false}
                   isEdit={isEdit}
                   onSelect={handleSelectTeamBox}
                   isLoading={isLoading}
-                  room={room}
                   idToggle={idToggle}
                   setIdToggle={setIdToggle}
                 />
@@ -325,10 +367,10 @@ const SearchAndGetCard = (props: NameCardProps) => {
             background:
               "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
           }}
-          initial={{ y: 100, opacity: 0 }} // 시작 상태
-          animate={{ y: 0, opacity: 1 }} // 애니메이션 상태
-          exit={{ y: 100, opacity: 0 }} // 종료 상태
-          transition={{ duration: 0.5 }} // 애니메이션 지속 시간
+          // initial={{ y: 100, opacity: 0 }} // 시작 상태
+          // animate={animateButton ? { y: 0, opacity: 1 } : {}} // 애니메이션 실행 조건
+          // exit={{ y: 100, opacity: 0 }} // 종료 상태
+          // transition={{ duration: 0.8 }} // 애니메이션 지속 시간
         >
           <button
             onClick={addCardBtn}

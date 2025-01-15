@@ -1,8 +1,8 @@
 import Image, { StaticImageData } from "next/image";
-import blueGraphic from "@/public/nameCard/blueStorageGraphic.svg";
-import yellowGraphic from "@/public/nameCard/yellowStorageGraphic.svg";
-import pinkGraphic from "@/public/nameCard/pinkStoragePink.svg";
-import mintGraphic from "@/public/nameCard/mintStorageGraphic.svg";
+import blueGraphic from "@/public/nameCard/blueGraphic.svg";
+import yellowGraphic from "@/public/nameCard/yellowGraphic.svg";
+import pinkGraphic from "@/public/nameCard/pinkGraphic.svg";
+import mintGraphic from "@/public/nameCard/mintGraphic.svg";
 import QrCode from "../../QrCode/QrCode";
 
 type SelectedColor = "PINK" | "MINT" | "YELLOW" | "BLUE";
@@ -53,7 +53,7 @@ const QrCard = ({ name = "", color = "PINK", cardId = 1 }: QrCardProps) => {
       <div
         className={`relative flex h-[19.2rem] flex-col items-center gap-[2.7rem] overflow-hidden rounded-[20px] px-[2.8rem] text-headline-1 ${backColorBottom[color]}`}
       >
-        <span className="mt-[2.4rem]">{name}</span>
+        <span className="mt-[2.4rem] text-black">{name}</span>
         <div
           className={`absolute ${positionStyles[color]} flex h-full w-full justify-center rounded-[2rem] bg-white-storage`}
         >

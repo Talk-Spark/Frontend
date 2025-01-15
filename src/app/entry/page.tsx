@@ -8,6 +8,8 @@ import { instance } from "@/src/apis";
 import ReadCode from "@/src/components/QrCode/ReadCode";
 import Header from "@/src/components/Headers/Header";
 import { useSearchParams } from "next/navigation";
+import Template from "@/src/components/Router/template";
+import { useRouterWrapper } from "@/src/components/Router/RouterWrapperProvider";
 
 // 방 타입 정의
 interface GameRoom {
@@ -19,6 +21,7 @@ interface GameRoom {
 }
 
 const Entry = () => {
+  const router = useRouterWrapper();
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
   const [isCamera, setIsCamera] = useState(false);
@@ -51,7 +54,7 @@ const Entry = () => {
     if (isCamera) {
       setIsCamera(false);
     } else {
-      window.history.back();
+      router.back();
     }
   };
 
@@ -95,4 +98,10 @@ const Entry = () => {
   );
 };
 
-export default Entry;
+export default function EntryPage() {
+  return (
+    <Template>
+      <Entry />
+    </Template>
+  );
+}

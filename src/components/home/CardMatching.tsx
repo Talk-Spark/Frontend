@@ -4,9 +4,12 @@ import enteringRoomImage from "@/public/Image/home/enteringRoomImage.png";
 import talkSparkImage from "@/public/Image/home/TalkSpark.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ExtendedLink from "../Router/ExtendedLink";
+import { useRouterWrapper } from "../Router/RouterWrapperProvider";
 
 const CardMatching = () => {
   const router = useRouter();
+  const { direction } = useRouterWrapper();
 
   const handleRouting = (addr: string) => {
     router.push(addr);
@@ -39,13 +42,15 @@ const CardMatching = () => {
           </div>
           <div
             className="h-[13.2rem] w-[16.2rem] cursor-pointer text-subhead-bold shadow-DEFAULT"
-            onClick={() => handleRouting("/entry")}
+            // onClick={() => handleRouting("/entry")}
           >
-            <Image
-              src={enteringRoomImage}
-              alt="명함 맞추기 입장하기"
-              className="h-full w-full"
-            />
+            <ExtendedLink href="/entry">
+              <Image
+                src={enteringRoomImage}
+                alt="명함 맞추기 입장하기"
+                className="h-full w-full"
+              />
+            </ExtendedLink>
           </div>
         </div>
       </div>
