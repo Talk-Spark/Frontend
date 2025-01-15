@@ -1,8 +1,8 @@
 import Image, { StaticImageData } from "next/image";
-import blueGraphic from "@/public/nameCard/blueStorageGraphic.svg";
-import yellowGraphic from "@/public/nameCard/yellowStorageGraphic.svg";
-import pinkGraphic from "@/public/nameCard/pinkStoragePink.svg";
-import mintGraphic from "@/public/nameCard/mintStorageGraphic.svg";
+import blueGraphic from "@/public/nameCard/blueGraphic.svg";
+import yellowGraphic from "@/public/nameCard/yellowGraphic.svg";
+import pinkGraphic from "@/public/nameCard/pinkGraphic.svg";
+import mintGraphic from "@/public/nameCard/mintGraphic.svg";
 import QrCode from "../../QrCode/QrCode";
 
 type SelectedColor = "PINK" | "MINT" | "YELLOW" | "BLUE";
