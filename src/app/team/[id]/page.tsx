@@ -3,7 +3,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 // import { useParams } from "next/navigation";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import ProfileImage from "@/src/components/ProfileImage";
 import FindRoom from "@/src/components/entry/FindRoom";
 import { Start } from "@mui/icons-material";
@@ -40,10 +40,11 @@ const TeamDetail = () => {
   //2.4.0 버전을 사용하기 때문에 타입 미존재(4.8.1 은 에러 발생)
   const socketRef = useRef<any>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [user, setUser] = useState<UserLocalData | null>(null);
-  const [isHost, setIsHost] = useState(!!localStorage.getItem("isGameHost"));
-  const { id } = useParams(); // roomId 파라미터 가져온 후 get
+  const isHost = searchParams.get("isHost") === "true";
+  const { id } = useParams();
   const [teamData, setTeamData] = useState<GameRoomDetail | null>(null);
   const [userDatas, setUserDatas] = useState<Participant[] | null>(null);
   const [isLottie, setIsLottie] = useState(false);
@@ -77,7 +78,7 @@ const TeamDetail = () => {
       socketRef.current.emit("joinRoom", {
         roomId: id,
         accessToken: user.accessToken,
-        isHost: isHost, //연결 되는지 테스트
+        isHost: isHost,
       });
 
       socketRef.current.on("roomUpdate", (arr: RoomUpdateProps[]) => {
@@ -97,7 +98,7 @@ const TeamDetail = () => {
         socketRef.current.emit("leaveRoom", {
           roomId: id,
           accessToken: user.accessToken,
-          isHost,
+          isHost: isHost,
         });
         socketRef.current.disconnect();
       };

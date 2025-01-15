@@ -60,10 +60,11 @@ const Result = () => {
   };
 
   const handleHostStartGame = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("isGameHost", "true");
-    }
-    router.push(`/team/${roomId}`);
+    // if (typeof window !== "undefined") {
+    //   localStorage.setItem("isGameHost", "true");
+    // }
+    // router.push(`/team/${roomId}`);
+    router.push(`/team/${roomId}?isHost=true`);
   };
 
   return (
