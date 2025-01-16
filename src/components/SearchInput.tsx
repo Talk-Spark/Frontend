@@ -15,8 +15,8 @@ const SearchInput = ({
   setSearchValue: (value: string) => void;
   placeholderText: string;
   isQr: boolean;
-  onSearch?: () => void; // 엔터 키 입력 시 호출되는 함수 (최신)
-  setIsCamera?: (value: boolean) => void; //(최신)
+  onSearch?: () => void; // 엔터 키 입력 시 호출되는 함수
+  setIsCamera?: (value: boolean) => void; 
   setIsFirst?: (value: boolean) => void; // entry 첫 렌더링인지 확인
 }) => {
   const [value, setValue] = useState("");
