@@ -7,6 +7,7 @@ import FindRoom from "@/src/components/entry/FindRoom";
 import { instance } from "@/src/apis";
 import ReadCode from "@/src/components/QrCode/ReadCode";
 import Header from "@/src/components/Headers/Header";
+import { useSearchParams } from "next/navigation";
 import Template from "@/src/components/Router/template";
 import { useRouterWrapper } from "@/src/components/Router/RouterWrapperProvider";
 
@@ -29,9 +30,9 @@ const Entry = () => {
     name: string;
   } | null>(null);
 
-  useEffect(() => {
-    localStorage.removeItem("isGameHost"); //entry를 통해 접근하는 사람은 방장이 아닌 것으로 치부.
-  }, []);
+  // useEffect(() => {
+  //   localStorage.removeItem("isGameHost"); //entry를 통해 접근하는 사람은 방장이 아닌 것으로 치부.
+  // }, []);
 
   const setIsNewData = () => {};
 
