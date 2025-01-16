@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import CardTop from "./Storage/card/CardTop";
 import CardBottom from "./Storage/card/CardBotttom";
 import { toPng } from "html-to-image";
+import { filter } from "lodash";
 
 type CardDataProps = {
   // 기본 정보
@@ -72,32 +73,37 @@ const StorageNameCard: React.FC<NameCardProps> = ({
 
   // 명함 이미지 저장 html-to-image
   const handleDownload = () => {
-    if (cardRef.current) {
+    const cardElement = cardRef.current;
+    if (cardElement) {
       //console.log("Card ref saved.");
       // 작동하나 몇 요소가 느리게 저장됨
-      const filter = (node: HTMLElement) => {
-        // 편집, 다운로드 버튼 제거
-        if (node.tagName === "BUTTON") {
-          return false;
-        }
-        const exclusionClasses = ["remove-me", "secret-div"];
-        return !exclusionClasses.some((classname) =>
-          node.classList?.contains(classname),
-        );
-      };
-      toPng(cardRef.current, {
-        cacheBust: true,
-        filter: filter,
-      })
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.download = "명함.png";
-          link.href = dataUrl;
-          link.click();
+      setTimeout(() => {
+        const filter = (node: HTMLElement) => {
+          // 편집, 다운로드 버튼 제거
+          if (node.tagName === "BUTTON") {
+            return false;
+          }
+          const exclusionClasses = ["remove-me", "secret-div"];
+          return !exclusionClasses.some((classname) =>
+            node.classList?.contains(classname),
+          );
+        };
+
+        toPng(cardElement, {
+          cacheBust: true,
+          includeQueryParams: true,
+          filter: filter,
         })
-        .catch((err) => {
-          console.log(err);
-        });
+          .then((dataUrl) => {
+            const link = document.createElement("a");
+            link.download = "명함.png";
+            link.href = dataUrl;
+            link.click();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 500); // 300ms 지연
     }
   };
 

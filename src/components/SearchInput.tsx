@@ -20,22 +20,21 @@ const SearchInput = ({
   setIsCamera?: (value: boolean) => void; //(최신)
 }) => {
   const [value, setValue] = useState("");
-  const borderBT = searchValue ? "border-b-black" : "border-b-gray-4 ";
+  const borderBT = value ? "border-b-black" : "border-b-gray-4 ";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
-  
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setSearchValue(value);
-      console.log("으하하")
-      if(onSearch){
+      console.log("으하하");
+      if (onSearch) {
         onSearch();
       }
     }
-  }
+  };
 
   const onCamera = () => {
     if (setIsCamera) setIsCamera(true);
@@ -46,12 +45,12 @@ const SearchInput = ({
     >
       {!value && <Image src={searchIcon} alt="돋보기 아이콘" />}
       <input
-        className="search-reset w-full text-subhead-med text-black placeholder-gray-5 focus:outline-none"
+        className="search-reset focus:outline-non w-full bg-white text-subhead-med text-black placeholder-gray-5"
+        type="search"
+        value={value}
         placeholder={placeholderText}
         onChange={handleChange}
         onKeyDown={handleKeyPress}
-        value={value}
-        type="search"
       />
       {isQr && (
         <Image
