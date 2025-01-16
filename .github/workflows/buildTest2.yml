@@ -3,12 +3,14 @@ name: Build Test
 on:
   pull_request:
     branches:
-      - develop
-      - main
+      - "**"
+      # - develop
+      # - main
   push:
     branches:
-      - develop
-      - main
+      - "**"
+      # - develop
+      # - main
 
 jobs:
   build:
