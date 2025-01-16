@@ -24,6 +24,7 @@ const Entry = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredRooms, setFilteredRooms] = useState<GameRoom[]>([]);
   const [isCamera, setIsCamera] = useState(false);
+  const [isFirst, setIsFirst] = useState(false);
   const [myRun, setMyRun] = useState<{
     cardId: number;
     name: string;
@@ -33,9 +34,12 @@ const Entry = () => {
     localStorage.removeItem("isGameHost"); //entry를 통해 접근하는 사람은 방장이 아닌 것으로 치부.
   }, []);
 
-  const setIsNewData = () => {};
-
   // 방 검색하기 api
+  useEffect(() => {
+    if (isFirst) {
+      handleSearch();
+    }
+  }, [searchValue]);
 
   const handleSearch = async () => {
     setFilteredRooms([]);
@@ -44,6 +48,7 @@ const Entry = () => {
         params: { searchName: searchValue }, // 검색어를 쿼리 매개변수로 전달
       });
       setFilteredRooms(response.data);
+      console.log(response.data);
     } catch (err) {
       console.error("Error fetching team data:", err);
     }
@@ -72,7 +77,6 @@ const Entry = () => {
             myRun={myRun}
             setMyRun={setMyRun}
             setIsCamera={setIsCamera}
-            setIsNewData={setIsNewData}
             qrVer="room"
           />
         </div>
@@ -80,15 +84,15 @@ const Entry = () => {
       <div className="my-[2.4rem] my-[2rem] flex flex-col">
         <span className="text-headline-3 text-black">팀 방 찾기</span>
         <SearchInput
-          searchValue={searchValue}
           setSearchValue={setSearchValue}
           placeholderText={"팀 방 검색"}
           isQr={true}
           setIsCamera={setIsCamera}
           onSearch={handleSearch}
+          setIsFirst={setIsFirst}
         />
       </div>
-      {filteredRooms.length > 0 ? (
+      {isFirst && filteredRooms.length > 0 ? (
         <TeamRoomList gameRooms={filteredRooms} />
       ) : (
         <FindRoom findText={"우리 팀을 찾아보아요~"} />

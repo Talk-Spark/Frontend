@@ -4,7 +4,7 @@ import fullCheckBox from "@/public/guest-book/fullCheckBox.svg";
 import sendIcon from "@/public/guest-book/sendIcon.svg";
 
 import Image from "next/image";
-import NewIcon from "@/public/guest-book/new.svg";
+import NewIcon from "@/public/guest-book/newIcon.svg";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { instance } from "@/src/apis";
@@ -85,7 +85,7 @@ const CommnetInput = ({
       <Image
         src={NewIcon}
         className={classNames(
-          "absolute -top-[6.5rem] right-[0.7rem] transform cursor-pointer transition-all duration-300",
+          "absolute -top-[6.5rem] right-[0.7rem] w-[5.5rem] transform cursor-pointer transition-all duration-300",
           { "animate-bounce-scale": isAnimating },
         )}
         alt="새로고침 버튼"

@@ -76,6 +76,7 @@ const SearchAndGetCard = (props: NameCardProps) => {
   const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
   const [filterDataC, setFilterDataC] = useState<Team[]>([]);
   const [filterDataR, setFilterDataR] = useState<Room[]>([]);
+  const [dataLength, setDataLength] = useState(0);
 
   useEffect(() => {
     if (teamData) {
@@ -85,9 +86,17 @@ const SearchAndGetCard = (props: NameCardProps) => {
     }
   }, [teamData, roomData]);
 
+  useEffect(() => {
+    if (teamData) {
+      setDataLength(filterDataC.length);
+    } else if (roomData) {
+      setDataLength(filterDataR.length);
+    }
+  }, [filterDataR, filterDataC]);
+
   // const [animateButton, setAnimateButton] = useState(false); // 버튼 애니메이션 상태
 
-  const dataLength = teamData ? teamData?.length : roomData?.length;
+  // const dataLength = filterDataC ? filterDataC?.length : filterDataR?.length;
 
   // 버튼 애니메이션을 0.5초 뒤에 실행
   useEffect(() => {
@@ -287,7 +296,6 @@ const SearchAndGetCard = (props: NameCardProps) => {
       <div className="w-[calc(100% - 4rem)] mx-[2rem] pb-[19rem]">
         <SearchInput
           setSearchValue={setSearchValue}
-          searchValue={searchValue}
           placeholderText={
             ver === "명함" ? "팀명 또는 이름 검색" : "방명록 검색"
           }
@@ -362,15 +370,11 @@ const SearchAndGetCard = (props: NameCardProps) => {
       )}
       {ver === "명함" && (
         <motion.div
-          className="fixed bottom-0 flex h-[16.2rem] w-full max-w-[76.8rem] justify-center"
+          className="fixed bottom-0 flex h-[10.6rem] w-full max-w-[76.8rem] justify-center"
           style={{
             background:
               "linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0.28%, #FFF 158.49%)",
           }}
-          // initial={{ y: 100, opacity: 0 }} // 시작 상태
-          // animate={animateButton ? { y: 0, opacity: 1 } : {}} // 애니메이션 실행 조건
-          // exit={{ y: 100, opacity: 0 }} // 종료 상태
-          // transition={{ duration: 0.8 }} // 애니메이션 지속 시간
         >
           <button
             onClick={addCardBtn}

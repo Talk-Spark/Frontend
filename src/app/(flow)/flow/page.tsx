@@ -168,7 +168,7 @@ const Flow = () => {
       accessToken: user?.accessToken,
     });
     socketRef.current.on("gameJoined", () => {
-      if (socketRef.current && isHost)
+      if (socketRef.current && isHost) // 방에 접속 후, 방장인 경우 퀴즈 준비를 요청.
         socketRef.current.emit("prepareQuizzes", { roomId });
 
       setTimeout(() => {

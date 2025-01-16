@@ -4,7 +4,7 @@ import QrScanner from "qr-scanner";
 import cameraIcon from "@/public/Image/entry/camera.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { instance, post } from "@/src/apis";
+import { post } from "@/src/apis";
 
 interface MyRun {
   cardId: number; // 입장하기 : 방 아이디, 명함보관함: 카드 아이디

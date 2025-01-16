@@ -6,18 +6,18 @@ import scannerIcon from "@/public/Image/entry/scanner.svg";
 
 const SearchInput = ({
   setSearchValue,
-  searchValue,
   placeholderText,
   isQr,
   onSearch,
   setIsCamera,
+  setIsFirst,
 }: {
   setSearchValue: (value: string) => void;
-  searchValue: string;
   placeholderText: string;
   isQr: boolean;
   onSearch?: () => void; // 엔터 키 입력 시 호출되는 함수 (최신)
   setIsCamera?: (value: boolean) => void; //(최신)
+  setIsFirst?: (value: boolean) => void; // entry 첫 렌더링인지 확인
 }) => {
   const [value, setValue] = useState("");
   const borderBT = value ? "border-b-black" : "border-b-gray-4 ";
@@ -29,9 +29,8 @@ const SearchInput = ({
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setSearchValue(value);
-      console.log("으하하");
-      if (onSearch) {
-        onSearch();
+      if (setIsFirst) {
+        setIsFirst(true);
       }
     }
   };
@@ -45,7 +44,7 @@ const SearchInput = ({
     >
       {!value && <Image src={searchIcon} alt="돋보기 아이콘" />}
       <input
-        className="search-reset focus:outline-non w-full bg-white text-subhead-med text-black placeholder-gray-5"
+        className="search-reset w-full bg-white text-subhead-med text-black placeholder-gray-5 focus:outline-none"
         type="search"
         value={value}
         placeholder={placeholderText}
