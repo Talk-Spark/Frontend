@@ -26,6 +26,9 @@ jobs:
           corepack enable
           corepack prepare pnpm@9.12.3 --activate
 
+      - name: Clear pnpm cache
+        run: pnpm store prune
+
       - name: Install dependencies
         run: |
           pnpm install
