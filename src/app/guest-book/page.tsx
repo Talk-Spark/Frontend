@@ -31,14 +31,14 @@ const Page = () => {
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]); // 선택 박스
 
   const headerBtn1 = () => {
-    const gameEnd = localStorage.getItem("gameEnd");
+    const gameEnd = JSON.parse(localStorage.getItem("gameEnd") || "false");
     console.log(gameEnd);
 
     if (!gameEnd) {
       router.back();
     } else {
       router.push("/home");
-      localStorage.setItem("gameEnd", false);
+      localStorage.setItem("gameEnd", JSON.stringify(false)); // 저장
     }
   };
 
