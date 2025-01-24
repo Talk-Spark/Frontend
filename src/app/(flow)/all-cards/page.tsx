@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { instance } from "@/src/apis";
 
 const AllCards = () => {
+  //깃허브 테스트
   const [finalPeople, setFinalPeople] = useState<FinalPeopleProps[] | null>(
     null,
   );
