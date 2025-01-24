@@ -129,7 +129,12 @@ const Page = () => {
     // 더미데이터
   ];
   const headerBtn1 = () => {
-    router.back();
+    const gameEnd = JSON.parse(localStorage.getItem("gameEnd") || "false");
+    if (!gameEnd) {
+      router.back();
+    } else {
+      router.push("/guest-book");
+    }
   };
 
   return (
@@ -146,7 +151,8 @@ const Page = () => {
           isPositionFixed={false}
         />
       </div>
-      <div className="flex flex-col items-center pb-[10.4rem]">
+
+      <div className="flex flex-col items-center pb-[9.9rem]">
         <div className="mb-[2rem] mt-[8rem] rounded-[1.2rem] border-[0.1rem] border-gray-7 px-[0.7rem] py-[0.3rem] text-caption-med text-gray-7">
           {formatDate(date)}
         </div>

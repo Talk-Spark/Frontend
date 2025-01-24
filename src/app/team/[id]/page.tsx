@@ -78,7 +78,7 @@ const TeamDetail = () => {
         transports: ["websocket"],
       });
 
-      //console.log(socketRef.current);
+      console.log(socketRef.current);
 
       socketRef.current.emit("joinRoom", {
         roomId: id,
@@ -99,14 +99,14 @@ const TeamDetail = () => {
         alert(data);
       });
 
-      const handleBeforeUnload = () => {
-        socketRef.current.emit("leaveRoom", {
-          roomId: id,
-          accessToken: user.accessToken,
-          isHost,
-        });
-        socketRef.current.disconnect();
-      };
+      // const handleBeforeUnload = () => {
+      //   socketRef.current.emit("leaveRoom", {
+      //     roomId: id,
+      //     accessToken: user.accessToken,
+      //     isHost,
+      //   });
+      //   socketRef.current.disconnect();
+      // };
 
       const setHostAndRoomData = async () => {
         try {
@@ -114,6 +114,7 @@ const TeamDetail = () => {
           const response2 = await get(`/api/rooms/${id}`); //방에 대한 정보 받아오는 api
           //setIsHost(response.data as boolean);
           setTeamData(response2.data as GameRoomDetail);
+          console.log(response2.data);
         } catch (err) {
           console.error("Error fetching host data:", err);
         }
@@ -127,7 +128,8 @@ const TeamDetail = () => {
         if (socketRef.current) {
           //방 퇴장시
           //console.log(gameStart);
-          if (!gameStartRef) {
+          if (!gameStartRef.current) {
+            console.log("나간다")
             socketRef.current.emit("leaveRoom", {
               roomId: id,
               accessToken: user.accessToken,
@@ -211,7 +213,7 @@ const TeamDetail = () => {
             <button
               onClick={startGame}
               className="w-full cursor-pointer rounded-[1.2rem] bg-main-pink py-[1.6rem] text-center text-subhead-bold text-white"
-              disabled={userDatas.length < 2} // 참가자가 한명일때는 불가 
+              // disabled={userDatas.length < 2} // 참가자가 한명일때는 불가
             >
               시작하기
             </button>

@@ -15,8 +15,6 @@ import { MutableRefObject, Suspense, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/src/components/Headers/Header";
-import Image from "next/image";
-import loading from "@/public/loading/loadingColor.gif";
 
 // export const CARD_FLOW = [
 //   "엠비티아이",
@@ -158,9 +156,11 @@ const Flow = () => {
 
   useEffect(() => {
     //여기서 다시 연결
+    console.log("연결 중!");
     socketRef.current = io("https://talkspark-dev-api.p-e.kr", {
       transports: ["websocket"],
     });
+    console.log(socketRef.current);
 
     //방에 잘 접속했다는 메세지 전송
     socketRef.current.emit("joinGame", {
@@ -168,7 +168,9 @@ const Flow = () => {
       accessToken: user?.accessToken,
     });
     socketRef.current.on("gameJoined", () => {
+      console.log("게임 접속!!");
       if (socketRef.current && isHost)
+        // 방에 접속 후, 방장인 경우 퀴즈 준비를 요청.
         socketRef.current.emit("prepareQuizzes", { roomId });
 
       setTimeout(() => {
@@ -181,6 +183,7 @@ const Flow = () => {
       //console.log(data);
 
       setIsQuizEnd(true);
+      
       setIsAllCorrect(false);
       setStorageCard({
         name: data.name,
@@ -241,6 +244,7 @@ const Flow = () => {
       },
     );
 
+   
     //todo: 현재 이 메세지 안옴(서버 문제)
     socketRef.current.on(
       "singleQuestionScoreBoard",

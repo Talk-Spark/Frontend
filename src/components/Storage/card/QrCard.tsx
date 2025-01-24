@@ -55,7 +55,7 @@ const QrCard = ({ name = "", color = "PINK", cardId = 1 }: QrCardProps) => {
       >
         <span className="mt-[2.4rem] text-black">{name}</span>
         <div
-          className={`absolute ${positionStyles[color]} flex h-full w-full justify-center rounded-[2rem] bg-white-storage`}
+          className={`absolute ${positionStyles[color]} flex h-[19.2rem] w-full justify-center rounded-[2rem] bg-white-storage`}
         >
           <Image
             src={graphicColor[color] || graphicColor.PINK}

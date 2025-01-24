@@ -73,9 +73,6 @@ const AfterSelect = ({
     }
   };
 
-  useEffect(() => {
-    //console.log(storageCard);
-  }, [storageCard]);
 
   //전부 다 맞췄을 때 로띠 뜨는 것도 구현 필요 + 방장만 클릭 가능한 거 많음.
   return (

@@ -45,7 +45,7 @@ export default function HomePage() {
     });
   }, [router]);
 
-  return <div>로그인 중...</div>; // 리다이렉트만 수행되므로 UI를 렌더링하지 않음
+  return <div></div>; // 리다이렉트만 수행되므로 UI를 렌더링하지 않음
 }
 
 // Refresh Token으로 Access Token 및 Refresh Token 재발급 요청

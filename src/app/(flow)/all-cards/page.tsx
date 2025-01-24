@@ -28,16 +28,20 @@ const AllCards = () => {
     const finalPeople: FinalPeopleProps[] =
       getDataFromLocalStorage("finalPeople");
     setFinalPeople(finalPeople);
+  }, []);
 
+  useEffect(() => {
     const newGuestBook = async () => {
       await instance.post(`/api/guest-books/create?roomId=${roomId}`);
     };
+
+    localStorage.setItem("gameEnd", JSON.stringify(true));
 
     if (roomId) {
       newGuestBook();
       console.log("방명록 생성");
     }
-  }, []);
+  }, [roomId]);
 
   const headerBtn2 = () => {
     if (roomId) {
