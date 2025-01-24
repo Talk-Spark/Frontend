@@ -31,7 +31,15 @@ const Page = () => {
   const [selectedTeamBoxes, setSelectedTeamBoxes] = useState<number[]>([]); // 선택 박스
 
   const headerBtn1 = () => {
-    router.back();
+    const gameEnd = localStorage.getItem("gameEnd");
+    console.log(gameEnd);
+
+    if (!gameEnd) {
+      router.back();
+    } else {
+      router.push("/home");
+      localStorage.setItem("gameEnd", false);
+    }
   };
 
   /* 정렬 조건에 따른 방명록 검색하기 */

@@ -35,6 +35,8 @@ const AllCards = () => {
       await instance.post(`/api/guest-books/create?roomId=${roomId}`);
     };
 
+    localStorage.setItem("gameEnd", true);
+
     if (roomId) {
       newGuestBook();
       console.log("방명록 생성");

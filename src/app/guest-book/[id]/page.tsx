@@ -129,7 +129,12 @@ const Page = () => {
     // 더미데이터
   ];
   const headerBtn1 = () => {
-    router.back();
+    const gameEnd = JSON.parse(localStorage.getItem("gameEnd") || "false"); // "false"를 기본값으로 설정
+    if (!gameEnd) {
+      router.back();
+    } else {
+      router.push("/guest-book");
+    }
   };
 
   return (

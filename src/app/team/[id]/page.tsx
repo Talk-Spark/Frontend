@@ -78,7 +78,7 @@ const TeamDetail = () => {
         transports: ["websocket"],
       });
 
-      //console.log(socketRef.current);
+      console.log(socketRef.current);
 
       socketRef.current.emit("joinRoom", {
         roomId: id,
@@ -128,7 +128,8 @@ const TeamDetail = () => {
         if (socketRef.current) {
           //방 퇴장시
           //console.log(gameStart);
-          if (!gameStartRef) {
+          if (!gameStartRef.current) {
+            console.log("나간다")
             socketRef.current.emit("leaveRoom", {
               roomId: id,
               accessToken: user.accessToken,

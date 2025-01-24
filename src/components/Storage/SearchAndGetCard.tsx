@@ -160,13 +160,10 @@ const SearchAndGetCard = (props: NameCardProps) => {
       }
     } else if (
       roomData &&
-      setIsLoading &&
       setRoomData &&
-      !isLoading &&
       selectedTeamBoxes &&
       setSelectedTeamBoxes
     ) {
-      setIsLoading(true);
       /* 보관된 방명록 삭제 (선택)) API */
       try {
         // 선택된 방명록 Id
@@ -188,7 +185,8 @@ const SearchAndGetCard = (props: NameCardProps) => {
       } catch (error) {
         console.error("삭제 중 오류 발생:", error);
       }
-      setIsLoading(false);
+    } else {
+      console.log("모하니?");
     }
   };
 
