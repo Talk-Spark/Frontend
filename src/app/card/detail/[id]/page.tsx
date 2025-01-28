@@ -41,6 +41,10 @@ const DetailCard = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    localStorage.setItem("cardDetail", JSON.stringify(true));
+  }, []);
+
+  useEffect(() => {
     if (!isLoading) {
       setIsLoading(true);
       if (id) {

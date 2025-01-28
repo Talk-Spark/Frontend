@@ -186,11 +186,18 @@ const Card = () => {
 
   const headerTitle = isCamera ? "명함 추가하기" : "명함 보관함";
   const headerBtn2 = isCamera ? "" : mineSettingBtn;
+
   const headerBtn1 = () => {
+    const cardDetail = JSON.parse(
+      localStorage.getItem("cardDetail") || "false",
+    );
     if (isCamera) {
       setIsCamera(false);
-    } else {
+    } else if (!cardDetail) {
       router.back();
+    } else {
+      router.push("/home");
+      localStorage.setItem("cardDetail", JSON.stringify(false));
     }
   };
 
