@@ -183,7 +183,7 @@ const Flow = () => {
       //console.log(data);
 
       setIsQuizEnd(true);
-      
+
       setIsAllCorrect(false);
       setStorageCard({
         name: data.name,
@@ -238,13 +238,13 @@ const Flow = () => {
           selfDescription: profileData.selfDescription,
           tmi: profileData.tmi,
         });
+        setIsQuizEnd(false);
         setQuizInfo(QuizData);
         setFieldHoles(blankData.blanks);
         setIsBefore(true);
       },
     );
 
-   
     //todo: 현재 이 메세지 안옴(서버 문제)
     socketRef.current.on(
       "singleQuestionScoreBoard",
@@ -277,6 +277,7 @@ const Flow = () => {
         (person) => person.correct === true,
       );
       setIsAllCorrect(isAllCorrect);
+      console.log(isAllCorrect);
     }
   }, [correctedPeople]);
 
