@@ -1,7 +1,7 @@
 # <img src="https://github.com/user-attachments/assets/8d5048b2-69b5-4f62-bf99-1c0f959b3b5b" width="128" height="128" alt="파비콘"> 톡스파크
 
 ![서비스만 있는 표지](https://github.com/user-attachments/assets/4ec42e16-883a-4265-affa-99684e8a9aec)
-처음 만나는 우리를 위한 실시간 아이스브레이킹 웹 서비스
+처음 만나는 우리를 위한 실시간 아이스브레이킹 웹 서비스!
 
 
 
@@ -65,7 +65,7 @@
 
 </div>
 <br/>
-<h2>⚡⭐️ 구현 뷰 설명</h2>
+<h2>⭐️ 구현 뷰 설명</h2>
 
 ![깃허브용_전체본](https://github.com/user-attachments/assets/f900be63-2345-47df-9a07-7d76ebc6e487)
 
