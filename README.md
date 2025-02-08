@@ -1,41 +1,50 @@
-## 만약 "use client 지시어를 사용하지 않고 코드를 작성한뒤, 빌드했을 때의 모습"
-![image](https://github.com/user-attachments/assets/f89ab713-0b21-449c-b0ab-f9503183a8e0)
+# <img src="https://github.com/user-attachments/assets/8d5048b2-69b5-4f62-bf99-1c0f959b3b5b" width="128" height="128" alt="파비콘"> 톡스파크
 
-정상적으로 빌드가 막힌다!
+![서비스만 있는 표지](https://github.com/user-attachments/assets/4ec42e16-883a-4265-affa-99684e8a9aec)
+처음 만나는 우리를 위한 실시간 아이스브레이킹 웹 서비스
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+</br>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<h2> ⚡️ TalkSpark Team </h2>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<table align="center">
+    <tr align="center">
+      <td style="min-width: 150px;">
+            <a href="https://github.com/ocahs9">
+              <img src="https://avatars.githubusercontent.com/u/155794105?v=4" width="200" height="250" alt="프로필사진">
+              <br />
+              <b>공준혁</b>
+            </a>
+        </td>
+      <td style="min-width: 150px;">
+            <a href="https://github.com/Cuyqo">
+              <img src="https://avatars.githubusercontent.com/u/144602200?v=4" width="200" height="250" alt="프로필사진">
+              <br />
+              <b>최정인</b>
+            </a>
+        </td>
+      <td style="min-width: 150px;">
+            <a href="https://github.com/boogiewooki02">
+              <img src="https://avatars.githubusercontent.com/u/128466405?v=4" width="200" height="250" alt="프로필사진">
+              <br />
+              <b>김동욱</b>
+            </a>
+        </td>
+    </tr>
+    <tr align="center">
+       <td>
+            <b>Lead</b>, 게임 flow 및 소켓 연결<br/>
+      </td>
+       <td>
+            방 압징하기, 명함 보관함, 방명록 보관함 뷰 <br/>
+      </td>
+       <td>
+            온보딩, 메인홈, 방 개설하기 뷰 <br/>
+      </td>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    </tr>
+</table>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+</br>
